@@ -1,0 +1,1 @@
+let &l:makeprg="cd ".g:localvimrc_script_dir."/build && make -j2"
