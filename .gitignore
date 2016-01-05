@@ -12,3 +12,4 @@ Session.vim
 ### Custom
 
 build
+.ycm_extra_conf.pyc
