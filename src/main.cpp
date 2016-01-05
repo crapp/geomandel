@@ -30,9 +30,9 @@ int mandel_cruncher(double x, double y, int bailout)
         y = 2 * x_old * y + y0;
         iterations++;
     }
-    // if (iterations < bailout)
-    return iterations;
-    // return 0;
+    if (iterations < bailout)
+        return iterations;
+    return 0;
 }
 
 void prnt_buff(const std::vector<std::vector<int>> &buff)
@@ -67,14 +67,13 @@ int main(int argc, char *argv[])
     for (int ix = 0; ix < xrange; ix++) {
         for (int iy = 0; iy <= yrange; iy++) {
             int its = mandel_cruncher(x, y, bailout);
-            // int its = mandel_cruncher2(x, y, bailout);
-            //if (its > 0)
-            //    mandelbuffer[ix][iy] = 1;
-            if (its == bailout) {
-                mandelbuffer[ix][iy] = 0;
-            } else {
+            if (its > 0)
                 mandelbuffer[ix][iy] = 1;
-            }
+            // if (its == bailout) {
+            // mandelbuffer[ix][iy] = 0;
+            //} else {
+            // mandelbuffer[ix][iy] = 1;
+            //}
             y += ((yl * -1) + yh) / yrange;
         }
         x += ((xl * -1) + xh) / xrange;
