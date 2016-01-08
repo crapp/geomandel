@@ -27,19 +27,23 @@ elseif(CMAKE_CXX_COMPILER_ID MATCHES "MSVC" AND ${MSVC_VERSION} LESS 1900)
         # MSVC 1900 has the best C++11 support so far. So, warn if you try to
         # use anything else.
       FATAL_ERROR
-      "LabPowerQt does not support compiling on Windows with "
-      "${CMAKE_CXX_COMPILER_ID}. Please use MSVC.")
+      "This Project does not support compiling on Windows with "
+      "MSVC ${CMAKE_CXX_COMPILER_ID}. Please use MSVC 14 or higher.")
 else ()
     message(FATAL_ERROR "Your C++ compiler does not support C++11.")
 endif ()
 
-#find_package()
+find_package(Threads REQUIRED)
 
 set (SOURCE
     ${CMAKE_CURRENT_SOURCE_DIR}/main.cpp
 )
 
-#set HEADER()
+set (HEADER
+    ${CMAKE_CURRENT_SOURCE_DIR}/cmdparser.hpp
+    ${CMAKE_CURRENT_SOURCE_DIR}/ctpl_stl.h
+)
 
-add_executable(geomandel ${SOURCE})
+add_executable(geomandel ${HEADER} ${SOURCE})
+target_link_libraries(geomandel ${CMAKE_THREAD_LIBS_INIT})
 
