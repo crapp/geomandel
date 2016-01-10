@@ -24,7 +24,11 @@
 #include <fstream>
 
 #include "ctpl_stl.h"
-#include "cmdparser.hpp"
+#include "cxxopts.hpp"
+/**
+ * Based on http://beej.us/blog/data/mandelbrot-set
+ *
+ */
 
 int mandel_cruncher(double x, double y, int bailout)
 {
@@ -38,29 +42,41 @@ int mandel_cruncher(double x, double y, int bailout)
         y = 2 * x_old * y + y0;
         iterations++;
     }
-    if (iterations < bailout)
-        return 0;
-  //     return iterations;
-    return iterations;
+    if (iterations == bailout)
+        return 1;
+    //     return iterations;
+    return 0;
 }
 
 void write_buff_to_image(const std::vector<std::vector<int>> &buff)
 {
+    // Escape time algorithm
+    // This will overwrite any existing image. Image is written into the
+    // directory from where the application was called.
     std::ofstream img("geomandel.pbm", std::ofstream::out);
     img.exceptions(std::ofstream::failbit | std::ofstream::badbit);
     try {
         if (img.is_open()) {
+            // magic number for bw bitmap
             img << "P1" << std::endl;
+            // comments
             img << "# geomandel bw output" << std::endl;
+            // specifiy width and height of the pbm
             img << buff.at(0).size() << " " << buff.size() << std::endl;
             for (const auto &v : buff) {
                 int linepos = 1;
                 for (auto data : v) {
+                    // this kind of images don't allow for more than 70
+                    // characters in one row
                     if (linepos % 70) {
                         img << std::endl;
                         linepos = 0;
                     }
-                    img << data;
+                    if (data > 0) {
+                        img << 1;
+                    } else {
+                        img << data;
+                    }
                     linepos++;
                 }
             }
@@ -73,6 +89,7 @@ void write_buff_to_image(const std::vector<std::vector<int>> &buff)
 
 void prnt_buff(const std::vector<std::vector<int>> &buff)
 {
+    // Escape time algorithm
     for (auto &v : buff) {
         for (auto &val : v) {
             std::cout << val;
@@ -81,34 +98,49 @@ void prnt_buff(const std::vector<std::vector<int>> &buff)
     }
 }
 
-void setup_command_line_parser(cli::Parser &p)
+void setup_command_line_parser(cxxopts::Options &p)
 {
-    p.set_optional<int>("o", "optional", 0, "Mandelbrot Set orientation");
-    p.set_optional<int>("b", "bailout", 1000,
-                        "How long do we try to calculate the complex number");
-    p.set_required<std::string>("g", "geotiff", "GEOTiff file to use");
-    p.run_and_exit_if_error();
+    // clang-format off
+    p.add_options()
+        ("b,bailout", "Bailout value for the mandelbrot set algorithm", 
+         cxxopts::value<int>()->default_value("1000"))
+        ("p,print", "Print Buffer to Screen", 
+         cxxopts::value<bool>()->default_value("0"))
+        ("bwimage", "Write Buffer to B&W Bitmap", 
+         cxxopts::value<bool>()->default_value("1"))
+        ("greyscale", "Write Buffer to Greyscale Bitmap", 
+         cxxopts::value<bool>()->default_value("1"));
+    // clang-format on
 }
-
 int main(int argc, char *argv[])
 {
-    // get the command line parser working
-    cli::Parser parser(argc, argv);
+    cxxopts::Options parser(argv[0], " - command line options");
     setup_command_line_parser(parser);
+    try {
+        parser.parse(argc, argv);
+    } catch (const cxxopts::OptionParseException &ex) {
+        std::cout << parser.help({""}) << std::endl;
+        std::cerr << "Could not parse command line options" << std::endl;
+        std::cerr << ex.what() << std::endl;
+    }
 
-    int bailout = parser.get<int>("b");
+    if (parser.count("help")) {
+        std::cout << parser.help({""}) << std::endl;
+        exit(0);
+    }
+    int bailout = parser["b"].as<int>();
     std::vector<std::vector<int>> mandelbuffer;
 
     // define some variables
-    double x = -2.5;
-    double xl = -2.0;
-    double xh = 1.0;
-    double xrange = 100;
+    double x = -1.5;
+    double xl = -1.5;
+    double xh = 1.5;
+    double xrange = 480;
     double xdelta = ((xl * -1) + xh) / xrange;
-    double y = -1.5;
-    double yl = -1.5;
-    double yh = 1.5;
-    double yrange = 200;
+    double y = -2.5;
+    double yl = -2.5;
+    double yh = 1.0;
+    double yrange = 640;
     double ydelta = ((yl * -1) + yh) / yrange;
 
     std::cout << "+++++++++++++++++++++++++++++++++++++" << std::endl;
@@ -130,8 +162,7 @@ int main(int argc, char *argv[])
     for (int ix = 0; ix < xrange; ix++) {
         for (int iy = 0; iy <= yrange; iy++) {
             int its = mandel_cruncher(x, y, bailout);
-            if (its > 0)
-                mandelbuffer[ix][iy] = 1;
+            mandelbuffer[ix][iy] = its;
             y += ydelta;
         }
         x += xdelta;
@@ -144,8 +175,9 @@ int main(int argc, char *argv[])
 
     std::cout << "Mandelcruncher time " << deltat.count() << "ms" << std::endl;
 
-    // print the buffer
-    prnt_buff(mandelbuffer);
-    write_buff_to_image(mandelbuffer);
+    if (parser.count("p") && parser["p"].as<bool>() == true)
+        prnt_buff(mandelbuffer);  // print the buffer
+    if (parser.count("bwimage"))
+        write_buff_to_image(mandelbuffer);
     return 0;
 }

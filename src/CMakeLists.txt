@@ -40,8 +40,8 @@ set (SOURCE
 )
 
 set (HEADER
-    ${CMAKE_CURRENT_SOURCE_DIR}/cmdparser.hpp
     ${CMAKE_CURRENT_SOURCE_DIR}/ctpl_stl.h
+    ${CMAKE_CURRENT_SOURCE_DIR}/cxxopts.hpp
 )
 
 add_executable(geomandel ${HEADER} ${SOURCE})
