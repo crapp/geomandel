@@ -35,6 +35,7 @@
 namespace constants
 {
 enum OUT_FORMAT { IMAGE_BW, IMAGE_GREY, IMAGE_COL, GEOTIFF };
+enum COL_ALGO { ESCAPE_TIME, CONTINUOUS };
 
 const std::map<OUT_FORMAT, std::vector<std::string>> BITMAP_DEFS{
     {OUT_FORMAT::IMAGE_BW, {"pbm", "P1"}},
@@ -58,7 +59,7 @@ const std::map<OUT_FORMAT, std::vector<std::string>> BITMAP_DEFS{
  *
  * @return Return number of iterations.
  */
-int mandel_cruncher(double x, double y, int bailout)
+std::tuple<int, double, double> mandel_cruncher(double x, double y, int bailout)
 {
     // std::cout << "Calculating [" << x << "/" << y << "]" << std::endl;
     int iterations = 0;
@@ -70,7 +71,7 @@ int mandel_cruncher(double x, double y, int bailout)
         y = 2 * x_old * y + y0;
         iterations++;
     }
-    return iterations;
+    return std::make_tuple(iterations, x, y);
 }
 
 /**
@@ -86,15 +87,19 @@ int mandel_cruncher(double x, double y, int bailout)
  * @param yl
  * @param bailout
  */
-void mandel_single(std::vector<std::vector<int>> &buff, double xrange,
-                   double xdelta, double x, double xl, double yrange,
-                   double ydelta, double y, double yl, int bailout)
+void mandel_single(std::vector<std::vector<int>> &buff, int xrange,
+                   double xdelta, double x, double xl, int yrange, double ydelta,
+                   double y, double yl, int bailout, constants::COL_ALGO col)
 {
     // calculate pixel by pixel
     for (int iy = 0; iy < yrange; iy++) {
         for (int ix = 0; ix <= xrange; ix++) {
-            int its = mandel_cruncher(x, y, bailout);
-            buff[iy][ix] = its;
+            auto crunched_mandel = mandel_cruncher(x, y, bailout);
+            int its = std::get<0>(crunched_mandel);
+            if (col == constants::COL_ALGO::ESCAPE_TIME)
+                buff[iy][ix] = its;
+            if (col == constants::COL_ALGO::CONTINUOUS)
+                buff[iy][ix] = its;
             x += xdelta;
         }
         y += ydelta;
@@ -102,29 +107,33 @@ void mandel_single(std::vector<std::vector<int>> &buff, double xrange,
     }
 }
 
-void mandel_multi(std::vector<std::vector<int>> &buff, double xrange,
-                  double xdelta, double x, double xl, double yrange,
-                  double ydelta, double y, double yl, int bailout, int cores)
+void mandel_multi(std::vector<std::vector<int>> &buff, int xrange, double xdelta,
+                  double x, double xl, int yrange, double ydelta, double y,
+                  double yl, int bailout, int cores, constants::COL_ALGO col)
 {
     // a vector filled with futures. We will wait for all of them to be finished.
     std::vector<std::future<void>> futures;
     ctpl::thread_pool tpl(cores);
 
-    // calculate the madelbrot set line by line. Each line will be pushed to the
-    // thread pool as separate job.
+    // calculate the mandelbrot set line by line. Each line will be pushed to the
+    // thread pool as separate job. The id parameter of the lambda function
+    // represents the thread id.
     int iy = 0; /**< row to calculate*/
     for (auto &int_vec : buff) {
         futures.push_back(tpl.push([&int_vec, xrange, xdelta, x, xl, yrange,
-                                    ydelta, y, yl, iy, bailout](int id) {
-                double ypass = y;
-                double xpass = x;
-                if (iy != 0)
-                    ypass += ydelta * iy;
-                for (int ix = 0; ix <= xrange; ix++) {
-                    int its = mandel_cruncher(xpass, ypass, bailout);
-                    int_vec[ix] = its;
-                    xpass += xdelta;
-                }
+                                    ydelta, y, yl, iy, bailout, col](int id) {
+            double ypass = y;
+            double xpass = x;
+            if (iy != 0)
+                ypass += ydelta * iy;
+            for (int ix = 0; ix <= xrange; ix++) {
+                auto crunched_mandel = mandel_cruncher(xpass, ypass, bailout);
+                int its = 0;
+                if (col == constants::COL_ALGO::ESCAPE_TIME)
+                    its = std::get<0>(crunched_mandel);
+                int_vec[ix] = its;
+                xpass += xdelta;
+            }
         }));
         iy++;
     }
@@ -211,14 +220,22 @@ void setup_command_line_parser(cxxopts::Options &p)
 {
     // clang-format off
     p.add_options()
-        ("h,help", "Show this help")
-        ("b,bailout", "Bailout value for the mandelbrot set algorithm", 
-         cxxopts::value<int>()->default_value("1000"))
+        ("help", "Show this help")
         ("p,print", "Print Buffer to Screen")
-        ("bwimage", "Write Buffer to B&W Bitmap")
-        ("greyscale", "Write Buffer to Greyscale Bitmap")
         ("m,multi", "Use multiple cores",
          cxxopts::value<int>()->implicit_value("1"));
+    p.add_options("Mandelbrot")
+        ("b,bailout", "Bailout value for the mandelbrot set algorithm", 
+         cxxopts::value<int>()->default_value("1000"));
+    p.add_options("Image")
+        ("w,width", "Image width", cxxopts::value<int>()->default_value("1000"))
+        ("h,height", "Image height", 
+         cxxopts::value<int>()->default_value("1000"))
+        ("bwimage", "Write Buffer to B&W Bitmap")
+        ("greyscale", "Write Buffer to Greyscale Bitmap")
+        ("colalgo", "Coloring algorithm 0->Escape Time, 1->Continuous Coloring",
+         cxxopts::value<int>()->default_value("0"));
+
     // clang-format on
 }
 int main(int argc, char *argv[])
@@ -235,7 +252,7 @@ int main(int argc, char *argv[])
     }
 
     if (parser.count("help")) {
-        std::cout << parser.help({""}) << std::endl;
+        std::cout << parser.help({"", "Mandelbrot", "Image"}) << std::endl;
         exit(0);
     }
     int bailout = parser["b"].as<int>();
@@ -245,23 +262,25 @@ int main(int argc, char *argv[])
     double x = -2.5;
     double xl = -2.5;
     double xh = 1.0;
-    double xrange = 1000;
+    int xrange = parser["w"].as<int>();
     double xdelta = ((xl * -1) + xh) / xrange;
     double y = -1.5;
     double yl = -1.5;
     double yh = 1.5;
-    double yrange = 1000;
+    int yrange = parser["h"].as<int>();
     double ydelta = ((yl * -1) + yh) / yrange;
 
     std::cout << "+++++++++++++++++++++++++++++++++++++" << std::endl;
     std::cout << "+       Welcome to geomandel        " << std::endl;
     std::cout << "+                                   " << std::endl;
     std::cout << "+ Bailout: " << std::to_string(bailout) << std::endl;
+    std::cout << "+ Width: " << std::to_string(xrange) << std::endl;
+    std::cout << "+ Height: " << std::to_string(yrange) << std::endl;
 
     // create the buffer that holds our data
-    mandelbuffer.assign(xrange, std::vector<int>());
+    mandelbuffer.assign(yrange, std::vector<int>());
     for (auto &v : mandelbuffer) {
-        v.assign(yrange, 0);
+        v.assign(xrange, 0);
     }
 
     std::chrono::time_point<std::chrono::system_clock> tbegin;
@@ -269,13 +288,16 @@ int main(int argc, char *argv[])
         std::cout << "+ Multicore: " << std::to_string(parser["m"].as<int>())
                   << std::endl;
         tbegin = std::chrono::system_clock::now();
-        mandel_multi(mandelbuffer, xrange, xdelta, x, xl, yrange, ydelta, y, yl,
-                     bailout, parser["m"].as<int>());
+        mandel_multi(
+            mandelbuffer, xrange, xdelta, x, xl, yrange, ydelta, y, yl, bailout,
+            parser["m"].as<int>(),
+            static_cast<constants::COL_ALGO>(parser["colalgo"].as<int>()));
     } else {
         std::cout << "+ Singlecore " << std::endl;
         tbegin = std::chrono::system_clock::now();
-        mandel_single(mandelbuffer, xrange, xdelta, x, xl, yrange, ydelta, y, yl,
-                      bailout);
+        mandel_single(
+            mandelbuffer, xrange, xdelta, x, xl, yrange, ydelta, y, yl, bailout,
+            static_cast<constants::COL_ALGO>(parser["colalgo"].as<int>()));
     }
     std::chrono::time_point<std::chrono::system_clock> tend =
         std::chrono::system_clock::now();
