@@ -37,7 +37,6 @@
  *
  */
 
-
 /**
  * @brief namespace for constants, typedefs and structs
  */
@@ -51,7 +50,6 @@ const std::map<OUT_FORMAT, std::vector<std::string>> BITMAP_DEFS{
     {OUT_FORMAT::IMAGE_GREY, {"pgm", "P2"}}};
 
 struct Iterations {
-
     int default_index;
     double continous_index;
 
@@ -61,7 +59,8 @@ struct Iterations {
         this->continous_index = 0;
     }
 
-    friend std::ostream& operator<<(std::ostream &out, const Iterations &it){
+    friend std::ostream &operator<<(std::ostream &out, const Iterations &it)
+    {
         out << "(" << it.default_index << ", " << it.continous_index << ")";
         return out;
     }
@@ -301,7 +300,15 @@ void setup_command_line_parser(cxxopts::Options &p)
 
     p.add_options("Mandelbrot")
         ("b,bailout", "Bailout value for the mandelbrot set algorithm",
-         cxxopts::value<int>()->default_value("1000"));
+         cxxopts::value<int>()->default_value("1000"))
+        ("creal-min", "Real part minimum",
+         cxxopts::value<double>()->default_value("-2.5"))
+        ("creal-max", "Real part maximum",
+         cxxopts::value<double>()->default_value("1.0"))
+        ("cima-min", "Imaginary part minimum",
+         cxxopts::value<double>()->default_value("-1.5"))
+        ("cima-max", "Imaginary part maximum",
+         cxxopts::value<double>()->default_value("1.5"));
 
     p.add_options("Image")
         ("w,width", "Image width", cxxopts::value<int>()->default_value("1000"))
@@ -334,14 +341,15 @@ int main(int argc, char *argv[])
     int bailout = parser["b"].as<int>();
 
     // define some variables
-    double x = -2.0;
-    double xl = -2.0;
-    double xh = 1.0;
+    double xl = parser["creal-min"].as<double>();
+    double xh = parser["creal-max"].as<double>();
+    double x = xl;
     int xrange = parser["w"].as<int>();
     double xdelta = ((xl * -1) + xh) / xrange;
-    double y = -1.5;
-    double yl = -1.5;
-    double yh = 1.5;
+
+    double yl = parser["cima-min"].as<double>();
+    double yh = parser["cima-max"].as<double>();
+    double y = yl;
     int yrange = parser["h"].as<int>();
     double ydelta = ((yl * -1) + yh) / yrange;
 
@@ -349,8 +357,11 @@ int main(int argc, char *argv[])
     std::cout << "+       Welcome to geomandel        " << std::endl;
     std::cout << "+                                   " << std::endl;
     std::cout << "+ Bailout: " << std::to_string(bailout) << std::endl;
-    std::cout << "+ Width: " << std::to_string(xrange) << std::endl;
-    std::cout << "+ Height: " << std::to_string(yrange) << std::endl;
+    std::cout << "+ Complex plane:" << std::endl;
+    std::cout << "+   Im " << yl << " " << yh << std::endl;
+    std::cout << "+   Re " << xl << " " << xh << std::endl;
+    std::cout << "+ Image " << std::to_string(xrange) << "x"
+              << std::to_string(yrange) << std::endl;
 
     // create the buffer that holds our data
     constants::mandelbuff mandelbuffer;
@@ -381,6 +392,7 @@ int main(int argc, char *argv[])
     // calculate time delta
     auto deltat =
         std::chrono::duration_cast<std::chrono::milliseconds>(tend - tbegin);
+    std::cout << "+" << std::endl;
     std::cout << "+ Mandelcruncher time " << deltat.count() << "ms" << std::endl;
     std::cout << "+++++++++++++++++++++++++++++++++++++" << std::endl;
 
