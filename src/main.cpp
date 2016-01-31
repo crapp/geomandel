@@ -18,7 +18,9 @@
 #include <iostream>
 #include <string>
 #include <map>
-/** 
+#include <cmath>
+#include <tuple>
+/**
  * measure time
  */
 #include <chrono>
@@ -28,10 +30,17 @@
 #include "cxxopts.hpp"
 
 /**
- * Based on http://beej.us/blog/data/mandelbrot-set
+ * Based on
+ * * http://beej.us/blog/data/mandelbrot-set
+ * * http://www.math.tu-dresden.de/~jzumbr/fractals/fractals.html
+ * * http://krazydad.com/tutorials/makecolors.php
  *
  */
 
+
+/**
+ * @brief namespace for constants, typedefs and structs
+ */
 namespace constants
 {
 enum OUT_FORMAT { IMAGE_BW, IMAGE_GREY, IMAGE_COL, GEOTIFF };
@@ -40,24 +49,43 @@ enum COL_ALGO { ESCAPE_TIME, CONTINUOUS };
 const std::map<OUT_FORMAT, std::vector<std::string>> BITMAP_DEFS{
     {OUT_FORMAT::IMAGE_BW, {"pbm", "P1"}},
     {OUT_FORMAT::IMAGE_GREY, {"pgm", "P2"}}};
+
+struct Iterations {
+
+    int default_index;
+    double continous_index;
+
+    Iterations()
+    {
+        this->default_index = 0;
+        this->continous_index = 0;
+    }
+
+    friend std::ostream& operator<<(std::ostream &out, const Iterations &it){
+        out << "(" << it.default_index << ", " << it.continous_index << ")";
+        return out;
+    }
+};
+
+typedef std::vector<std::vector<Iterations>> mandelbuff;
 }
 
 /**
- * @brief Mandelbrot algorithm. 
+ * @brief Mandelbrot algorithm.
  *
  * @param x
  * @param y
  * @param bailout
  *
  * @details
- * Returns the number of iterations it took to check whether the complex number 
- * made of x and y (representing the imaginary and the real part of a complex 
+ * Returns the number of iterations it took to check whether the complex number
+ * made of x and y (representing the imaginary and the real part of a complex
  * number) is within our 4.0 radius and therefor inside the Mandelbrot. This means
- * if the number of iterations is equal to bailout we assume this complex number 
- * to be part of the mandelbrot set. The number of iterations can later be used 
- * to make a colored image what is also called the Escape Time Algorithm. 
+ * if the number of iterations is equal to bailout we assume this complex number
+ * to be part of the mandelbrot set.
  *
- * @return Return number of iterations.
+ * @return Return number of iterations as well as Real and Imaginary Part of the
+ * Complex Number.
  */
 std::tuple<int, double, double> mandel_cruncher(double x, double y, int bailout)
 {
@@ -75,6 +103,31 @@ std::tuple<int, double, double> mandel_cruncher(double x, double y, int bailout)
 }
 
 /**
+ * @brief Generates a tuple for our buffer according to the coloring algorithm
+ *
+ * @param its Number of iterations
+ * @param Zx Real part of the complex number
+ * @param Zy Imaginary part of the complex number
+ * @param colalgo Coloring algorithm
+ *
+ * @return Manelbrot Set Buffer tuple
+ */
+constants::Iterations mandel_buff_iteration(int its, double Zx, double Zy,
+                                            constants::COL_ALGO colalgo)
+{
+    constants::Iterations it;
+    if (colalgo == constants::COL_ALGO::ESCAPE_TIME)
+        it.default_index = its;
+    if (colalgo == constants::COL_ALGO::CONTINUOUS) {
+        double cont_index =
+            its -
+            (std::log(std::log(std::sqrt(Zx * Zx + Zy * Zy)))) / std::log(2.0);
+        it.continous_index = cont_index;
+    }
+    return it;
+}
+
+/**
  * @brief Single thread mandelbrot set calculator
  *
  * @param buff The Buffer we use to store the number of iterations
@@ -87,19 +140,24 @@ std::tuple<int, double, double> mandel_cruncher(double x, double y, int bailout)
  * @param yl
  * @param bailout
  */
-void mandel_single(std::vector<std::vector<int>> &buff, int xrange,
-                   double xdelta, double x, double xl, int yrange, double ydelta,
-                   double y, double yl, int bailout, constants::COL_ALGO col)
+void mandel_single(constants::mandelbuff &buff, int xrange, double xdelta,
+                   double x, double xl, int yrange, double ydelta, double y,
+                   double yl, int bailout, constants::COL_ALGO col)
 {
     // calculate pixel by pixel
     for (int iy = 0; iy < yrange; iy++) {
-        for (int ix = 0; ix <= xrange; ix++) {
+        for (int ix = 0; ix < xrange; ix++) {
             auto crunched_mandel = mandel_cruncher(x, y, bailout);
             int its = std::get<0>(crunched_mandel);
-            if (col == constants::COL_ALGO::ESCAPE_TIME)
-                buff[iy][ix] = its;
-            if (col == constants::COL_ALGO::CONTINUOUS)
-                buff[iy][ix] = its;
+            if (col == constants::COL_ALGO::ESCAPE_TIME) {
+                constants::Iterations it = mandel_buff_iteration(its, 0, 0, col);
+                buff[iy][ix].default_index = it.default_index;
+            }
+            if (col == constants::COL_ALGO::CONTINUOUS) {
+                double Zx = std::get<1>(crunched_mandel);
+                double Zy = std::get<2>(crunched_mandel);
+                buff[iy][ix] = mandel_buff_iteration(its, Zx, Zy, col);
+            }
             x += xdelta;
         }
         y += ydelta;
@@ -107,7 +165,7 @@ void mandel_single(std::vector<std::vector<int>> &buff, int xrange,
     }
 }
 
-void mandel_multi(std::vector<std::vector<int>> &buff, int xrange, double xdelta,
+void mandel_multi(constants::mandelbuff &buff, int xrange, double xdelta,
                   double x, double xl, int yrange, double ydelta, double y,
                   double yl, int bailout, int cores, constants::COL_ALGO col)
 {
@@ -122,16 +180,21 @@ void mandel_multi(std::vector<std::vector<int>> &buff, int xrange, double xdelta
     for (auto &int_vec : buff) {
         futures.push_back(tpl.push([&int_vec, xrange, xdelta, x, xl, yrange,
                                     ydelta, y, yl, iy, bailout, col](int id) {
-            double ypass = y;
+            double ypass = y;  // y value is constant for each row
             double xpass = x;
             if (iy != 0)
                 ypass += ydelta * iy;
-            for (int ix = 0; ix <= xrange; ix++) {
+            for (int ix = 0; ix < xrange; ix++) {
                 auto crunched_mandel = mandel_cruncher(xpass, ypass, bailout);
-                int its = 0;
+                int its = std::get<0>(crunched_mandel);
                 if (col == constants::COL_ALGO::ESCAPE_TIME)
-                    its = std::get<0>(crunched_mandel);
-                int_vec[ix] = its;
+                    int_vec[ix] = mandel_buff_iteration(its, 0, 0, col);
+                if (col == constants::COL_ALGO::CONTINUOUS) {
+                    double Zx = std::get<1>(crunched_mandel);
+                    double Zy = std::get<2>(crunched_mandel);
+                    int_vec[ix] = mandel_buff_iteration(its, Zx, Zy, col);
+                }
+                // increment xpass by xdelta
                 xpass += xdelta;
             }
         }));
@@ -143,8 +206,8 @@ void mandel_multi(std::vector<std::vector<int>> &buff, int xrange, double xdelta
     }
 }
 
-void write_buff_to_image(const std::vector<std::vector<int>> &buff, int maxiter,
-                         constants::OUT_FORMAT f)
+void write_buff_to_image(const constants::mandelbuff &buff, int maxiter,
+                         constants::OUT_FORMAT f, constants::COL_ALGO colalgo)
 {
     // Escape time algorithm
     // This will overwrite any existing image. Image is written into the
@@ -154,11 +217,11 @@ void write_buff_to_image(const std::vector<std::vector<int>> &buff, int maxiter,
     img.exceptions(std::ofstream::failbit | std::ofstream::badbit);
     try {
         if (img.is_open()) {
-            // magic number for bw bitmap
+            // magic number for bitmap
             img << constants::BITMAP_DEFS.at(f).at(1) << std::endl;
             // comments
             img << "# geomandel output" << std::endl;
-            // specify width and height of the pbm
+            // specify width and height of the bitmap
             img << buff.at(0).size() << " " << buff.size() << std::endl;
             if (f == constants::OUT_FORMAT::IMAGE_GREY)
                 img << 255 << std::endl;
@@ -172,28 +235,40 @@ void write_buff_to_image(const std::vector<std::vector<int>> &buff, int maxiter,
                         linepos = 0;
                     }
                     if (f == constants::OUT_FORMAT::IMAGE_BW) {
-                        if (data > 0) {
+                        if (data.default_index > 0) {
                             img << 1 << " ";
                         } else {
-                            img << data << " ";
-                        }
-                    }
-                    if (f == constants::OUT_FORMAT::IMAGE_GREY) {
-                        // not very efficient to do some of the math over
-                        // and over again. Hopefully the compiler will
-                        // optimize this ;)
-                        if (data < maxiter / 2) {
-                            img << 127 + (floor(data / (maxiter / 127.0)))
-                                << " ";
-                        } else if (data >= maxiter / 2 && data != maxiter) {
-                            img << floor(data / (maxiter / 127.0)) << " ";
-                        } else if (data == maxiter) {
                             img << 0 << " ";
                         }
                     }
-                    if (f == constants::OUT_FORMAT::IMAGE_COL) {
-                        if (data < maxiter / 2) {
+                    if (f == constants::OUT_FORMAT::IMAGE_GREY) {
+                        int its = data.default_index;
+                        if (colalgo == constants::COL_ALGO::ESCAPE_TIME) {
+                            // not very efficient to do some of the math over
+                            // and over again. Hopefully the compiler will
+                            // optimize this ;)
+                            if (its < maxiter / 2) {
+                                img << 127 + (floor(its / (maxiter / 127.0)))
+                                    << " ";
+                            } else if (its >= maxiter / 2 && its != maxiter) {
+                                img << floor(its / (maxiter / 127.0)) << " ";
+                            } else if (its == maxiter) {
+                                img << 0 << " ";
+                            }
                         }
+                        if (colalgo == constants::COL_ALGO::CONTINUOUS) {
+                            if (its < maxiter) {
+                                double continuous_index = data.continous_index;
+                                img << std::sin(0.016 * continuous_index + 4) *
+                                               230 +
+                                           25
+                                    << " ";
+                            } else {
+                                img << 0 << " ";
+                            }
+                        }
+                    }
+                    if (f == constants::OUT_FORMAT::IMAGE_COL) {
                     }
                     linepos++;
                 }
@@ -205,12 +280,11 @@ void write_buff_to_image(const std::vector<std::vector<int>> &buff, int maxiter,
     }
 }
 
-void prnt_buff(const std::vector<std::vector<int>> &buff)
+void prnt_buff(const constants::mandelbuff &buff)
 {
-    // Escape time algorithm
     for (auto &v : buff) {
         for (auto &val : v) {
-            std::cout << val;
+            std::cout << val.default_index;
         }
         std::cout << std::endl;
     }
@@ -224,20 +298,22 @@ void setup_command_line_parser(cxxopts::Options &p)
         ("p,print", "Print Buffer to Screen")
         ("m,multi", "Use multiple cores",
          cxxopts::value<int>()->implicit_value("1"));
+
     p.add_options("Mandelbrot")
-        ("b,bailout", "Bailout value for the mandelbrot set algorithm", 
+        ("b,bailout", "Bailout value for the mandelbrot set algorithm",
          cxxopts::value<int>()->default_value("1000"));
+
     p.add_options("Image")
         ("w,width", "Image width", cxxopts::value<int>()->default_value("1000"))
-        ("h,height", "Image height", 
+        ("h,height", "Image height",
          cxxopts::value<int>()->default_value("1000"))
         ("bwimage", "Write Buffer to B&W Bitmap")
         ("greyscale", "Write Buffer to Greyscale Bitmap")
         ("colalgo", "Coloring algorithm 0->Escape Time, 1->Continuous Coloring",
          cxxopts::value<int>()->default_value("0"));
-
     // clang-format on
 }
+
 int main(int argc, char *argv[])
 {
     cxxopts::Options parser("geomandel", " - command line options");
@@ -245,7 +321,7 @@ int main(int argc, char *argv[])
     try {
         parser.parse(argc, argv);
     } catch (const cxxopts::OptionParseException &ex) {
-        std::cout << parser.help({""}) << std::endl;
+        std::cout << parser.help({"", "Mandelbrot", "Image"}) << std::endl;
         std::cerr << "Could not parse command line options" << std::endl;
         std::cerr << ex.what() << std::endl;
         exit(1);
@@ -256,11 +332,10 @@ int main(int argc, char *argv[])
         exit(0);
     }
     int bailout = parser["b"].as<int>();
-    std::vector<std::vector<int>> mandelbuffer;
 
     // define some variables
-    double x = -2.5;
-    double xl = -2.5;
+    double x = -2.0;
+    double xl = -2.0;
     double xh = 1.0;
     int xrange = parser["w"].as<int>();
     double xdelta = ((xl * -1) + xh) / xrange;
@@ -278,9 +353,10 @@ int main(int argc, char *argv[])
     std::cout << "+ Height: " << std::to_string(yrange) << std::endl;
 
     // create the buffer that holds our data
-    mandelbuffer.assign(yrange, std::vector<int>());
+    constants::mandelbuff mandelbuffer;
+    mandelbuffer.assign(yrange, std::vector<constants::Iterations>());
     for (auto &v : mandelbuffer) {
-        v.assign(xrange, 0);
+        v.assign(xrange, constants::Iterations());
     }
 
     std::chrono::time_point<std::chrono::system_clock> tbegin;
@@ -312,10 +388,13 @@ int main(int argc, char *argv[])
     if (parser.count("p"))
         prnt_buff(mandelbuffer);  // print the buffer
     if (parser.count("bwimage"))
-        write_buff_to_image(mandelbuffer, bailout,
-                            constants::OUT_FORMAT::IMAGE_BW);
+        write_buff_to_image(
+            mandelbuffer, bailout, constants::OUT_FORMAT::IMAGE_BW,
+            static_cast<constants::COL_ALGO>(parser["colalgo"].as<int>()));
     if (parser.count("greyscale"))
-        write_buff_to_image(mandelbuffer, bailout,
-                            constants::OUT_FORMAT::IMAGE_GREY);
+        write_buff_to_image(
+            mandelbuffer, bailout, constants::OUT_FORMAT::IMAGE_GREY,
+            static_cast<constants::COL_ALGO>(parser["colalgo"].as<int>()));
+    std::cout << "\n All data written, Good Bye" << std::endl;
     return 0;
 }
