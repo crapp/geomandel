@@ -36,14 +36,28 @@ endif ()
 find_package(Threads REQUIRED)
 
 set (SOURCE
+    ${CMAKE_CURRENT_SOURCE_DIR}/buffwriter.cpp
+    ${CMAKE_CURRENT_SOURCE_DIR}/imagewriter.cpp
     ${CMAKE_CURRENT_SOURCE_DIR}/main.cpp
+    ${CMAKE_CURRENT_SOURCE_DIR}/mandelcruncher.cpp
+    ${CMAKE_CURRENT_SOURCE_DIR}/mandelcrunchmulti.cpp
+    ${CMAKE_CURRENT_SOURCE_DIR}/mandelcrunchsingle.cpp
 )
 
 set (HEADER
+    ${CMAKE_CURRENT_SOURCE_DIR}/buffwriter.h
+    ${CMAKE_CURRENT_SOURCE_DIR}/global.h
+    ${CMAKE_CURRENT_SOURCE_DIR}/imagewriter.h
+    ${CMAKE_CURRENT_SOURCE_DIR}/mandelcruncher.h
+    ${CMAKE_CURRENT_SOURCE_DIR}/mandelcrunchmulti.h
+    ${CMAKE_CURRENT_SOURCE_DIR}/mandelcrunchsingle.h
+)
+
+set (HEADER_LIB
     ${CMAKE_CURRENT_SOURCE_DIR}/ctpl_stl.h
     ${CMAKE_CURRENT_SOURCE_DIR}/cxxopts.hpp
 )
 
-add_executable(geomandel ${HEADER} ${SOURCE})
+add_executable(geomandel ${HEADER} ${HEADER_LIB} ${SOURCE})
 target_link_libraries(geomandel ${CMAKE_THREAD_LIBS_INIT})
 

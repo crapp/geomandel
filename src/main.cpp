@@ -1,30 +1,33 @@
-// A Mandelbrot Set paired with GeoTIFF
-// Copyright © 2015, 2016 Christian Rapp
-//
-// This program is free software: you can redistribute it and/or modify
-// it under the terms of the GNU General Public License as published by
-// the Free Software Foundation, either version 3 of the License, or
-// (at your option) any later version.
-//
-// This program is distributed in the hope that it will be useful,
-// but WITHOUT ANY WARRANTY; without even the implied warranty of
-// MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
-// GNU General Public License for more details.
-//
-// You should have received a copy of the GNU General Public License
-// along with this program.  If not, see <http://www.gnu.org/licenses/>.
+/*
+This file is part of geomandel. Mandelbrot Set infused by GeoTIFF
+Copyright © 2015, 2016 Christian Rapp
 
-#include <vector>
+This program is free software: you can redistribute it and/or modify
+it under the terms of the GNU General Public License as published by
+the Free Software Foundation, either version 3 of the License, or
+(at your option) any later version.
+
+This program is distributed in the hope that it will be useful,
+but WITHOUT ANY WARRANTY; without even the implied warranty of
+MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+GNU General Public License for more details.
+
+You should have received a copy of the GNU General Public License
+along with this program.  If not, see <http://www.gnu.org/licenses/>.
+*/
+
 #include <iostream>
-#include <string>
-#include <map>
+#include <memory>
 #include <cmath>
-#include <tuple>
 /**
  * measure time
  */
 #include <chrono>
 #include <fstream>
+
+#include "global.h"
+#include "mandelcrunchsingle.h"
+#include "mandelcrunchmulti.h"
 
 #include "ctpl_stl.h"
 #include "cxxopts.hpp"
@@ -34,176 +37,7 @@
  * * http://beej.us/blog/data/mandelbrot-set
  * * http://www.math.tu-dresden.de/~jzumbr/fractals/fractals.html
  * * http://krazydad.com/tutorials/makecolors.php
- *
  */
-
-/**
- * @brief namespace for constants, typedefs and structs
- */
-namespace constants
-{
-enum OUT_FORMAT { IMAGE_BW, IMAGE_GREY, IMAGE_COL, GEOTIFF };
-enum COL_ALGO { ESCAPE_TIME, CONTINUOUS };
-
-const std::map<OUT_FORMAT, std::vector<std::string>> BITMAP_DEFS{
-    {OUT_FORMAT::IMAGE_BW, {"pbm", "P1"}},
-    {OUT_FORMAT::IMAGE_GREY, {"pgm", "P2"}}};
-
-struct Iterations {
-    int default_index;
-    double continous_index;
-
-    Iterations()
-    {
-        this->default_index = 0;
-        this->continous_index = 0;
-    }
-
-    friend std::ostream &operator<<(std::ostream &out, const Iterations &it)
-    {
-        out << "(" << it.default_index << ", " << it.continous_index << ")";
-        return out;
-    }
-};
-
-typedef std::vector<std::vector<Iterations>> mandelbuff;
-}
-
-/**
- * @brief Mandelbrot algorithm.
- *
- * @param x
- * @param y
- * @param bailout
- *
- * @details
- * Returns the number of iterations it took to check whether the complex number
- * made of x and y (representing the imaginary and the real part of a complex
- * number) is within our 4.0 radius and therefor inside the Mandelbrot. This means
- * if the number of iterations is equal to bailout we assume this complex number
- * to be part of the mandelbrot set.
- *
- * @return Return number of iterations as well as Real and Imaginary Part of the
- * Complex Number.
- */
-std::tuple<int, double, double> mandel_cruncher(double x, double y, int bailout)
-{
-    // std::cout << "Calculating [" << x << "/" << y << "]" << std::endl;
-    int iterations = 0;
-    double x0 = x;
-    double y0 = y;
-    while (x * x + y * y <= 4.0 && iterations < bailout) {
-        double x_old = x;
-        x = x * x - y * y + x0;
-        y = 2 * x_old * y + y0;
-        iterations++;
-    }
-    return std::make_tuple(iterations, x, y);
-}
-
-/**
- * @brief Generates a tuple for our buffer according to the coloring algorithm
- *
- * @param its Number of iterations
- * @param Zx Real part of the complex number
- * @param Zy Imaginary part of the complex number
- * @param colalgo Coloring algorithm
- *
- * @return Manelbrot Set Buffer tuple
- */
-constants::Iterations mandel_buff_iteration(int its, double Zx, double Zy,
-                                            constants::COL_ALGO colalgo)
-{
-    constants::Iterations it;
-    if (colalgo == constants::COL_ALGO::ESCAPE_TIME)
-        it.default_index = its;
-    if (colalgo == constants::COL_ALGO::CONTINUOUS) {
-        double cont_index =
-            its -
-            (std::log(std::log(std::sqrt(Zx * Zx + Zy * Zy)))) / std::log(2.0);
-        it.continous_index = cont_index;
-    }
-    return it;
-}
-
-/**
- * @brief Single thread mandelbrot set calculator
- *
- * @param buff The Buffer we use to store the number of iterations
- * @param xrange
- * @param xdelta
- * @param x
- * @param yrange
- * @param ydelta
- * @param y
- * @param yl
- * @param bailout
- */
-void mandel_single(constants::mandelbuff &buff, int xrange, double xdelta,
-                   double x, double xl, int yrange, double ydelta, double y,
-                   double yl, int bailout, constants::COL_ALGO col)
-{
-    // calculate pixel by pixel
-    for (int iy = 0; iy < yrange; iy++) {
-        for (int ix = 0; ix < xrange; ix++) {
-            auto crunched_mandel = mandel_cruncher(x, y, bailout);
-            int its = std::get<0>(crunched_mandel);
-            if (col == constants::COL_ALGO::ESCAPE_TIME) {
-                constants::Iterations it = mandel_buff_iteration(its, 0, 0, col);
-                buff[iy][ix].default_index = it.default_index;
-            }
-            if (col == constants::COL_ALGO::CONTINUOUS) {
-                double Zx = std::get<1>(crunched_mandel);
-                double Zy = std::get<2>(crunched_mandel);
-                buff[iy][ix] = mandel_buff_iteration(its, Zx, Zy, col);
-            }
-            x += xdelta;
-        }
-        y += ydelta;
-        x = xl;
-    }
-}
-
-void mandel_multi(constants::mandelbuff &buff, int xrange, double xdelta,
-                  double x, double xl, int yrange, double ydelta, double y,
-                  double yl, int bailout, int cores, constants::COL_ALGO col)
-{
-    // a vector filled with futures. We will wait for all of them to be finished.
-    std::vector<std::future<void>> futures;
-    ctpl::thread_pool tpl(cores);
-
-    // calculate the mandelbrot set line by line. Each line will be pushed to the
-    // thread pool as separate job. The id parameter of the lambda function
-    // represents the thread id.
-    int iy = 0; /**< row to calculate*/
-    for (auto &int_vec : buff) {
-        futures.push_back(tpl.push([&int_vec, xrange, xdelta, x, xl, yrange,
-                                    ydelta, y, yl, iy, bailout, col](int id) {
-            double ypass = y;  // y value is constant for each row
-            double xpass = x;
-            if (iy != 0)
-                ypass += ydelta * iy;
-            for (int ix = 0; ix < xrange; ix++) {
-                auto crunched_mandel = mandel_cruncher(xpass, ypass, bailout);
-                int its = std::get<0>(crunched_mandel);
-                if (col == constants::COL_ALGO::ESCAPE_TIME)
-                    int_vec[ix] = mandel_buff_iteration(its, 0, 0, col);
-                if (col == constants::COL_ALGO::CONTINUOUS) {
-                    double Zx = std::get<1>(crunched_mandel);
-                    double Zy = std::get<2>(crunched_mandel);
-                    int_vec[ix] = mandel_buff_iteration(its, Zx, Zy, col);
-                }
-                // increment xpass by xdelta
-                xpass += xdelta;
-            }
-        }));
-        iy++;
-    }
-    // make sure all jobs are finished
-    for (const std::future<void> &f : futures) {
-        f.wait();
-    }
-}
 
 void write_buff_to_image(const constants::mandelbuff &buff, int maxiter,
                          constants::OUT_FORMAT f, constants::COL_ALGO colalgo)
@@ -234,7 +68,7 @@ void write_buff_to_image(const constants::mandelbuff &buff, int maxiter,
                         linepos = 0;
                     }
                     if (f == constants::OUT_FORMAT::IMAGE_BW) {
-                        if (data.default_index > 0) {
+                        if (data.default_index == maxiter) {
                             img << 1 << " ";
                         } else {
                             img << 0 << " ";
@@ -343,15 +177,13 @@ int main(int argc, char *argv[])
     // define some variables
     double xl = parser["creal-min"].as<double>();
     double xh = parser["creal-max"].as<double>();
-    double x = xl;
     int xrange = parser["w"].as<int>();
-    double xdelta = ((xl * -1) + xh) / xrange;
 
     double yl = parser["cima-min"].as<double>();
     double yh = parser["cima-max"].as<double>();
-    double y = yl;
     int yrange = parser["h"].as<int>();
-    double ydelta = ((yl * -1) + yh) / yrange;
+
+    MandelParameters params(xrange, xl, xh, yrange, yl, yh, bailout);
 
     std::cout << "+++++++++++++++++++++++++++++++++++++" << std::endl;
     std::cout << "+       Welcome to geomandel        " << std::endl;
@@ -370,22 +202,25 @@ int main(int argc, char *argv[])
         v.assign(xrange, constants::Iterations());
     }
 
-    std::chrono::time_point<std::chrono::system_clock> tbegin;
+    std::unique_ptr<Mandelcruncher> crunchi;
+
     if (parser.count("m")) {
         std::cout << "+ Multicore: " << std::to_string(parser["m"].as<int>())
                   << std::endl;
-        tbegin = std::chrono::system_clock::now();
-        mandel_multi(
-            mandelbuffer, xrange, xdelta, x, xl, yrange, ydelta, y, yl, bailout,
-            parser["m"].as<int>(),
-            static_cast<constants::COL_ALGO>(parser["colalgo"].as<int>()));
+        crunchi = std::unique_ptr<Mandelcrunchmulti>(new Mandelcrunchmulti(
+            mandelbuffer, params,
+            static_cast<constants::COL_ALGO>(parser["colalgo"].as<int>()),
+            parser["m"].as<int>()));
     } else {
         std::cout << "+ Singlecore " << std::endl;
-        tbegin = std::chrono::system_clock::now();
-        mandel_single(
-            mandelbuffer, xrange, xdelta, x, xl, yrange, ydelta, y, yl, bailout,
-            static_cast<constants::COL_ALGO>(parser["colalgo"].as<int>()));
+        crunchi = std::unique_ptr<Mandelcrunchsingle>(new Mandelcrunchsingle(
+            mandelbuffer, params,
+            static_cast<constants::COL_ALGO>(parser["colalgo"].as<int>())));
     }
+
+    std::chrono::time_point<std::chrono::system_clock> tbegin;
+    tbegin = std::chrono::system_clock::now();
+    crunchi->fill_buffer();
     std::chrono::time_point<std::chrono::system_clock> tend =
         std::chrono::system_clock::now();
 
