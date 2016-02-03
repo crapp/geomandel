@@ -16,31 +16,20 @@ You should have received a copy of the GNU General Public License
 along with this program.  If not, see <http://www.gnu.org/licenses/>.
 */
 
-#ifndef IMAGEWRITER_H
-#define IMAGEWRITER_H
-
 #include <fstream>
-#include <string>
-#include <cmath>
+#include <sstream>
 
-#include "buffwriter.h"
 #include "global.h"
+#include "buffwriter.h"
 
-class Imagewriter : public Buffwriter
+class CSVWriter : public Buffwriter
 {
 public:
-    Imagewriter(const constants::mandelbuff &buff,
-                const constants::OUT_FORMAT format,
-                const constants::COL_ALGO col_algo, const int maxiter);
-    virtual ~Imagewriter();
+    CSVWriter(const constants::mandelbuff &buff);
+    virtual ~CSVWriter();
 
     void write_buffer();
 
 private:
     /* data */
-    const constants::OUT_FORMAT format;
-    const constants::COL_ALGO col_algo;
-    const int maxiter;
 };
-
-#endif /* ifndef IMAGEWRITER_H */

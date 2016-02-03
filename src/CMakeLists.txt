@@ -37,6 +37,7 @@ find_package(Threads REQUIRED)
 
 set (SOURCE
     ${CMAKE_CURRENT_SOURCE_DIR}/buffwriter.cpp
+    ${CMAKE_CURRENT_SOURCE_DIR}/csvwriter.cpp
     ${CMAKE_CURRENT_SOURCE_DIR}/imagewriter.cpp
     ${CMAKE_CURRENT_SOURCE_DIR}/main.cpp
     ${CMAKE_CURRENT_SOURCE_DIR}/mandelcruncher.cpp
@@ -46,6 +47,7 @@ set (SOURCE
 
 set (HEADER
     ${CMAKE_CURRENT_SOURCE_DIR}/buffwriter.h
+    ${CMAKE_CURRENT_SOURCE_DIR}/csvwriter.h
     ${CMAKE_CURRENT_SOURCE_DIR}/global.h
     ${CMAKE_CURRENT_SOURCE_DIR}/imagewriter.h
     ${CMAKE_CURRENT_SOURCE_DIR}/mandelcruncher.h
@@ -56,6 +58,12 @@ set (HEADER
 set (HEADER_LIB
     ${CMAKE_CURRENT_SOURCE_DIR}/ctpl_stl.h
     ${CMAKE_CURRENT_SOURCE_DIR}/cxxopts.hpp
+)
+
+configure_file(${CMAKE_CURRENT_SOURCE_DIR}/config.h.in config.h)
+
+include_directories(
+    ${CMAKE_CURRENT_BINARY_DIR}
 )
 
 add_executable(geomandel ${HEADER} ${HEADER_LIB} ${SOURCE})

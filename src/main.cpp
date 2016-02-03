@@ -26,6 +26,11 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
 #include <fstream>
 
 #include "global.h"
+#include "config.h"
+
+#include "imagewriter.h"
+#include "csvwriter.h"
+
 #include "mandelcrunchsingle.h"
 #include "mandelcrunchmulti.h"
 
@@ -38,80 +43,6 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
  * * http://www.math.tu-dresden.de/~jzumbr/fractals/fractals.html
  * * http://krazydad.com/tutorials/makecolors.php
  */
-
-void write_buff_to_image(const constants::mandelbuff &buff, int maxiter,
-                         constants::OUT_FORMAT f, constants::COL_ALGO colalgo)
-{
-    // Escape time algorithm
-    // This will overwrite any existing image. Image is written into the
-    // directory from where the application was called.
-    std::string filename = "geomandel." + constants::BITMAP_DEFS.at(f).at(0);
-    std::ofstream img(filename, std::ofstream::out);
-    img.exceptions(std::ofstream::failbit | std::ofstream::badbit);
-    try {
-        if (img.is_open()) {
-            // magic number for bitmap
-            img << constants::BITMAP_DEFS.at(f).at(1) << std::endl;
-            // comments
-            img << "# geomandel output" << std::endl;
-            // specify width and height of the bitmap
-            img << buff.at(0).size() << " " << buff.size() << std::endl;
-            if (f == constants::OUT_FORMAT::IMAGE_GREY)
-                img << 255 << std::endl;
-            for (const auto &v : buff) {
-                int linepos = 1;
-                for (auto data : v) {
-                    // this kind of images don't allow for more than 70
-                    // characters in one row
-                    if (linepos % 70 == 0) {
-                        img << std::endl;
-                        linepos = 0;
-                    }
-                    if (f == constants::OUT_FORMAT::IMAGE_BW) {
-                        if (data.default_index == maxiter) {
-                            img << 1 << " ";
-                        } else {
-                            img << 0 << " ";
-                        }
-                    }
-                    if (f == constants::OUT_FORMAT::IMAGE_GREY) {
-                        int its = data.default_index;
-                        if (colalgo == constants::COL_ALGO::ESCAPE_TIME) {
-                            // not very efficient to do some of the math over
-                            // and over again. Hopefully the compiler will
-                            // optimize this ;)
-                            if (its < maxiter / 2) {
-                                img << 127 + (floor(its / (maxiter / 127.0)))
-                                    << " ";
-                            } else if (its >= maxiter / 2 && its != maxiter) {
-                                img << floor(its / (maxiter / 127.0)) << " ";
-                            } else if (its == maxiter) {
-                                img << 0 << " ";
-                            }
-                        }
-                        if (colalgo == constants::COL_ALGO::CONTINUOUS) {
-                            if (its < maxiter) {
-                                double continuous_index = data.continous_index;
-                                img << std::sin(0.016 * continuous_index + 4) *
-                                               230 +
-                                           25
-                                    << " ";
-                            } else {
-                                img << 0 << " ";
-                            }
-                        }
-                    }
-                    if (f == constants::OUT_FORMAT::IMAGE_COL) {
-                    }
-                    linepos++;
-                }
-            }
-        }
-    } catch (const std::ifstream::failure &e) {
-        std::cout << "Error writing image file" << std::endl;
-        std::cout << e.what() << std::endl;
-    }
-}
 
 void prnt_buff(const constants::mandelbuff &buff)
 {
@@ -128,7 +59,6 @@ void setup_command_line_parser(cxxopts::Options &p)
     // clang-format off
     p.add_options()
         ("help", "Show this help")
-        ("p,print", "Print Buffer to Screen")
         ("m,multi", "Use multiple cores",
          cxxopts::value<int>()->implicit_value("1"));
 
@@ -152,6 +82,10 @@ void setup_command_line_parser(cxxopts::Options &p)
         ("greyscale", "Write Buffer to Greyscale Bitmap")
         ("colalgo", "Coloring algorithm 0->Escape Time, 1->Continuous Coloring",
          cxxopts::value<int>()->default_value("0"));
+
+    p.add_options("Export")
+        ("p,print", "Print Buffer to terminal")
+        ("csv", "Export data to csv files");
     // clang-format on
 }
 
@@ -162,14 +96,16 @@ int main(int argc, char *argv[])
     try {
         parser.parse(argc, argv);
     } catch (const cxxopts::OptionParseException &ex) {
-        std::cout << parser.help({"", "Mandelbrot", "Image"}) << std::endl;
+        std::cout << parser.help({"", "Mandelbrot", "Image", "Export"})
+                  << std::endl;
         std::cerr << "Could not parse command line options" << std::endl;
         std::cerr << ex.what() << std::endl;
         exit(1);
     }
 
     if (parser.count("help")) {
-        std::cout << parser.help({"", "Mandelbrot", "Image"}) << std::endl;
+        std::cout << parser.help({"", "Mandelbrot", "Image", "Export"})
+                  << std::endl;
         exit(0);
     }
     int bailout = parser["b"].as<int>();
@@ -185,9 +121,15 @@ int main(int argc, char *argv[])
 
     MandelParameters params(xrange, xl, xh, yrange, yl, yh, bailout);
 
+    std::string version =
+        std::string(GEOMANDEL_MAJOR) + "." + std::string(GEOMANDEL_MINOR);
+    if (std::string(GEOMANDEL_PATCH) != "0") {
+        version += "." + std::string(GEOMANDEL_PATCH);
+    }
+
     std::cout << "+++++++++++++++++++++++++++++++++++++" << std::endl;
-    std::cout << "+       Welcome to geomandel        " << std::endl;
-    std::cout << "+                                   " << std::endl;
+    std::cout << "+       Welcome to geomandel " << version << std::endl;
+    std::cout << "+                                    " << std::endl;
     std::cout << "+ Bailout: " << std::to_string(bailout) << std::endl;
     std::cout << "+ Complex plane:" << std::endl;
     std::cout << "+   Im " << yl << " " << yh << std::endl;
@@ -231,17 +173,33 @@ int main(int argc, char *argv[])
     std::cout << "+ Mandelcruncher time " << deltat.count() << "ms" << std::endl;
     std::cout << "+++++++++++++++++++++++++++++++++++++" << std::endl;
 
-    // visualize what the crunched numbers
+    // visualize/export the crunched numbers
+    std::unique_ptr<Buffwriter> img;
+    std::unique_ptr<Buffwriter> csv =
+        std::unique_ptr<CSVWriter>(new CSVWriter(mandelbuffer));
+    if (parser.count("bwimage")) {
+        std::cout << "Generating B/W image" << std::endl;
+        img = std::unique_ptr<Imagewriter>(new Imagewriter(
+            mandelbuffer, constants::OUT_FORMAT::IMAGE_BW,
+            static_cast<constants::COL_ALGO>(parser["colalgo"].as<int>()),
+            params.bailout));
+        img->write_buffer();
+    }
+    if (parser.count("greyscale")) {
+        std::cout << "Generating greyscal bitmap" << std::endl;
+        img = std::unique_ptr<Imagewriter>(new Imagewriter(
+            mandelbuffer, constants::OUT_FORMAT::IMAGE_GREY,
+            static_cast<constants::COL_ALGO>(parser["colalgo"].as<int>()),
+            params.bailout));
+        img->write_buffer();
+    }
+    if (parser.count("csv")) {
+        std::cout << "Exporting data to csv files" << std::endl;
+        csv->write_buffer();
+    }
     if (parser.count("p"))
         prnt_buff(mandelbuffer);  // print the buffer
-    if (parser.count("bwimage"))
-        write_buff_to_image(
-            mandelbuffer, bailout, constants::OUT_FORMAT::IMAGE_BW,
-            static_cast<constants::COL_ALGO>(parser["colalgo"].as<int>()));
-    if (parser.count("greyscale"))
-        write_buff_to_image(
-            mandelbuffer, bailout, constants::OUT_FORMAT::IMAGE_GREY,
-            static_cast<constants::COL_ALGO>(parser["colalgo"].as<int>()));
+
     std::cout << "\n All data written, Good Bye" << std::endl;
     return 0;
 }

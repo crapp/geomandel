@@ -16,31 +16,8 @@ You should have received a copy of the GNU General Public License
 along with this program.  If not, see <http://www.gnu.org/licenses/>.
 */
 
-#ifndef IMAGEWRITER_H
-#define IMAGEWRITER_H
+#cmakedefine GEOTIFF
 
-#include <fstream>
-#include <string>
-#include <cmath>
-
-#include "buffwriter.h"
-#include "global.h"
-
-class Imagewriter : public Buffwriter
-{
-public:
-    Imagewriter(const constants::mandelbuff &buff,
-                const constants::OUT_FORMAT format,
-                const constants::COL_ALGO col_algo, const int maxiter);
-    virtual ~Imagewriter();
-
-    void write_buffer();
-
-private:
-    /* data */
-    const constants::OUT_FORMAT format;
-    const constants::COL_ALGO col_algo;
-    const int maxiter;
-};
-
-#endif /* ifndef IMAGEWRITER_H */
+#define GEOMANDEL_MAJOR "@GEOMANDEL_VERSION_MAJOR@"
+#define GEOMANDEL_MINOR "@GEOMANDEL_VERSION_MINOR@"
+#define GEOMANDEL_PATCH "@GEOMANDEL_VERSION_PATCH@"
