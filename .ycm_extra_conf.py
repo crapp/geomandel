@@ -41,9 +41,8 @@ flags = [
 # relevant for c++ headers.
 # For a C project, you would set this to 'c' instead of 'c++'.
 '-x', 'c++',
-'-I', '.',
-'-I', DirectoryOfThisScript + "/src",
-'-I', DirectoryOfThisScript + '/build/src',
+'-I', os.path.dirname( os.path.abspath( __file__ ) ) + "/src",
+'-I', os.path.dirname( os.path.abspath( __file__ ) ) + '/build/src',
 '-isystem', '/usr/include',
 '-isystem', '/usr/local/include',
 ]
