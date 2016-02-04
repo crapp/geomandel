@@ -78,8 +78,9 @@ void setup_command_line_parser(cxxopts::Options &p)
         ("w,width", "Image width", cxxopts::value<int>()->default_value("1000"))
         ("h,height", "Image height",
          cxxopts::value<int>()->default_value("1000"))
-        ("bwimage", "Write Buffer to B&W Bitmap")
+        ("bandw", "Write Buffer to B&W Bitmap")
         ("greyscale", "Write Buffer to Greyscale Bitmap")
+        ("color", "Write Buffer to RGB Bitmap")
         ("colalgo", "Coloring algorithm 0->Escape Time, 1->Continuous Coloring",
          cxxopts::value<int>()->default_value("0"));
 
@@ -171,14 +172,15 @@ int main(int argc, char *argv[])
         std::chrono::duration_cast<std::chrono::milliseconds>(tend - tbegin);
     std::cout << "+" << std::endl;
     std::cout << "+ Mandelcruncher time " << deltat.count() << "ms" << std::endl;
-    std::cout << "+++++++++++++++++++++++++++++++++++++" << std::endl;
+    std::cout << "+++++++++++++++++++++++++++++++++++++" << std::endl
+              << std::endl;
 
     // visualize/export the crunched numbers
     std::unique_ptr<Buffwriter> img;
     std::unique_ptr<Buffwriter> csv =
         std::unique_ptr<CSVWriter>(new CSVWriter(mandelbuffer));
-    if (parser.count("bwimage")) {
-        std::cout << "Generating B/W image" << std::endl;
+    if (parser.count("bandw")) {
+        std::cout << " Generating B/W image" << std::endl;
         img = std::unique_ptr<Imagewriter>(new Imagewriter(
             mandelbuffer, constants::OUT_FORMAT::IMAGE_BW,
             static_cast<constants::COL_ALGO>(parser["colalgo"].as<int>()),
@@ -186,15 +188,23 @@ int main(int argc, char *argv[])
         img->write_buffer();
     }
     if (parser.count("greyscale")) {
-        std::cout << "Generating greyscal bitmap" << std::endl;
+        std::cout << " Generating greyscale bitmap" << std::endl;
         img = std::unique_ptr<Imagewriter>(new Imagewriter(
             mandelbuffer, constants::OUT_FORMAT::IMAGE_GREY,
             static_cast<constants::COL_ALGO>(parser["colalgo"].as<int>()),
             params.bailout));
         img->write_buffer();
     }
+    if (parser.count("color")) {
+        std::cout << " Generating RGB bitmap" << std::endl;
+        img = std::unique_ptr<Imagewriter>(new Imagewriter(
+            mandelbuffer, constants::OUT_FORMAT::IMAGE_COL,
+            static_cast<constants::COL_ALGO>(parser["colalgo"].as<int>()),
+            params.bailout));
+        img->write_buffer();
+    }
     if (parser.count("csv")) {
-        std::cout << "Exporting data to csv files" << std::endl;
+        std::cout << " Exporting data to csv files" << std::endl;
         csv->write_buffer();
     }
     if (parser.count("p"))

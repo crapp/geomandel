@@ -42,13 +42,15 @@ void Imagewriter::write_buffer()
             // specify width and height of the bitmap
             img << this->buff.at(0).size() << " " << this->buff.size()
                 << std::endl;
-            if (this->format == constants::OUT_FORMAT::IMAGE_GREY)
+            if (this->format == constants::OUT_FORMAT::IMAGE_GREY ||
+                this->format == constants::OUT_FORMAT::IMAGE_COL)
                 img << 255 << std::endl;
             for (const auto &v : this->buff) {
                 int linepos = 1;
                 for (auto data : v) {
                     // this kind of images don't allow for more than 70
                     // characters in one row
+                    // FIXME: This kind of linepos handling is borked
                     if (linepos % 70 == 0) {
                         img << std::endl;
                         linepos = 0;
@@ -79,9 +81,13 @@ void Imagewriter::write_buffer()
                         if (col_algo == constants::COL_ALGO::CONTINUOUS) {
                             if (its < maxiter) {
                                 double continuous_index = data.continous_index;
-                                img << std::sin(0.016 * continuous_index + 4) *
+                                // TODO: Clang format is producing some weird
+                                // code formatting here.
+                                img << static_cast<int>(std::floor(std::abs(
+                                           std::sin(0.016 * continuous_index +
+                                                    4) *
                                                230 +
-                                           25
+                                           25)))
                                     << " ";
                             } else {
                                 img << 0 << " ";
@@ -89,6 +95,49 @@ void Imagewriter::write_buffer()
                         }
                     }
                     if (this->format == constants::OUT_FORMAT::IMAGE_COL) {
+                        int its = data.default_index;
+                        if (col_algo == constants::COL_ALGO::ESCAPE_TIME) {
+                            // Escape time algorithm coloring
+                            // not very efficient to do some of the math over
+                            // and over again. Hopefully the compiler will
+                            // optimize this ;)
+                            int red = 255;
+                            int green = 0;
+                            int blue = 0;
+                            if (its == maxiter) {
+                                img << "0 0 0"
+                                    << "\t";
+                            } else {
+                                img << red << " " << (green + ((its % 16) * 16))
+                                    << " " << blue << "\t";
+                            }
+
+                            // if (its < maxiter / 2) {
+                            // red = red + (std::floor(its / (maxiter /
+                            //(255.0 - red))));
+                            // green = green +
+                            //(std::floor(
+                            //its / (maxiter / (255.0 - green))));
+                            // blue = blue +
+                            //(std::floor(its /
+                            //(maxiter / (255.0 - blue))));
+                            // img << red << " " << green << " " << blue
+                            //<< "\t";
+                            //} else if (its >= maxiter / 2 && its != maxiter) {
+                            // red = std::floor(
+                            // its / (maxiter / static_cast<double>(red)));
+                            // green = std::floor(
+                            // its /
+                            //(maxiter / static_cast<double>(green)));
+                            // blue = std::floor(
+                            // its / (maxiter / static_cast<double>(blue)));
+                            // img << red << " " << green << " " << blue
+                            //<< "\t";
+                            //} else if (its == maxiter) {
+                            // img << "0 0 0"
+                            //<< "\t";
+                            //}
+                        }
                     }
                     linepos++;
                 }

@@ -49,9 +49,12 @@ constants::Iterations Mandelcruncher::iterations_factory(int its, double Zx,
     if (this->col_algo == constants::COL_ALGO::ESCAPE_TIME)
         it.default_index = its;
     if (this->col_algo == constants::COL_ALGO::CONTINUOUS) {
+        it.default_index = its;
         double cont_index =
-            its -
-            (std::log(std::log(std::sqrt(Zx * Zx + Zy * Zy)))) / std::log(2.0);
+            its + 1 -
+            (std::log(2) / std::sqrt(Zx * Zx + Zy * Zy)) / std::log(2.0);
+
+        //its - (std::log(std::log(std::sqrt(Zx * Zx + Zy * Zy)))) / std::log(2.0);
         it.continous_index = cont_index;
     }
     return it;

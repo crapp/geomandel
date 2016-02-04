@@ -34,7 +34,8 @@ enum COL_ALGO { ESCAPE_TIME, CONTINUOUS };
 
 const std::map<OUT_FORMAT, std::vector<std::string>> BITMAP_DEFS{
     {OUT_FORMAT::IMAGE_BW, {"pbm", "P1"}},
-    {OUT_FORMAT::IMAGE_GREY, {"pgm", "P2"}}};
+    {OUT_FORMAT::IMAGE_GREY, {"pgm", "P2"}},
+    {OUT_FORMAT::IMAGE_COL, {"ppm", "P3"}}};
 
 struct Iterations {
     int default_index;
