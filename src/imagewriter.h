@@ -22,6 +22,7 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
 #include <fstream>
 #include <string>
 #include <cmath>
+#include <tuple>
 
 #include "buffwriter.h"
 #include "global.h"
@@ -41,6 +42,19 @@ private:
     const constants::OUT_FORMAT format;
     const constants::COL_ALGO col_algo;
     const int maxiter;
+
+    /**
+     * @brief Map iteration count on RGB colors in a inear fashion
+     *
+     * @param its Number of iterations
+     * @param rgb_base The RGB base color
+     * @param rgb_freq The RGB frequency
+     *
+     * @return RGB values
+     */
+    std::tuple<int, int, int> rgb_linear(int its,
+                                         std::tuple<int, int, int> rgb_base,
+                                         std::tuple<int, int, int> rgb_freq);
 };
 
 #endif /* ifndef IMAGEWRITER_H */

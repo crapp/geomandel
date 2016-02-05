@@ -29,8 +29,8 @@ void Imagewriter::write_buffer()
 {
     // This will overwrite any existing image. Image is written into the
     // directory from where the application was called.
-    std::string filename =
-        "geomandel." + constants::BITMAP_DEFS.at(format).at(0);
+    std::string filename = "geomandel_" + std::to_string(maxiter) + "." +
+                           constants::BITMAP_DEFS.at(format).at(0);
     std::ofstream img(filename, std::ofstream::out);
     img.exceptions(std::ofstream::failbit | std::ofstream::badbit);
     try {
@@ -69,13 +69,13 @@ void Imagewriter::write_buffer()
                             // not very efficient to do some of the math over
                             // and over again. Hopefully the compiler will
                             // optimize this ;)
-                            if (its < maxiter / 2) {
-                                img << 127 + (floor(its / (maxiter / 127.0)))
-                                    << " ";
-                            } else if (its >= maxiter / 2 && its != maxiter) {
-                                img << floor(its / (maxiter / 127.0)) << " ";
-                            } else if (its == maxiter) {
+                            if (its == maxiter) {
                                 img << 0 << " ";
+                            } else {
+                                std::tuple<int, int, int> rgb = this->rgb_linear(
+                                    its, std::make_tuple(55, 0, 0),
+                                    std::make_tuple(5, 0, 0));
+                                img << std::get<0>(rgb) << " ";
                             }
                         }
                         if (col_algo == constants::COL_ALGO::CONTINUOUS) {
@@ -101,42 +101,19 @@ void Imagewriter::write_buffer()
                             // not very efficient to do some of the math over
                             // and over again. Hopefully the compiler will
                             // optimize this ;)
-                            int red = 255;
-                            int green = 0;
-                            int blue = 0;
                             if (its == maxiter) {
                                 img << "0 0 0"
                                     << "\t";
                             } else {
-                                img << red << " " << (green + ((its % 16) * 16))
-                                    << " " << blue << "\t";
-                            }
+                                std::tuple<int, int, int> rgb = this->rgb_linear(
+                                    its, std::make_tuple(255, 0, 0),
+                                    std::make_tuple(0, 16, 16));
+                                //(green + ((its % 16) * 16))
 
-                            // if (its < maxiter / 2) {
-                            // red = red + (std::floor(its / (maxiter /
-                            //(255.0 - red))));
-                            // green = green +
-                            //(std::floor(
-                            //its / (maxiter / (255.0 - green))));
-                            // blue = blue +
-                            //(std::floor(its /
-                            //(maxiter / (255.0 - blue))));
-                            // img << red << " " << green << " " << blue
-                            //<< "\t";
-                            //} else if (its >= maxiter / 2 && its != maxiter) {
-                            // red = std::floor(
-                            // its / (maxiter / static_cast<double>(red)));
-                            // green = std::floor(
-                            // its /
-                            //(maxiter / static_cast<double>(green)));
-                            // blue = std::floor(
-                            // its / (maxiter / static_cast<double>(blue)));
-                            // img << red << " " << green << " " << blue
-                            //<< "\t";
-                            //} else if (its == maxiter) {
-                            // img << "0 0 0"
-                            //<< "\t";
-                            //}
+                                img << std::get<0>(rgb) << " "
+                                    << std::get<1>(rgb) << " "
+                                    << std::get<2>(rgb) << "\t";
+                            }
                         }
                     }
                     linepos++;
@@ -147,4 +124,34 @@ void Imagewriter::write_buffer()
         std::cerr << "Error writing image file" << std::endl;
         std::cerr << e.what() << std::endl;
     }
+}
+
+std::tuple<int, int, int> Imagewriter::rgb_linear(
+    int its, std::tuple<int, int, int> rgb_base,
+    std::tuple<int, int, int> rgb_freq)
+{
+    int red_base = std::get<0>(rgb_base);
+    int green_base = std::get<1>(rgb_base);
+    int blue_base = std::get<2>(rgb_base);
+
+    std::tuple<int, int, int> rgb =
+        std::make_tuple(red_base, green_base, blue_base);
+
+    int red_freq = std::get<0>(rgb_freq);
+    int green_freq = std::get<1>(rgb_freq);
+    int blue_freq = std::get<2>(rgb_freq);
+
+    // map iterations on rgb colors
+    if (red_freq > 0) {
+        std::get<0>(rgb) = red_base + ((red_freq * its) % (255 - red_base));
+    }
+    if (green_freq > 0) {
+        std::get<1>(rgb) =
+            green_base + ((green_freq * its) % (255 - green_base));
+    }
+    if (blue_freq > 0) {
+        std::get<2>(rgb) = blue_base + ((blue_freq * its) % (255 - blue_base));
+    }
+
+    return rgb;
 }

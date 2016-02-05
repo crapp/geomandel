@@ -1,4 +1,6 @@
 (A) 2016-02-04 Implement continuous coloring algorithm +geomandel @mandelbrot
 (B) 2016-02-04 Write a proper README file +geomandel @documentation
 (C) 2016-02-04 Speed up mandelbrot cruncher code with CUDA +geomandel @mandelbrot
+(B) 2016-02-05 Add a jupyter notebook to plot iterations using matplotlib +geomandel @zoom
+(A) 2016-02-05 Add possibility to zoom mandelbrot at a given coordinate @zoom
 
