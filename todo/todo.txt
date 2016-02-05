@@ -1,7 +1,9 @@
 (A) 2016-02-04 Implement continuous coloring algorithm @color
+(C) 2016-02-05 Linear RGB function extension like (255 - its * freq) % (255 - base) @color
 (C) 2016-02-05 Make color variables configurable @color
+(C) 2016-02-05 Maybe add a plugin api based on python for rgb color @color
+(C) 2016-02-04 Speed up mandelbrot cruncher code with CUDA @computation
 (B) 2016-02-04 Write a proper README file @documentation
-(C) 2016-02-04 Speed up mandelbrot cruncher code with CUDA @proce
-(B) 2016-02-05 Add a jupyter notebook to plot iterations using matplotlib  @zoom
+(C) 2016-02-05 Document code with doxygen and code comments @documentation
 (A) 2016-02-05 Add possibility to zoom mandelbrot at a given coordinate @zoom
-
+(B) 2016-02-05 Add a jupyter notebook to plot iterations using matplotlib  @zoom @color
