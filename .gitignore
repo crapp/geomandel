@@ -13,3 +13,5 @@ Session.vim
 
 build
 .ycm_extra_conf.pyc
+todo/todo.sh
+todo/todo.cfg
