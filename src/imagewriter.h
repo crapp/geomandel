@@ -32,7 +32,9 @@ class Imagewriter : public Buffwriter
 public:
     Imagewriter(const constants::mandelbuff &buff,
                 const constants::OUT_FORMAT format,
-                const constants::COL_ALGO col_algo, const int maxiter);
+                const constants::COL_ALGO col_algo, const int maxiter,
+                std::tuple<int, int, int> rgb_base,
+                std::tuple<int, int, int> rgb_freq);
     virtual ~Imagewriter();
 
     void write_buffer();
@@ -42,6 +44,8 @@ private:
     const constants::OUT_FORMAT format;
     const constants::COL_ALGO col_algo;
     const int maxiter;
+    std::tuple<int, int, int> rgb_base;
+    std::tuple<int, int, int> rgb_freq;
 
     /**
      * @brief Map iteration count on RGB colors in a inear fashion
@@ -51,10 +55,16 @@ private:
      * @param rgb_freq The RGB frequency
      *
      * @return RGB values
+     *
+     * @details
+     * This function uses the Escape Time Algorithm to compute RGB colors. This
+     * leads to visible color bands but is fast and easy to implement. The
+     * method is also used by the greyscale Bitmap code. Only the first element
+     * (red) of the RGB tuple is used in this case.
      */
-    std::tuple<int, int, int> rgb_linear(int its,
-                                         std::tuple<int, int, int> rgb_base,
-                                         std::tuple<int, int, int> rgb_freq);
+    std::tuple<int, int, int> rgb_linear(
+        int its, const std::tuple<int, int, int> &rgb_base,
+        const std::tuple<int, int, int> &rgb_freq);
 };
 
 #endif /* ifndef IMAGEWRITER_H */

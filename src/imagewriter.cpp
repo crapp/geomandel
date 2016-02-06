@@ -20,8 +20,15 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
 
 Imagewriter::Imagewriter(const constants::mandelbuff &buff,
                          const constants::OUT_FORMAT format,
-                         const constants::COL_ALGO col_algo, const int maxiter)
-    : Buffwriter(buff), format(format), col_algo(col_algo), maxiter(maxiter)
+                         const constants::COL_ALGO col_algo, const int maxiter,
+                         std::tuple<int, int, int> rgb_base,
+                         std::tuple<int, int, int> rgb_freq)
+    : Buffwriter(buff),
+      format(format),
+      col_algo(col_algo),
+      maxiter(maxiter),
+      rgb_base(std::move(rgb_base)),
+      rgb_freq(std::move(rgb_freq))
 {
 }
 Imagewriter::~Imagewriter() {}
@@ -97,17 +104,12 @@ void Imagewriter::write_buffer()
                     if (this->format == constants::OUT_FORMAT::IMAGE_COL) {
                         int its = data.default_index;
                         if (col_algo == constants::COL_ALGO::ESCAPE_TIME) {
-                            // Escape time algorithm coloring
-                            // not very efficient to do some of the math over
-                            // and over again. Hopefully the compiler will
-                            // optimize this ;)
                             if (its == maxiter) {
                                 img << "0 0 0"
                                     << "\t";
                             } else {
                                 std::tuple<int, int, int> rgb = this->rgb_linear(
-                                    its, std::make_tuple(255, 0, 0),
-                                    std::make_tuple(0, 16, 16));
+                                    its, this->rgb_base, this->rgb_freq);
                                 //(green + ((its % 16) * 16))
 
                                 img << std::get<0>(rgb) << " "
@@ -127,8 +129,8 @@ void Imagewriter::write_buffer()
 }
 
 std::tuple<int, int, int> Imagewriter::rgb_linear(
-    int its, std::tuple<int, int, int> rgb_base,
-    std::tuple<int, int, int> rgb_freq)
+    int its, const std::tuple<int, int, int> &rgb_base,
+    const std::tuple<int, int, int> &rgb_freq)
 {
     int red_base = std::get<0>(rgb_base);
     int green_base = std::get<1>(rgb_base);

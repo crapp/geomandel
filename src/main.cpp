@@ -82,7 +82,15 @@ void setup_command_line_parser(cxxopts::Options &p)
         ("greyscale", "Write Buffer to Greyscale Bitmap")
         ("color", "Write Buffer to RGB Bitmap")
         ("colalgo", "Coloring algorithm 0->Escape Time, 1->Continuous Coloring",
-         cxxopts::value<int>()->default_value("0"));
+         cxxopts::value<int>()->default_value("0"))
+        ("grey-base", "Base grey color between 0 - 255",
+         cxxopts::value<int>()->default_value("55"))
+        ("grey-freq", "Frequency for grey shade computation",
+         cxxopts::value<int>()->default_value("5"))
+        ("rgb-base", "Base RGB color as comma separated string",
+         cxxopts::value<std::string>()->default_value("255,0,0"))
+        ("rgb-freq", "Frequency for RGB computation as comma separated string",
+         cxxopts::value<std::string>()->default_value("0,16,16"));
 
     p.add_options("Export")
         ("p,print", "Print Buffer to terminal")

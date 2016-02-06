@@ -12,6 +12,11 @@ Session.vim
 ### Custom
 
 build
+
 .ycm_extra_conf.pyc
+
 todo/todo.sh
 todo/todo.cfg
+
+.ipynb_checkpoints
+
