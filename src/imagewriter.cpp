@@ -157,3 +157,9 @@ std::tuple<int, int, int> Imagewriter::rgb_linear(
 
     return rgb;
 }
+
+std::tuple<int, int, int> Imagewrite::rgb_continuous(
+    int its, const std::tuple<int, int, int> &rgb_base,
+    std::tuple<int, int, int> &rgb_freq, std::tuple<int, int, int> &rgb_phase)
+{
+}

@@ -65,6 +65,10 @@ private:
     std::tuple<int, int, int> rgb_linear(
         int its, const std::tuple<int, int, int> &rgb_base,
         const std::tuple<int, int, int> &rgb_freq);
+    std::tuple<int, int, int> rgb_continuous(
+        int its, const std::tuple<int, int, int> &rgb_base,
+        std::tuple<int, int, int> &rgb_freq,
+        std::tuple<int, int, int> &rgb_phase);
 };
 
 #endif /* ifndef IMAGEWRITER_H */

@@ -39,6 +39,9 @@ set (SOURCE
     ${CMAKE_CURRENT_SOURCE_DIR}/buffwriter.cpp
     ${CMAKE_CURRENT_SOURCE_DIR}/csvwriter.cpp
     ${CMAKE_CURRENT_SOURCE_DIR}/imagewriter.cpp
+    ${CMAKE_CURRENT_SOURCE_DIR}/imagebw.cpp
+    ${CMAKE_CURRENT_SOURCE_DIR}/imagecol.cpp
+    ${CMAKE_CURRENT_SOURCE_DIR}/imagegrey.cpp
     ${CMAKE_CURRENT_SOURCE_DIR}/main.cpp
     ${CMAKE_CURRENT_SOURCE_DIR}/mandelcruncher.cpp
     ${CMAKE_CURRENT_SOURCE_DIR}/mandelcrunchmulti.cpp
@@ -50,6 +53,9 @@ set (HEADER
     ${CMAKE_CURRENT_SOURCE_DIR}/csvwriter.h
     ${CMAKE_CURRENT_SOURCE_DIR}/global.h
     ${CMAKE_CURRENT_SOURCE_DIR}/imagewriter.h
+    ${CMAKE_CURRENT_SOURCE_DIR}/imagebw.h
+    ${CMAKE_CURRENT_SOURCE_DIR}/imagecol.h
+    ${CMAKE_CURRENT_SOURCE_DIR}/imagegrey.h
     ${CMAKE_CURRENT_SOURCE_DIR}/mandelcruncher.h
     ${CMAKE_CURRENT_SOURCE_DIR}/mandelcrunchmulti.h
     ${CMAKE_CURRENT_SOURCE_DIR}/mandelcrunchsingle.h
