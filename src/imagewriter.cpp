@@ -19,25 +19,19 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
 #include "imagewriter.h"
 
 Imagewriter::Imagewriter(const constants::mandelbuff &buff,
-                         const constants::OUT_FORMAT format,
                          const constants::COL_ALGO col_algo, const int maxiter,
-                         std::tuple<int, int, int> rgb_base,
-                         std::tuple<int, int, int> rgb_freq)
-    : Buffwriter(buff),
-      format(format),
-      col_algo(col_algo),
-      maxiter(maxiter),
-      rgb_base(std::move(rgb_base)),
-      rgb_freq(std::move(rgb_freq))
+                         const constants::OUT_FORMAT format)
+    : Buffwriter(buff), col_algo(col_algo), maxiter(maxiter), format(format)
 {
 }
+
 Imagewriter::~Imagewriter() {}
 void Imagewriter::write_buffer()
 {
     // This will overwrite any existing image. Image is written into the
     // directory from where the application was called.
     std::string filename = "geomandel_" + std::to_string(maxiter) + "." +
-                           constants::BITMAP_DEFS.at(format).at(0);
+                           constants::BITMAP_DEFS.at(this->format).at(0);
     std::ofstream img(filename, std::ofstream::out);
     img.exceptions(std::ofstream::failbit | std::ofstream::badbit);
     try {
@@ -54,7 +48,7 @@ void Imagewriter::write_buffer()
                 img << 255 << std::endl;
             for (const auto &v : this->buff) {
                 int linepos = 1;
-                for (auto data : v) {
+                for (const auto &data : v) {
                     // this kind of images don't allow for more than 70
                     // characters in one row
                     // FIXME: This kind of linepos handling is borked
@@ -62,62 +56,8 @@ void Imagewriter::write_buffer()
                         img << std::endl;
                         linepos = 0;
                     }
-                    if (this->format == constants::OUT_FORMAT::IMAGE_BW) {
-                        if (data.default_index == maxiter) {
-                            img << 1 << " ";
-                        } else {
-                            img << 0 << " ";
-                        }
-                    }
-                    if (this->format == constants::OUT_FORMAT::IMAGE_GREY) {
-                        int its = data.default_index;
-                        if (col_algo == constants::COL_ALGO::ESCAPE_TIME) {
-                            // Escape time algorithm coloring
-                            // not very efficient to do some of the math over
-                            // and over again. Hopefully the compiler will
-                            // optimize this ;)
-                            if (its == maxiter) {
-                                img << 0 << " ";
-                            } else {
-                                std::tuple<int, int, int> rgb = this->rgb_linear(
-                                    its, std::make_tuple(55, 0, 0),
-                                    std::make_tuple(5, 0, 0));
-                                img << std::get<0>(rgb) << " ";
-                            }
-                        }
-                        if (col_algo == constants::COL_ALGO::CONTINUOUS) {
-                            if (its < maxiter) {
-                                double continuous_index = data.continous_index;
-                                // TODO: Clang format is producing some weird
-                                // code formatting here.
-                                img << static_cast<int>(std::floor(std::abs(
-                                           std::sin(0.016 * continuous_index +
-                                                    4) *
-                                               230 +
-                                           25)))
-                                    << " ";
-                            } else {
-                                img << 0 << " ";
-                            }
-                        }
-                    }
-                    if (this->format == constants::OUT_FORMAT::IMAGE_COL) {
-                        int its = data.default_index;
-                        if (col_algo == constants::COL_ALGO::ESCAPE_TIME) {
-                            if (its == maxiter) {
-                                img << "0 0 0"
-                                    << "\t";
-                            } else {
-                                std::tuple<int, int, int> rgb = this->rgb_linear(
-                                    its, this->rgb_base, this->rgb_freq);
-                                //(green + ((its % 16) * 16))
-
-                                img << std::get<0>(rgb) << " "
-                                    << std::get<1>(rgb) << " "
-                                    << std::get<2>(rgb) << "\t";
-                            }
-                        }
-                    }
+                    // write data to image file stream
+                    this->out_format_write(img, data);
                     linepos++;
                 }
             }
@@ -158,7 +98,7 @@ std::tuple<int, int, int> Imagewriter::rgb_linear(
     return rgb;
 }
 
-std::tuple<int, int, int> Imagewrite::rgb_continuous(
+std::tuple<int, int, int> Imagewriter::rgb_continuous(
     int its, const std::tuple<int, int, int> &rgb_base,
     std::tuple<int, int, int> &rgb_freq, std::tuple<int, int, int> &rgb_phase)
 {

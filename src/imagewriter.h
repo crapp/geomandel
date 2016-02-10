@@ -31,21 +31,18 @@ class Imagewriter : public Buffwriter
 {
 public:
     Imagewriter(const constants::mandelbuff &buff,
-                const constants::OUT_FORMAT format,
                 const constants::COL_ALGO col_algo, const int maxiter,
-                std::tuple<int, int, int> rgb_base,
-                std::tuple<int, int, int> rgb_freq);
+                const constants::OUT_FORMAT format);
     virtual ~Imagewriter();
 
     void write_buffer();
 
-private:
-    /* data */
-    const constants::OUT_FORMAT format;
+protected:
     const constants::COL_ALGO col_algo;
     const int maxiter;
-    std::tuple<int, int, int> rgb_base;
-    std::tuple<int, int, int> rgb_freq;
+
+    virtual void out_format_write(std::ofstream &img,
+                                  const constants::Iterations &data) = 0;
 
     /**
      * @brief Map iteration count on RGB colors in a inear fashion
@@ -69,6 +66,10 @@ private:
         int its, const std::tuple<int, int, int> &rgb_base,
         std::tuple<int, int, int> &rgb_freq,
         std::tuple<int, int, int> &rgb_phase);
+
+private:
+    /* data */
+    const constants::OUT_FORMAT format;
 };
 
 #endif /* ifndef IMAGEWRITER_H */

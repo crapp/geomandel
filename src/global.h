@@ -23,6 +23,7 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
 #include <map>
 #include <vector>
 #include <string>
+#include <sstream>
 
 /**
  * @brief namespace for constants, typedefs and structs
@@ -57,4 +58,25 @@ struct Iterations {
 typedef std::vector<std::vector<Iterations>> mandelbuff;
 }
 
+namespace utility
+{
+/**
+ * @brief Simple split function
+ *
+ * @param s Input string
+ * @param delim Delimeter to split on
+ * @param elems Vector to put the tokens
+ *
+ * @note Does not skip empty tokens
+ */
+inline void split(const std::string &s, char delim,
+                  std::vector<std::string> &elems)
+{
+    std::stringstream ss(s);
+    std::string item;
+    while (std::getline(ss, item, delim)) {
+        elems.push_back(item);
+    }
+}
+}
 #endif /* ifndef GLOBAL_H */

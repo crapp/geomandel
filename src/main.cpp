@@ -24,11 +24,15 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
 #include <chrono>
 #include <fstream>
+#include <tuple>
 
 #include "global.h"
 #include "config.h"
 
-#include "imagewriter.h"
+#include "imagebw.h"
+#include "imagegrey.h"
+#include "imagecol.h"
+
 #include "csvwriter.h"
 
 #include "mandelcrunchsingle.h"
@@ -90,7 +94,9 @@ void setup_command_line_parser(cxxopts::Options &p)
         ("rgb-base", "Base RGB color as comma separated string",
          cxxopts::value<std::string>()->default_value("255,0,0"))
         ("rgb-freq", "Frequency for RGB computation as comma separated string",
-         cxxopts::value<std::string>()->default_value("0,16,16"));
+         cxxopts::value<std::string>()->default_value("0,16,16"))
+        ("rgb-phase", "Phase for RGB computation as comma separated string",
+         cxxopts::value<std::string>()->default_value("0,4,2"));
 
     p.add_options("Export")
         ("p,print", "Print Buffer to terminal")
@@ -189,26 +195,46 @@ int main(int argc, char *argv[])
         std::unique_ptr<CSVWriter>(new CSVWriter(mandelbuffer));
     if (parser.count("bandw")) {
         std::cout << " Generating B/W image" << std::endl;
-        img = std::unique_ptr<Imagewriter>(new Imagewriter(
-            mandelbuffer, constants::OUT_FORMAT::IMAGE_BW,
+        img = std::unique_ptr<ImageBW>(new ImageBW(
+            mandelbuffer,
             static_cast<constants::COL_ALGO>(parser["colalgo"].as<int>()),
-            params.bailout));
+            params.bailout, constants::OUT_FORMAT::IMAGE_BW));
         img->write_buffer();
     }
     if (parser.count("greyscale")) {
         std::cout << " Generating greyscale bitmap" << std::endl;
-        img = std::unique_ptr<Imagewriter>(new Imagewriter(
-            mandelbuffer, constants::OUT_FORMAT::IMAGE_GREY,
+        int grey_base = parser["grey-base"].as<int>();
+        int grey_freq = parser["grey-freq"].as<int>();
+        img = std::unique_ptr<Imagegrey>(new Imagegrey(
+            mandelbuffer,
             static_cast<constants::COL_ALGO>(parser["colalgo"].as<int>()),
-            params.bailout));
+            params.bailout, constants::OUT_FORMAT::IMAGE_GREY,
+            std::make_tuple(grey_base, 0, 0), std::make_tuple(grey_freq, 0, 0)));
         img->write_buffer();
     }
     if (parser.count("color")) {
         std::cout << " Generating RGB bitmap" << std::endl;
-        img = std::unique_ptr<Imagewriter>(new Imagewriter(
-            mandelbuffer, constants::OUT_FORMAT::IMAGE_COL,
+        // read command line parameters and create rgb tuples
+        std::vector<std::string> rgb_base_vec;
+        utility::split(parser["rgb-base"].as<std::string>(), ',', rgb_base_vec);
+        auto rgb_base = std::make_tuple(std::stoi(rgb_base_vec.at(0)),
+                                        std::stoi(rgb_base_vec.at(1)),
+                                        std::stoi(rgb_base_vec.at(2)));
+        std::vector<std::string> rgb_freq_vec;
+        utility::split(parser["rgb-freq"].as<std::string>(), ',', rgb_freq_vec);
+        auto rgb_freq = std::make_tuple(std::stoi(rgb_freq_vec.at(0)),
+                                        std::stoi(rgb_freq_vec.at(1)),
+                                        std::stoi(rgb_freq_vec.at(2)));
+        std::vector<std::string> rgb_phase_vec;
+        utility::split(parser["rgb-base"].as<std::string>(), ',', rgb_phase_vec);
+        auto rgb_phase = std::make_tuple(std::stoi(rgb_phase_vec.at(0)),
+                                         std::stoi(rgb_phase_vec.at(1)),
+                                         std::stoi(rgb_phase_vec.at(2)));
+        img = std::unique_ptr<Imagecol>(new Imagecol(
+            mandelbuffer,
             static_cast<constants::COL_ALGO>(parser["colalgo"].as<int>()),
-            params.bailout));
+            params.bailout, constants::OUT_FORMAT::IMAGE_COL,
+            std::move(rgb_base), std::move(rgb_freq), std::move(rgb_phase)));
         img->write_buffer();
     }
     if (parser.count("csv")) {
