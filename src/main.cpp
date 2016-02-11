@@ -93,10 +93,10 @@ void setup_command_line_parser(cxxopts::Options &p)
          cxxopts::value<int>()->default_value("5"))
         ("rgb-base", "Base RGB color as comma separated string",
          cxxopts::value<std::string>()->default_value("255,0,0"))
-        ("rgb-freq", "Frequency for RGB computation as comma separated string",
+        ("rgb-freq", "Frequency for RGB computation as comma separated string. You may use doubles but no negative values",
          cxxopts::value<std::string>()->default_value("0,16,16"))
         ("rgb-phase", "Phase for RGB computation as comma separated string",
-         cxxopts::value<std::string>()->default_value("0,4,2"));
+         cxxopts::value<std::string>()->default_value("0,2,4"));
 
     p.add_options("Export")
         ("p,print", "Print Buffer to terminal")
@@ -222,9 +222,10 @@ int main(int argc, char *argv[])
                                         std::stoi(rgb_base_vec.at(2)));
         std::vector<std::string> rgb_freq_vec;
         utility::split(parser["rgb-freq"].as<std::string>(), ',', rgb_freq_vec);
-        auto rgb_freq = std::make_tuple(std::stoi(rgb_freq_vec.at(0)),
-                                        std::stoi(rgb_freq_vec.at(1)),
-                                        std::stoi(rgb_freq_vec.at(2)));
+        auto rgb_freq =
+            std::make_tuple(std::fabs(std::stod(rgb_freq_vec.at(0))),
+                            std::fabs(std::stod(rgb_freq_vec.at(1))),
+                            std::fabs(std::stod(rgb_freq_vec.at(2))));
         std::vector<std::string> rgb_phase_vec;
         utility::split(parser["rgb-base"].as<std::string>(), ',', rgb_phase_vec);
         auto rgb_phase = std::make_tuple(std::stoi(rgb_phase_vec.at(0)),

@@ -70,7 +70,7 @@ void Imagewriter::write_buffer()
 
 std::tuple<int, int, int> Imagewriter::rgb_linear(
     int its, const std::tuple<int, int, int> &rgb_base,
-    const std::tuple<int, int, int> &rgb_freq)
+    const std::tuple<double, double, double> &rgb_freq)
 {
     int red_base = std::get<0>(rgb_base);
     int green_base = std::get<1>(rgb_base);
@@ -79,27 +79,57 @@ std::tuple<int, int, int> Imagewriter::rgb_linear(
     std::tuple<int, int, int> rgb =
         std::make_tuple(red_base, green_base, blue_base);
 
-    int red_freq = std::get<0>(rgb_freq);
-    int green_freq = std::get<1>(rgb_freq);
-    int blue_freq = std::get<2>(rgb_freq);
+    double red_freq = std::get<0>(rgb_freq);
+    double green_freq = std::get<1>(rgb_freq);
+    double blue_freq = std::get<2>(rgb_freq);
 
     // map iterations on rgb colors
+    // we only touch the base color if frequency is higher than 0
+    // Have a look at the readme for some charts how color values change using
+    // this method
     if (red_freq > 0) {
-        std::get<0>(rgb) = red_base + ((red_freq * its) % (255 - red_base));
+        std::get<0>(rgb) =
+            red_base + (static_cast<int>((red_freq * its)) % (255 - red_base));
     }
     if (green_freq > 0) {
-        std::get<1>(rgb) =
-            green_base + ((green_freq * its) % (255 - green_base));
+        std::get<1>(rgb) = green_base + (static_cast<int>((green_freq * its)) %
+                                         (255 - green_base));
     }
     if (blue_freq > 0) {
-        std::get<2>(rgb) = blue_base + ((blue_freq * its) % (255 - blue_base));
+        std::get<2>(rgb) = blue_base + (static_cast<int>((blue_freq * its)) %
+                                        (255 - blue_base));
     }
 
     return rgb;
 }
 
 std::tuple<int, int, int> Imagewriter::rgb_continuous(
-    int its, const std::tuple<int, int, int> &rgb_base,
-    std::tuple<int, int, int> &rgb_freq, std::tuple<int, int, int> &rgb_phase)
+    double its, const std::tuple<int, int, int> &rgb_base,
+    const std::tuple<double, double, double> &rgb_freq,
+    const std::tuple<int, int, int> &rgb_phase)
 {
+    int red_base = std::get<0>(rgb_base);
+    int green_base = std::get<1>(rgb_base);
+    int blue_base = std::get<2>(rgb_base);
+
+    std::tuple<int, int, int> rgb =
+        std::make_tuple(red_base, green_base, blue_base);
+
+    double red_freq = std::get<0>(rgb_freq);
+    double green_freq = std::get<1>(rgb_freq);
+    double blue_freq = std::get<2>(rgb_freq);
+
+    double red_phase = std::get<0>(rgb_phase);
+    double green_phase = std::get<1>(rgb_phase);
+    double blue_phase = std::get<2>(rgb_phase);
+
+    std::get<0>(rgb) = static_cast<int>(std::fabs(
+        std::sin(red_freq * its + red_phase) * red_base + (255 - red_base)));
+    std::get<1>(rgb) = static_cast<int>(
+        std::fabs(std::sin(green_freq * its + green_phase) * green_base +
+                  (255 - green_base)));
+    std::get<2>(rgb) = static_cast<int>(std::fabs(
+        std::sin(blue_freq * its + blue_phase) * blue_base + (255 - blue_base)));
+
+    return rgb;
 }

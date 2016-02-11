@@ -61,11 +61,26 @@ protected:
      */
     std::tuple<int, int, int> rgb_linear(
         int its, const std::tuple<int, int, int> &rgb_base,
-        const std::tuple<int, int, int> &rgb_freq);
+        const std::tuple<double, double, double> &rgb_freq);
+
+    /**
+     * @brief Map contiuous iteration count on rgb colors using sine waves
+     *
+     * @param its Continous iteration count
+     * @param rgb_base RGB base color
+     * @param rgb_freq Frequency determining how fast color changes
+     * @param rgb_phase For out of phase waves 
+     *
+     * @return RGB tuple
+     *
+     * @details 
+     *
+     * Based on the concepts of [Jim Bumgardner](http://krazydad.com/tutorials/makecolors.php)
+     */
     std::tuple<int, int, int> rgb_continuous(
-        int its, const std::tuple<int, int, int> &rgb_base,
-        std::tuple<int, int, int> &rgb_freq,
-        std::tuple<int, int, int> &rgb_phase);
+        double its, const std::tuple<int, int, int> &rgb_base,
+        const std::tuple<double, double, double> &rgb_freq,
+        const std::tuple<int, int, int> &rgb_phase);
 
 private:
     /* data */

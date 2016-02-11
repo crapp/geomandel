@@ -22,7 +22,7 @@ Imagegrey::Imagegrey(const constants::mandelbuff &buff,
                      const constants::COL_ALGO col_algo, const int maxiter,
                      const constants::OUT_FORMAT format,
                      std::tuple<int, int, int> rgb_base,
-                     std::tuple<int, int, int> rgb_freq)
+                     std::tuple<double, double, double> rgb_freq)
     : Imagewriter(buff, col_algo, maxiter, format),
       rgb_base(std::move(rgb_base)),
       rgb_freq(std::move(rgb_freq))

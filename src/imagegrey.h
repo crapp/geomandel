@@ -29,14 +29,14 @@ public:
               const constants::COL_ALGO col_algo, const int maxiter,
               const constants::OUT_FORMAT format,
               std::tuple<int, int, int> rgb_base,
-              std::tuple<int, int, int> rgb_freq);
+              std::tuple<double, double, double> rgb_freq);
     virtual ~Imagegrey();
 
 private:
     /* data */
 
     std::tuple<int, int, int> rgb_base;
-    std::tuple<int, int, int> rgb_freq;
+    std::tuple<double, double, double> rgb_freq;
 
     void out_format_write(std::ofstream &img, const constants::Iterations &data);
 };

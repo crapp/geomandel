@@ -36,17 +36,24 @@ void Imagecol::out_format_write(std::ofstream &img,
                                 const constants::Iterations &data)
 {
     int its = data.default_index;
+    double continous_index = data.continous_index;
+    if (its == maxiter) {
+        img << "0 0 0"
+            << "\t";
+        return;
+    }
     if (col_algo == constants::COL_ALGO::ESCAPE_TIME) {
-        if (its == maxiter) {
-            img << "0 0 0"
-                << "\t";
-        } else {
-            std::tuple<int, int, int> rgb =
-                this->rgb_linear(its, this->rgb_base, this->rgb_freq);
-            //(green + ((its % 16) * 16))
+        auto rgb = this->rgb_linear(its, this->rgb_base, this->rgb_freq);
+        //(green + ((its % 16) * 16))
 
-            img << std::get<0>(rgb) << " " << std::get<1>(rgb) << " "
-                << std::get<2>(rgb) << "\t";
-        }
+        img << std::get<0>(rgb) << " " << std::get<1>(rgb) << " "
+            << std::get<2>(rgb) << "\t";
+    }
+    if (col_algo == constants::COL_ALGO::CONTINUOUS) {
+        auto rgb = this->rgb_continuous(continous_index, this->rgb_base,
+                                        this->rgb_freq, this->rgb_phase);
+
+        img << std::get<0>(rgb) << " " << std::get<1>(rgb) << " "
+            << std::get<2>(rgb) << "\t";
     }
 }
