@@ -102,9 +102,9 @@ void setup_command_line_parser(cxxopts::Options &p)
         ("zoom", "Zoom level. Use together with xcoord, ycoord",
          cxxopts::value<int>())
         ("xcoord", "X coordinate where you want to zoom into the fraktal",
-         cxxopts::value<double>())
+         cxxopts::value<int>())
         ("ycoord", "Y coordinate where you want to zoom into the fraktal",
-         cxxopts::value<double>());
+         cxxopts::value<int>());
 
     p.add_options("Export")
         ("p,print", "Print Buffer to terminal")
@@ -152,8 +152,8 @@ int main(int argc, char *argv[])
         }
         // get zoom parameters and coordinate
         zoomlvl = parser["zoom"].as<int>();
-        double xcoord = parser["xcoord"].as<double>();
-        double ycoord = parser["ycoord"].as<double>();
+        int xcoord = parser["xcoord"].as<int>();
+        int ycoord = parser["ycoord"].as<int>();
         Mandelzoom zoomer;
         // calculate new complex plane
         zoomer.calcalute_zoom_cpane(xh, xl, yh, yl, zoomlvl, xcoord, ycoord,

@@ -40,7 +40,7 @@ public:
      * @param ycoord Y coordinate in the complex plane
      */
     void calcalute_zoom_cpane(double &xh, double &xl, double &yh, double &yl,
-                              int zoom, double xcoord, double ycoord, int width,
+                              int zoom, int xcoord, int ycoord, int width,
                               int height);
 
 private:

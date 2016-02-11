@@ -20,8 +20,8 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
 
 Mandelzoom::Mandelzoom() {}
 void Mandelzoom::calcalute_zoom_cpane(double &xh, double &xl, double &yh,
-                                      double &yl, int zoom, double xcoord,
-                                      double ycoord, int width, int height)
+                                      double &yl, int zoom, int xcoord,
+                                      int ycoord, int width, int height)
 {
     /*
      * Nehme bisheriges delta und teile das durch das zoom level. Rechne
@@ -32,20 +32,13 @@ void Mandelzoom::calcalute_zoom_cpane(double &xh, double &xl, double &yh,
     double xdelta = (xh - xl) / width;
     double ydelta = (yh - yl) / height;
 
-    std::cout << "Deltas " << xdelta << "/" << ydelta << std::endl;
-
     // map image coordinates to complex plane
     double xcoord_cplane = xl + xcoord * xdelta;
     double ycoord_cplane = yl + ycoord * ydelta;
 
-    std::cout << "Coord on plane " << xcoord_cplane << "/" << ycoord_cplane
-              << std::endl;
-
     // new delta derived from zoom
     double xdelta_zoom = xdelta / zoom;
     double ydelta_zoom = ydelta / zoom;
-
-    std::cout << "delta zoom " << xdelta_zoom << "/" << ydelta_zoom << std::endl;
 
     // update complex plane values in relation to the coordinates
     xl = xcoord_cplane - (width / 2 * xdelta_zoom);
