@@ -19,11 +19,12 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
 #include "imagegrey.h"
 
 Imagegrey::Imagegrey(const constants::mandelbuff &buff,
-                     const constants::COL_ALGO col_algo, const int maxiter,
+                     const constants::COL_ALGO col_algo,
+                     const MandelParameters &params,
                      const constants::OUT_FORMAT format,
                      std::tuple<int, int, int> rgb_base,
                      std::tuple<double, double, double> rgb_freq)
-    : Imagewriter(buff, col_algo, maxiter, format),
+    : Imagewriter(buff, col_algo, params, format),
       rgb_base(std::move(rgb_base)),
       rgb_freq(std::move(rgb_freq))
 {
@@ -39,7 +40,7 @@ void Imagegrey::out_format_write(std::ofstream &img,
         // not very efficient to do some of the math over
         // and over again. Hopefully the compiler will
         // optimize this ;)
-        if (its == maxiter) {
+        if (its == this->params.bailout) {
             img << 0 << " ";
         } else {
             std::tuple<int, int, int> rgb = this->rgb_linear(
@@ -48,7 +49,7 @@ void Imagegrey::out_format_write(std::ofstream &img,
         }
     }
     if (col_algo == constants::COL_ALGO::CONTINUOUS) {
-        if (its < maxiter) {
+        if (its < this->params.bailout) {
             double continuous_index = data.continous_index;
             // TODO: Clang format is producing some weird
             // code formatting here.

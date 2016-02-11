@@ -16,32 +16,35 @@ You should have received a copy of the GNU General Public License
 along with this program.  If not, see <http://www.gnu.org/licenses/>.
 */
 
-#ifndef IMAGECOL_H
-#define IMAGECOL_H
+#ifndef MANDELZOOM_H
+#define MANDELZOOM_H
+
+#include <cmath>
 
 #include "global.h"
-#include "imagewriter.h"
 
-class Imagecol : public Imagewriter
+class Mandelzoom
 {
 public:
-    Imagecol(const constants::mandelbuff &buff,
-             const constants::COL_ALGO col_algo, const MandelParameters &params,
-             const constants::OUT_FORMAT format,
-             std::tuple<int, int, int> rgb_base,
-             std::tuple<int, int, int> rgb_freq,
-             std::tuple<int, int, int> rgb_phase);
+    Mandelzoom();
 
-    virtual ~Imagecol();
+    /**
+     * @brief Calculates new complex plane values based on zoom level and coordinates
+     *
+     * @param xh Real to
+     * @param xl Real from
+     * @param yh Imaginary to
+     * @param yl Imaginary from
+     * @param zoom Zoom level
+     * @param xcoord X coordinate in the complex plane
+     * @param ycoord Y coordinate in the complex plane
+     */
+    void calcalute_zoom_cpane(double &xh, double &xl, double &yh, double &yl,
+                              int zoom, double xcoord, double ycoord, int width,
+                              int height);
 
 private:
     /* data */
-
-    std::tuple<int, int, int> rgb_base;
-    std::tuple<int, int, int> rgb_freq;
-    std::tuple<int, int, int> rgb_phase;
-
-    void out_format_write(std::ofstream &img, const constants::Iterations &data);
 };
 
-#endif /* ifndef IMAGECOL_H */
+#endif /* ifndef MANDELZOOM_H */

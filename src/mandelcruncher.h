@@ -23,38 +23,7 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
 #include <cmath>
 
 #include "global.h"
-
-struct MandelParameters {
-    int xrange;
-    double xdelta;
-    double x;
-    double xl;
-    double xh;
-
-    int yrange;
-    double ydelta;
-    double y;
-    double yl;
-    double yh;
-    int bailout;
-
-    MandelParameters(int xrange, double xl, double xh, int yrange, double yl,
-                     double yh, double bailout)
-        : xrange(xrange),
-          xl(xl),
-          xh(xh),
-          yrange(yrange),
-          yl(yl),
-          yh(yh),
-          bailout(bailout)
-    {
-        this->x = xl;
-        this->y = yl;
-
-        this->xdelta = ((xl * -1) + xh) / xrange;
-        this->ydelta = ((yl * -1) + yh) / yrange;
-    }
-};
+#include "mandelparams.h"
 
 class Mandelcruncher
 {

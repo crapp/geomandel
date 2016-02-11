@@ -26,12 +26,14 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
 
 #include "buffwriter.h"
 #include "global.h"
+#include "mandelparams.h"
 
 class Imagewriter : public Buffwriter
 {
 public:
     Imagewriter(const constants::mandelbuff &buff,
-                const constants::COL_ALGO col_algo, const int maxiter,
+                const constants::COL_ALGO col_algo,
+                const MandelParameters &params,
                 const constants::OUT_FORMAT format);
     virtual ~Imagewriter();
 
@@ -39,7 +41,7 @@ public:
 
 protected:
     const constants::COL_ALGO col_algo;
-    const int maxiter;
+    const MandelParameters &params;
 
     virtual void out_format_write(std::ofstream &img,
                                   const constants::Iterations &data) = 0;
@@ -69,11 +71,11 @@ protected:
      * @param its Continous iteration count
      * @param rgb_base RGB base color
      * @param rgb_freq Frequency determining how fast color changes
-     * @param rgb_phase For out of phase waves 
+     * @param rgb_phase For out of phase waves
      *
      * @return RGB tuple
      *
-     * @details 
+     * @details
      *
      * Based on the concepts of [Jim Bumgardner](http://krazydad.com/tutorials/makecolors.php)
      */

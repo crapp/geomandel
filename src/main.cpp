@@ -35,6 +35,8 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
 
 #include "csvwriter.h"
 
+#include "mandelzoom.h"
+
 #include "mandelcrunchsingle.h"
 #include "mandelcrunchmulti.h"
 
@@ -96,7 +98,13 @@ void setup_command_line_parser(cxxopts::Options &p)
         ("rgb-freq", "Frequency for RGB computation as comma separated string. You may use doubles but no negative values",
          cxxopts::value<std::string>()->default_value("0,16,16"))
         ("rgb-phase", "Phase for RGB computation as comma separated string",
-         cxxopts::value<std::string>()->default_value("0,2,4"));
+         cxxopts::value<std::string>()->default_value("0,2,4"))
+        ("zoom", "Zoom level. Use together with xcoord, ycoord",
+         cxxopts::value<int>())
+        ("xcoord", "X coordinate where you want to zoom into the fraktal",
+         cxxopts::value<double>())
+        ("ycoord", "Y coordinate where you want to zoom into the fraktal",
+         cxxopts::value<double>());
 
     p.add_options("Export")
         ("p,print", "Print Buffer to terminal")
@@ -125,7 +133,7 @@ int main(int argc, char *argv[])
     }
     int bailout = parser["b"].as<int>();
 
-    // define some variables
+    // define complex plane variables
     double xl = parser["creal-min"].as<double>();
     double xh = parser["creal-max"].as<double>();
     int xrange = parser["w"].as<int>();
@@ -134,7 +142,27 @@ int main(int argc, char *argv[])
     double yh = parser["cima-max"].as<double>();
     int yrange = parser["h"].as<int>();
 
-    MandelParameters params(xrange, xl, xh, yrange, yl, yh, bailout);
+    int zoomlvl = 0;
+
+    // check if user wants to zoom
+    if (parser.count("zoom")) {
+        if (!parser.count("xcoord") || !parser.count("ycoord")) {
+            std::cerr << "Please provide x/y coordinates to zoom" << std::endl;
+            exit(1);
+        }
+        // get zoom parameters and coordinate
+        zoomlvl = parser["zoom"].as<int>();
+        double xcoord = parser["xcoord"].as<double>();
+        double ycoord = parser["ycoord"].as<double>();
+        Mandelzoom zoomer;
+        // calculate new complex plane
+        zoomer.calcalute_zoom_cpane(xh, xl, yh, yl, zoomlvl, xcoord, ycoord,
+                                    xrange, yrange);
+    }
+
+    // Stores informations used by the mandel cruncher and some data writer
+    // classes
+    MandelParameters params(xrange, xl, xh, yrange, yl, yh, bailout, zoomlvl);
 
     std::string version =
         std::string(GEOMANDEL_MAJOR) + "." + std::string(GEOMANDEL_MINOR);
@@ -186,34 +214,32 @@ int main(int argc, char *argv[])
         std::chrono::duration_cast<std::chrono::milliseconds>(tend - tbegin);
     std::cout << "+" << std::endl;
     std::cout << "+ Mandelcruncher time " << deltat.count() << "ms" << std::endl;
-    std::cout << "+++++++++++++++++++++++++++++++++++++" << std::endl
-              << std::endl;
 
     // visualize/export the crunched numbers
     std::unique_ptr<Buffwriter> img;
     std::unique_ptr<Buffwriter> csv =
         std::unique_ptr<CSVWriter>(new CSVWriter(mandelbuffer));
     if (parser.count("bandw")) {
-        std::cout << " Generating B/W image" << std::endl;
+        std::cout << "+ Generating B/W image" << std::endl;
         img = std::unique_ptr<ImageBW>(new ImageBW(
             mandelbuffer,
             static_cast<constants::COL_ALGO>(parser["colalgo"].as<int>()),
-            params.bailout, constants::OUT_FORMAT::IMAGE_BW));
+            params, constants::OUT_FORMAT::IMAGE_BW));
         img->write_buffer();
     }
     if (parser.count("greyscale")) {
-        std::cout << " Generating greyscale bitmap" << std::endl;
+        std::cout << "+ Generating greyscale bitmap" << std::endl;
         int grey_base = parser["grey-base"].as<int>();
         int grey_freq = parser["grey-freq"].as<int>();
         img = std::unique_ptr<Imagegrey>(new Imagegrey(
             mandelbuffer,
             static_cast<constants::COL_ALGO>(parser["colalgo"].as<int>()),
-            params.bailout, constants::OUT_FORMAT::IMAGE_GREY,
+            params, constants::OUT_FORMAT::IMAGE_GREY,
             std::make_tuple(grey_base, 0, 0), std::make_tuple(grey_freq, 0, 0)));
         img->write_buffer();
     }
     if (parser.count("color")) {
-        std::cout << " Generating RGB bitmap" << std::endl;
+        std::cout << "+ Generating RGB bitmap" << std::endl;
         // read command line parameters and create rgb tuples
         std::vector<std::string> rgb_base_vec;
         utility::split(parser["rgb-base"].as<std::string>(), ',', rgb_base_vec);
@@ -234,17 +260,19 @@ int main(int argc, char *argv[])
         img = std::unique_ptr<Imagecol>(new Imagecol(
             mandelbuffer,
             static_cast<constants::COL_ALGO>(parser["colalgo"].as<int>()),
-            params.bailout, constants::OUT_FORMAT::IMAGE_COL,
-            std::move(rgb_base), std::move(rgb_freq), std::move(rgb_phase)));
+            params, constants::OUT_FORMAT::IMAGE_COL, std::move(rgb_base),
+            std::move(rgb_freq), std::move(rgb_phase)));
         img->write_buffer();
     }
     if (parser.count("csv")) {
-        std::cout << " Exporting data to csv files" << std::endl;
+        std::cout << "+ Exporting data to csv files" << std::endl;
         csv->write_buffer();
     }
     if (parser.count("p"))
         prnt_buff(mandelbuffer);  // print the buffer
 
-    std::cout << "\n All data written, Good Bye" << std::endl;
+    std::cout << "+\n+ All data written, Good Bye" << std::endl;
+    std::cout << "+++++++++++++++++++++++++++++++++++++" << std::endl
+              << std::endl;
     return 0;
 }

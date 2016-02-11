@@ -19,9 +19,10 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
 #include "imagebw.h"
 
 ImageBW::ImageBW(const constants::mandelbuff &buff,
-                 const constants::COL_ALGO col_algo, const int maxiter,
+                 const constants::COL_ALGO col_algo,
+                 const MandelParameters &params,
                  const constants::OUT_FORMAT format)
-    : Imagewriter(buff, col_algo, maxiter, format)
+    : Imagewriter(buff, col_algo, params, format)
 {
 }
 
@@ -29,7 +30,7 @@ ImageBW::~ImageBW() {}
 void ImageBW::out_format_write(std::ofstream &img,
                                const constants::Iterations &data)
 {
-    if (data.default_index == this->maxiter) {
+    if (data.default_index == this->params.bailout) {
         img << 1 << " ";
     } else {
         img << 0 << " ";

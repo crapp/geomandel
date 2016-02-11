@@ -46,6 +46,7 @@ set (SOURCE
     ${CMAKE_CURRENT_SOURCE_DIR}/mandelcruncher.cpp
     ${CMAKE_CURRENT_SOURCE_DIR}/mandelcrunchmulti.cpp
     ${CMAKE_CURRENT_SOURCE_DIR}/mandelcrunchsingle.cpp
+    ${CMAKE_CURRENT_SOURCE_DIR}/mandelzoom.cpp
 )
 
 set (HEADER
@@ -59,6 +60,8 @@ set (HEADER
     ${CMAKE_CURRENT_SOURCE_DIR}/mandelcruncher.h
     ${CMAKE_CURRENT_SOURCE_DIR}/mandelcrunchmulti.h
     ${CMAKE_CURRENT_SOURCE_DIR}/mandelcrunchsingle.h
+    ${CMAKE_CURRENT_SOURCE_DIR}/mandelparams.h
+    ${CMAKE_CURRENT_SOURCE_DIR}/mandelzoom.h
 )
 
 set (HEADER_LIB

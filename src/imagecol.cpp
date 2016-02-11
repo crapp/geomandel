@@ -19,12 +19,13 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
 #include "imagecol.h"
 
 Imagecol::Imagecol(const constants::mandelbuff &buff,
-                   const constants::COL_ALGO col_algo, const int maxiter,
+                   const constants::COL_ALGO col_algo,
+                   const MandelParameters &params,
                    const constants::OUT_FORMAT format,
                    std::tuple<int, int, int> rgb_base,
                    std::tuple<int, int, int> rgb_freq,
                    std::tuple<int, int, int> rgb_phase)
-    : Imagewriter(buff, col_algo, maxiter, format),
+    : Imagewriter(buff, col_algo, params, format),
       rgb_base(std::move(rgb_base)),
       rgb_freq(std::move(rgb_freq)),
       rgb_phase(std::move(rgb_phase))
@@ -37,7 +38,7 @@ void Imagecol::out_format_write(std::ofstream &img,
 {
     int its = data.default_index;
     double continous_index = data.continous_index;
-    if (its == maxiter) {
+    if (its == this->params.bailout) {
         img << "0 0 0"
             << "\t";
         return;

@@ -19,9 +19,10 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
 #include "imagewriter.h"
 
 Imagewriter::Imagewriter(const constants::mandelbuff &buff,
-                         const constants::COL_ALGO col_algo, const int maxiter,
+                         const constants::COL_ALGO col_algo,
+                         const MandelParameters &params,
                          const constants::OUT_FORMAT format)
-    : Buffwriter(buff), col_algo(col_algo), maxiter(maxiter), format(format)
+    : Buffwriter(buff), col_algo(col_algo), params(params), format(format)
 {
 }
 
@@ -30,7 +31,11 @@ void Imagewriter::write_buffer()
 {
     // This will overwrite any existing image. Image is written into the
     // directory from where the application was called.
-    std::string filename = "geomandel_" + std::to_string(maxiter) + "." +
+    // File name: BAILOUT_WIDTHxHEIGHT_ZOOMx.FILE_TYPE
+    std::string filename = "geomandel_" + std::to_string(this->params.bailout) +
+                           "_" + std::to_string(this->params.xrange) + "x" +
+                           std::to_string(this->params.yrange) + "_" +
+                           std::to_string(this->params.zoom) + "x" + "." +
                            constants::BITMAP_DEFS.at(this->format).at(0);
     std::ofstream img(filename, std::ofstream::out);
     img.exceptions(std::ofstream::failbit | std::ofstream::badbit);
