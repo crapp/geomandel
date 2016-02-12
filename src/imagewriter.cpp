@@ -31,12 +31,17 @@ void Imagewriter::write_buffer()
 {
     // This will overwrite any existing image. Image is written into the
     // directory from where the application was called.
-    // File name: BAILOUT_WIDTHxHEIGHT_ZOOMx.FILE_TYPE
-    std::string filename = "geomandel_" + std::to_string(this->params.bailout) +
-                           "_" + std::to_string(this->params.xrange) + "x" +
+    // TODO: Maybe add coordinates for zoom
+    // FIXME: Add zoom value to filename only when greater 0
+    // File name: FILENAME_BAILOUT_WIDTHxHEIGHT_ZOOMx.FILE_TYPE
+    std::string filename = this->params.image_base + "_" +
+                           std::to_string(this->params.bailout) + "_" +
+                           std::to_string(this->params.xrange) + "x" +
                            std::to_string(this->params.yrange) + "_" +
                            std::to_string(this->params.zoom) + "x" + "." +
                            constants::BITMAP_DEFS.at(this->format).at(0);
+    std::cout << "+ \u2937 " + filename << std::endl;
+
     std::ofstream img(filename, std::ofstream::out);
     img.exceptions(std::ofstream::failbit | std::ofstream::badbit);
     try {
@@ -44,7 +49,7 @@ void Imagewriter::write_buffer()
             // magic number for bitmap
             img << constants::BITMAP_DEFS.at(this->format).at(1) << std::endl;
             // comments
-            img << "# geomandel output" << std::endl;
+            img << "# Created with geomandel https://git.io/vgXRW" << std::endl;
             // specify width and height of the bitmap
             img << this->buff.at(0).size() << " " << this->buff.size()
                 << std::endl;

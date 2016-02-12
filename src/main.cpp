@@ -50,11 +50,16 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
  * * http://krazydad.com/tutorials/makecolors.php
  */
 
-void prnt_buff(const constants::mandelbuff &buff)
+void prnt_buff(const constants::mandelbuff &buff, int bailout)
 {
     for (auto &v : buff) {
         for (auto &val : v) {
-            std::cout << val.default_index;
+            if (val.default_index == bailout) {
+                std::cout << "*";
+
+            } else {
+                std::cout << ".";
+            }
         }
         std::cout << std::endl;
     }
@@ -81,12 +86,14 @@ void setup_command_line_parser(cxxopts::Options &p)
          cxxopts::value<double>()->default_value("1.5"));
 
     p.add_options("Image")
+        ("image-file", "Image file base name",
+         cxxopts::value<std::string>()->default_value("geomandel"))
         ("w,width", "Image width", cxxopts::value<int>()->default_value("1000"))
         ("h,height", "Image height",
          cxxopts::value<int>()->default_value("1000"))
-        ("bandw", "Write Buffer to B&W Bitmap")
-        ("greyscale", "Write Buffer to Greyscale Bitmap")
-        ("color", "Write Buffer to RGB Bitmap")
+        ("img-bandw", "Write Buffer to B&W Bitmap")
+        ("img-greyscale", "Write Buffer to Greyscale Bitmap")
+        ("img-color", "Write Buffer to RGB Bitmap")
         ("colalgo", "Coloring algorithm 0->Escape Time, 1->Continuous Coloring",
          cxxopts::value<int>()->default_value("0"))
         ("grey-base", "Base grey color between 0 - 255",
@@ -162,7 +169,8 @@ int main(int argc, char *argv[])
 
     // Stores informations used by the mandel cruncher and some data writer
     // classes
-    MandelParameters params(xrange, xl, xh, yrange, yl, yh, bailout, zoomlvl);
+    MandelParameters params(xrange, xl, xh, yrange, yl, yh, bailout, zoomlvl,
+                            parser["image-file"].as<std::string>());
 
     std::string version =
         std::string(GEOMANDEL_MAJOR) + "." + std::string(GEOMANDEL_MINOR);
@@ -213,13 +221,14 @@ int main(int argc, char *argv[])
     auto deltat =
         std::chrono::duration_cast<std::chrono::milliseconds>(tend - tbegin);
     std::cout << "+" << std::endl;
-    std::cout << "+ Mandelcruncher time " << deltat.count() << "ms" << std::endl;
+    std::cout << "+ Mandelcruncher time " << deltat.count() << "ms \n+"
+              << std::endl;
 
     // visualize/export the crunched numbers
     std::unique_ptr<Buffwriter> img;
     std::unique_ptr<Buffwriter> csv =
         std::unique_ptr<CSVWriter>(new CSVWriter(mandelbuffer));
-    if (parser.count("bandw")) {
+    if (parser.count("img-bandw")) {
         std::cout << "+ Generating B/W image" << std::endl;
         img = std::unique_ptr<ImageBW>(new ImageBW(
             mandelbuffer,
@@ -227,7 +236,7 @@ int main(int argc, char *argv[])
             params, constants::OUT_FORMAT::IMAGE_BW));
         img->write_buffer();
     }
-    if (parser.count("greyscale")) {
+    if (parser.count("img-greyscale")) {
         std::cout << "+ Generating greyscale bitmap" << std::endl;
         int grey_base = parser["grey-base"].as<int>();
         int grey_freq = parser["grey-freq"].as<int>();
@@ -238,7 +247,7 @@ int main(int argc, char *argv[])
             std::make_tuple(grey_base, 0, 0), std::make_tuple(grey_freq, 0, 0)));
         img->write_buffer();
     }
-    if (parser.count("color")) {
+    if (parser.count("img-color")) {
         std::cout << "+ Generating RGB bitmap" << std::endl;
         // read command line parameters and create rgb tuples
         std::vector<std::string> rgb_base_vec;
@@ -269,7 +278,7 @@ int main(int argc, char *argv[])
         csv->write_buffer();
     }
     if (parser.count("p"))
-        prnt_buff(mandelbuffer);  // print the buffer
+        prnt_buff(mandelbuffer, bailout);  // print the buffer
 
     std::cout << "+\n+ All data written, Good Bye" << std::endl;
     std::cout << "+++++++++++++++++++++++++++++++++++++" << std::endl

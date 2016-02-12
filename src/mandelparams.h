@@ -19,6 +19,8 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
 #ifndef MANDELPARAMS_H
 #define MANDELPARAMS_H
 
+#include <string>
+
 struct MandelParameters {
     int xrange;
     double xdelta;
@@ -36,8 +38,10 @@ struct MandelParameters {
 
     int zoom;
 
+    std::string image_base;
+
     MandelParameters(int xrange, double xl, double xh, int yrange, double yl,
-                     double yh, double bailout, int zoom)
+                     double yh, double bailout, int zoom, std::string image_base)
         : xrange(xrange),
           xl(xl),
           xh(xh),
@@ -45,7 +49,8 @@ struct MandelParameters {
           yl(yl),
           yh(yh),
           bailout(bailout),
-          zoom(zoom)
+          zoom(zoom),
+          image_base(image_base)
     {
         this->x = xl;
         this->y = yl;
