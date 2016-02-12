@@ -262,7 +262,8 @@ int main(int argc, char *argv[])
                             std::fabs(std::stod(rgb_freq_vec.at(1))),
                             std::fabs(std::stod(rgb_freq_vec.at(2))));
         std::vector<std::string> rgb_phase_vec;
-        utility::split(parser["rgb-base"].as<std::string>(), ',', rgb_phase_vec);
+        utility::split(parser["rgb-phase"].as<std::string>(), ',',
+                       rgb_phase_vec);
         auto rgb_phase = std::make_tuple(std::stoi(rgb_phase_vec.at(0)),
                                          std::stoi(rgb_phase_vec.at(1)),
                                          std::stoi(rgb_phase_vec.at(2)));

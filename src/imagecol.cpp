@@ -23,7 +23,7 @@ Imagecol::Imagecol(const constants::mandelbuff &buff,
                    const MandelParameters &params,
                    const constants::OUT_FORMAT format,
                    std::tuple<int, int, int> rgb_base,
-                   std::tuple<int, int, int> rgb_freq,
+                   std::tuple<double, double, double> rgb_freq,
                    std::tuple<int, int, int> rgb_phase)
     : Imagewriter(buff, col_algo, params, format),
       rgb_base(std::move(rgb_base)),

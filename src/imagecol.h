@@ -29,7 +29,7 @@ public:
              const constants::COL_ALGO col_algo, const MandelParameters &params,
              const constants::OUT_FORMAT format,
              std::tuple<int, int, int> rgb_base,
-             std::tuple<int, int, int> rgb_freq,
+             std::tuple<double, double, double> rgb_freq,
              std::tuple<int, int, int> rgb_phase);
 
     virtual ~Imagecol();
@@ -38,7 +38,7 @@ private:
     /* data */
 
     std::tuple<int, int, int> rgb_base;
-    std::tuple<int, int, int> rgb_freq;
+    std::tuple<double, double, double> rgb_freq;
     std::tuple<int, int, int> rgb_phase;
 
     void out_format_write(std::ofstream &img, const constants::Iterations &data);

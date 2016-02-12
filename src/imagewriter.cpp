@@ -129,9 +129,9 @@ std::tuple<int, int, int> Imagewriter::rgb_continuous(
     double green_freq = std::get<1>(rgb_freq);
     double blue_freq = std::get<2>(rgb_freq);
 
-    double red_phase = std::get<0>(rgb_phase);
-    double green_phase = std::get<1>(rgb_phase);
-    double blue_phase = std::get<2>(rgb_phase);
+    int red_phase = std::get<0>(rgb_phase);
+    int green_phase = std::get<1>(rgb_phase);
+    int blue_phase = std::get<2>(rgb_phase);
 
     std::get<0>(rgb) = static_cast<int>(std::fabs(
         std::sin(red_freq * its + red_phase) * red_base + (255 - red_base)));
