@@ -19,7 +19,7 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
 #include "mandelcrunchmulti.h"
 
 Mandelcrunchmulti::Mandelcrunchmulti(constants::mandelbuff &buff,
-                                     const MandelParameters &params,
+                                     const std::shared_ptr<MandelParameters> &params,
                                      constants::COL_ALGO col_algo, int cores)
     : Mandelcruncher(buff, params, col_algo), cores(cores)
 {
@@ -35,18 +35,18 @@ void Mandelcrunchmulti::fill_buffer()
     // calculate the mandelbrot set line by line. Each line will be pushed to the
     // thread pool as separate job. The id parameter of the lambda function
     // represents the thread id.
-    double x = this->params.x;
-    double y = this->params.y;
+    double x = this->params->x;
+    double y = this->params->y;
     int iy = 0; /**< row to calculate*/
     for (auto &int_vec : buff) {
         futures.push_back(tpl.push([&int_vec, x, y, iy, this](int id) {
             double ypass = y;  // y value is constant for each row
             double xpass = x;
             if (iy != 0)
-                ypass += this->params.ydelta * iy;
-            for (int ix = 0; ix < this->params.xrange; ix++) {
+                ypass += this->params->ydelta * iy;
+            for (int ix = 0; ix < this->params->xrange; ix++) {
                 auto crunched_mandel = this->crunch_mandel_complex(
-                    xpass, ypass, this->params.bailout);
+                    xpass, ypass, this->params->bailout);
                 int its = std::get<0>(crunched_mandel);
                 if (this->col_algo == constants::COL_ALGO::ESCAPE_TIME)
                     int_vec[ix] = this->iterations_factory(its, 0, 0);
@@ -56,7 +56,7 @@ void Mandelcrunchmulti::fill_buffer()
                     int_vec[ix] = this->iterations_factory(its, Zx, Zy);
                 }
                 // increment xpass by xdelta
-                xpass += this->params.xdelta;
+                xpass += this->params->xdelta;
             }
         }));
         iy++;

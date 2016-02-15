@@ -16,23 +16,21 @@ You should have received a copy of the GNU General Public License
 along with this program.  If not, see <http://www.gnu.org/licenses/>.
 */
 
-#include "imagebw.h"
+#include "catch.hpp"
 
-ImageBW::ImageBW(const constants::mandelbuff &buff,
-                 const constants::COL_ALGO col_algo,
-                 const std::shared_ptr<MandelParameters> &params,
-                 const constants::OUT_FORMAT format)
-    : Imagewriter(buff, col_algo, params, format)
-{
-}
+#include "global.h"
 
-ImageBW::~ImageBW() {}
-void ImageBW::out_format_write(std::ofstream &img,
-                               const constants::Iterations &data)
+#include <vector>
+#include <string>
+
+TEST_CASE("Command line arguments", "[commandline]")
 {
-    if (data.default_index == this->params->bailout) {
-        img << 1 << " ";
-    } else {
-        img << 0 << " ";
-    }
+    int test_argc = 1;
+    std::vector<const char *> test_argv(test_argc + 1);
+    const char *first_opt = "--help";
+    test_argv[0] = first_opt;
+    cxxopts::Options parser("Test command line parser");
+    utility::configure_command_line_parser(parser);
+    char **test = const_cast<char **>(test_argv.data());
+    parser.parse(test_argc, test);
 }

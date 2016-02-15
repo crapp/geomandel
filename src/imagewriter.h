@@ -33,7 +33,7 @@ class Imagewriter : public Buffwriter
 public:
     Imagewriter(const constants::mandelbuff &buff,
                 const constants::COL_ALGO col_algo,
-                const MandelParameters &params,
+                const std::shared_ptr<MandelParameters> &params,
                 const constants::OUT_FORMAT format);
     virtual ~Imagewriter();
 
@@ -41,7 +41,7 @@ public:
 
 protected:
     const constants::COL_ALGO col_algo;
-    const MandelParameters &params;
+    const std::shared_ptr<MandelParameters> &params;
 
     virtual void out_format_write(std::ofstream &img,
                                   const constants::Iterations &data) = 0;

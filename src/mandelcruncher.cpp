@@ -19,7 +19,7 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
 #include "mandelcruncher.h"
 
 Mandelcruncher::Mandelcruncher(constants::mandelbuff &buff,
-                               const MandelParameters &params,
+                               const std::shared_ptr<MandelParameters> &params,
                                constants::COL_ALGO col_algo)
     : buff(buff), params(params), col_algo(col_algo)
 {

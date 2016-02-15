@@ -27,6 +27,7 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
 #include <tuple>
 
 #include "global.h"
+#include "main_helper.h"
 #include "config.h"
 
 #include "imagebw.h"
@@ -65,64 +66,10 @@ void prnt_buff(const constants::mandelbuff &buff, int bailout)
     }
 }
 
-void setup_command_line_parser(cxxopts::Options &p)
-{
-    // clang-format off
-    p.add_options()
-        ("help", "Show this help")
-        ("m,multi", "Use multiple cores",
-         cxxopts::value<int>()->implicit_value("1"));
-
-    p.add_options("Mandelbrot")
-        ("b,bailout", "Bailout value for the mandelbrot set algorithm",
-         cxxopts::value<int>()->default_value("1000"))
-        ("creal-min", "Real part minimum",
-         cxxopts::value<double>()->default_value("-2.5"))
-        ("creal-max", "Real part maximum",
-         cxxopts::value<double>()->default_value("1.0"))
-        ("cima-min", "Imaginary part minimum",
-         cxxopts::value<double>()->default_value("-1.5"))
-        ("cima-max", "Imaginary part maximum",
-         cxxopts::value<double>()->default_value("1.5"));
-
-    p.add_options("Image")
-        ("image-file", "Image file base name",
-         cxxopts::value<std::string>()->default_value("geomandel"))
-        ("w,width", "Image width", cxxopts::value<int>()->default_value("1000"))
-        ("h,height", "Image height",
-         cxxopts::value<int>()->default_value("1000"))
-        ("img-bandw", "Write Buffer to B&W Bitmap")
-        ("img-greyscale", "Write Buffer to Greyscale Bitmap")
-        ("img-color", "Write Buffer to RGB Bitmap")
-        ("colalgo", "Coloring algorithm 0->Escape Time, 1->Continuous Coloring",
-         cxxopts::value<int>()->default_value("0"))
-        ("grey-base", "Base grey color between 0 - 255",
-         cxxopts::value<int>()->default_value("55"))
-        ("grey-freq", "Frequency for grey shade computation",
-         cxxopts::value<int>()->default_value("5"))
-        ("rgb-base", "Base RGB color as comma separated string",
-         cxxopts::value<std::string>()->default_value("255,0,0"))
-        ("rgb-freq", "Frequency for RGB computation as comma separated string. You may use doubles but no negative values",
-         cxxopts::value<std::string>()->default_value("0,16,16"))
-        ("rgb-phase", "Phase for RGB computation as comma separated string",
-         cxxopts::value<std::string>()->default_value("0,2,4"))
-        ("zoom", "Zoom level. Use together with xcoord, ycoord",
-         cxxopts::value<int>())
-        ("xcoord", "X coordinate where you want to zoom into the fraktal",
-         cxxopts::value<int>())
-        ("ycoord", "Y coordinate where you want to zoom into the fraktal",
-         cxxopts::value<int>());
-
-    p.add_options("Export")
-        ("p,print", "Print Buffer to terminal")
-        ("csv", "Export data to csv files");
-    // clang-format on
-}
-
 int main(int argc, char *argv[])
 {
     cxxopts::Options parser("geomandel", " - command line options");
-    setup_command_line_parser(parser);
+    utility::configure_command_line_parser(parser);
     try {
         parser.parse(argc, argv);
     } catch (const cxxopts::OptionParseException &ex) {
@@ -130,47 +77,21 @@ int main(int argc, char *argv[])
                   << std::endl;
         std::cerr << "Could not parse command line options" << std::endl;
         std::cerr << ex.what() << std::endl;
-        exit(1);
+        return 1;
     }
 
     if (parser.count("help")) {
         std::cout << parser.help({"", "Mandelbrot", "Image", "Export"})
                   << std::endl;
-        exit(0);
-    }
-    int bailout = parser["b"].as<int>();
-
-    // define complex plane variables
-    double xl = parser["creal-min"].as<double>();
-    double xh = parser["creal-max"].as<double>();
-    int xrange = parser["w"].as<int>();
-
-    double yl = parser["cima-min"].as<double>();
-    double yh = parser["cima-max"].as<double>();
-    int yrange = parser["h"].as<int>();
-
-    int zoomlvl = 0;
-
-    // check if user wants to zoom
-    if (parser.count("zoom")) {
-        if (!parser.count("xcoord") || !parser.count("ycoord")) {
-            std::cerr << "Please provide x/y coordinates to zoom" << std::endl;
-            exit(1);
-        }
-        // get zoom parameters and coordinate
-        zoomlvl = parser["zoom"].as<int>();
-        int xcoord = parser["xcoord"].as<int>();
-        int ycoord = parser["ycoord"].as<int>();
-        Mandelzoom zoomer;
-        // calculate new complex plane
-        zoomer.calcalute_zoom_cpane(xh, xl, yh, yl, zoomlvl, xcoord, ycoord,
-                                    xrange, yrange);
+        return 0;
     }
 
-    // Stores informations used by the mandel cruncher and some data writer
-    // classes
-    MandelParameters params(xrange, xl, xh, yrange, yl, yh, bailout, zoomlvl,
-                            parser["image-file"].as<std::string>());
+    std::shared_ptr<MandelParameters> params = nullptr;
+    init_mandel_parameters(params, parser);
+
+    if (params == nullptr) {
+        return 1;
+    }
 
     std::string version =
         std::string(GEOMANDEL_MAJOR) + "." + std::string(GEOMANDEL_MINOR);
@@ -181,18 +102,18 @@ int main(int argc, char *argv[])
     std::cout << "+++++++++++++++++++++++++++++++++++++" << std::endl;
     std::cout << "+       Welcome to geomandel " << version << std::endl;
     std::cout << "+                                    " << std::endl;
-    std::cout << "+ Bailout: " << std::to_string(bailout) << std::endl;
+    std::cout << "+ Bailout: " << std::to_string(params->bailout) << std::endl;
     std::cout << "+ Complex plane:" << std::endl;
-    std::cout << "+   Im " << yl << " " << yh << std::endl;
-    std::cout << "+   Re " << xl << " " << xh << std::endl;
-    std::cout << "+ Image " << std::to_string(xrange) << "x"
-              << std::to_string(yrange) << std::endl;
+    std::cout << "+   Im " << params->yl << " " << params->yh << std::endl;
+    std::cout << "+   Re " << params->xl << " " << params->xh << std::endl;
+    std::cout << "+ Image " << std::to_string(params->xrange) << "x"
+              << std::to_string(params->yrange) << std::endl;
 
     // create the buffer that holds our data
     constants::mandelbuff mandelbuffer;
-    mandelbuffer.assign(yrange, std::vector<constants::Iterations>());
+    mandelbuffer.assign(params->yrange, std::vector<constants::Iterations>());
     for (auto &v : mandelbuffer) {
-        v.assign(xrange, constants::Iterations());
+        v.assign(params->xrange, constants::Iterations());
     }
 
     std::unique_ptr<Mandelcruncher> crunchi;
@@ -279,7 +200,7 @@ int main(int argc, char *argv[])
         csv->write_buffer();
     }
     if (parser.count("p"))
-        prnt_buff(mandelbuffer, bailout);  // print the buffer
+        prnt_buff(mandelbuffer, params->bailout);  // print the buffer
 
     std::cout << "+\n+ All data written, Good Bye" << std::endl;
     std::cout << "+++++++++++++++++++++++++++++++++++++" << std::endl

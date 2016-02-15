@@ -57,6 +57,7 @@ set (HEADER
     ${CMAKE_CURRENT_SOURCE_DIR}/imagebw.h
     ${CMAKE_CURRENT_SOURCE_DIR}/imagecol.h
     ${CMAKE_CURRENT_SOURCE_DIR}/imagegrey.h
+    ${CMAKE_CURRENT_SOURCE_DIR}/main_helper.h
     ${CMAKE_CURRENT_SOURCE_DIR}/mandelcruncher.h
     ${CMAKE_CURRENT_SOURCE_DIR}/mandelcrunchmulti.h
     ${CMAKE_CURRENT_SOURCE_DIR}/mandelcrunchsingle.h
@@ -73,8 +74,14 @@ configure_file(${CMAKE_CURRENT_SOURCE_DIR}/config.h.in config.h)
 
 include_directories(
     ${CMAKE_CURRENT_BINARY_DIR}
+    ${CMAKE_CURRENT_SOURCE_DIR}
 )
 
 add_executable(geomandel ${HEADER} ${HEADER_LIB} ${SOURCE})
 target_link_libraries(geomandel ${CMAKE_THREAD_LIBS_INIT})
 
+# TODO: It would be better to use this with CMAKEs test framework
+# check if we need to build unit test executable
+if (${UNIT_TEST})
+    add_subdirectory(test)
+endif()

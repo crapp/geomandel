@@ -29,7 +29,7 @@ class Mandelcrunchmulti : public Mandelcruncher
 {
 public:
     Mandelcrunchmulti(constants::mandelbuff &buff,
-                      const MandelParameters &params,
+                      const std::shared_ptr<MandelParameters> &params,
                       constants::COL_ALGO col_algo,
                       int cores);
     virtual ~Mandelcrunchmulti();

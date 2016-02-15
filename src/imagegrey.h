@@ -26,7 +26,7 @@ class Imagegrey : public Imagewriter
 {
 public:
     Imagegrey(const constants::mandelbuff &buff,
-              const constants::COL_ALGO col_algo, const MandelParameters &params,
+              const constants::COL_ALGO col_algo, const std::shared_ptr<MandelParameters> &params,
               const constants::OUT_FORMAT format,
               std::tuple<int, int, int> rgb_base,
               std::tuple<double, double, double> rgb_freq);

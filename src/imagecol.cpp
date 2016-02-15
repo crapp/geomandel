@@ -20,7 +20,7 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
 
 Imagecol::Imagecol(const constants::mandelbuff &buff,
                    const constants::COL_ALGO col_algo,
-                   const MandelParameters &params,
+                   const std::shared_ptr<MandelParameters> &params,
                    const constants::OUT_FORMAT format,
                    std::tuple<int, int, int> rgb_base,
                    std::tuple<double, double, double> rgb_freq,
@@ -38,7 +38,7 @@ void Imagecol::out_format_write(std::ofstream &img,
 {
     int its = data.default_index;
     double continous_index = data.continous_index;
-    if (its == this->params.bailout) {
+    if (its == this->params->bailout) {
         img << "0 0 0"
             << "\t";
         return;

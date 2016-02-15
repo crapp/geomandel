@@ -19,7 +19,7 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
 #include "mandelcrunchsingle.h"
 
 Mandelcrunchsingle::Mandelcrunchsingle(constants::mandelbuff &buff,
-                                       const MandelParameters &params,
+                                       const std::shared_ptr<MandelParameters> &params,
                                        constants::COL_ALGO col_algo)
     : Mandelcruncher(buff, params, col_algo)
 {
@@ -28,14 +28,14 @@ Mandelcrunchsingle::Mandelcrunchsingle(constants::mandelbuff &buff,
 Mandelcrunchsingle::~Mandelcrunchsingle() {}
 void Mandelcrunchsingle::fill_buffer()
 {
-    double x = this->params.x;
-    double y = this->params.y;
+    double x = this->params->x;
+    double y = this->params->y;
 
     // calculate pixel by pixel
-    for (int iy = 0; iy < this->params.yrange; iy++) {
-        for (int ix = 0; ix < this->params.xrange; ix++) {
+    for (int iy = 0; iy < this->params->yrange; iy++) {
+        for (int ix = 0; ix < this->params->xrange; ix++) {
             auto crunched_mandel =
-                this->crunch_mandel_complex(x, y, this->params.bailout);
+                this->crunch_mandel_complex(x, y, this->params->bailout);
             int its = std::get<0>(crunched_mandel);
             if (this->col_algo == constants::COL_ALGO::ESCAPE_TIME) {
                 constants::Iterations it = this->iterations_factory(its, 0, 0);
@@ -46,9 +46,9 @@ void Mandelcrunchsingle::fill_buffer()
                 double Zy = std::get<2>(crunched_mandel);
                 buff[iy][ix] = this->iterations_factory(its, Zx, Zy);
             }
-            x += this->params.xdelta;
+            x += this->params->xdelta;
         }
-        y += this->params.ydelta;
-        x = this->params.xl;
+        y += this->params->ydelta;
+        x = this->params->xl;
     }
 }

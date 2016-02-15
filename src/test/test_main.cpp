@@ -16,23 +16,7 @@ You should have received a copy of the GNU General Public License
 along with this program.  If not, see <http://www.gnu.org/licenses/>.
 */
 
-#include "imagebw.h"
+#define CATCH_CONFIG_MAIN  // This tells Catch to provide a main() -
+                           // only do this in one cpp file
 
-ImageBW::ImageBW(const constants::mandelbuff &buff,
-                 const constants::COL_ALGO col_algo,
-                 const std::shared_ptr<MandelParameters> &params,
-                 const constants::OUT_FORMAT format)
-    : Imagewriter(buff, col_algo, params, format)
-{
-}
-
-ImageBW::~ImageBW() {}
-void ImageBW::out_format_write(std::ofstream &img,
-                               const constants::Iterations &data)
-{
-    if (data.default_index == this->params->bailout) {
-        img << 1 << " ";
-    } else {
-        img << 0 << " ";
-    }
-}
+#include "catch.hpp"

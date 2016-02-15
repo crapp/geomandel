@@ -40,6 +40,7 @@ struct MandelParameters {
 
     std::string image_base;
 
+    MandelParameters() {}
     MandelParameters(int xrange, double xl, double xh, int yrange, double yl,
                      double yh, double bailout, int zoom, std::string image_base)
         : xrange(xrange),
