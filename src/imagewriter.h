@@ -62,7 +62,7 @@ protected:
      * (red) of the RGB tuple is used in this case.
      */
     std::tuple<int, int, int> rgb_linear(
-        int its, const std::tuple<int, int, int> &rgb_base,
+        unsigned int its, const std::tuple<int, int, int> &rgb_base,
         const std::tuple<double, double, double> &rgb_freq);
 
     /**

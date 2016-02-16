@@ -41,7 +41,7 @@ const std::map<OUT_FORMAT, std::vector<std::string>> BITMAP_DEFS{
     {OUT_FORMAT::IMAGE_COL, {"ppm", "P3"}}};
 
 struct Iterations {
-    int default_index;
+    unsigned int default_index;
     double continous_index;
 
     Iterations()
@@ -79,60 +79,6 @@ inline void split(const std::string &s, char delim,
     while (std::getline(ss, item, delim)) {
         elems.push_back(item);
     }
-}
-
-inline void configure_command_line_parser(cxxopts::Options &p)
-{
-    // clang-format off
-    p.add_options()
-        ("help", "Show this help")
-        ("m,multi", "Use multiple cores",
-         cxxopts::value<int>()->implicit_value("1"));
-
-    p.add_options("Mandelbrot")
-        ("b,bailout", "Bailout value for the mandelbrot set algorithm",
-         cxxopts::value<int>()->default_value("1000"))
-        ("creal-min", "Real part minimum",
-         cxxopts::value<double>()->default_value("-2.5"))
-        ("creal-max", "Real part maximum",
-         cxxopts::value<double>()->default_value("1.0"))
-        ("cima-min", "Imaginary part minimum",
-         cxxopts::value<double>()->default_value("-1.5"))
-        ("cima-max", "Imaginary part maximum",
-         cxxopts::value<double>()->default_value("1.5"));
-
-    p.add_options("Image")
-        ("image-file", "Image file base name",
-         cxxopts::value<std::string>()->default_value("geomandel"))
-        ("w,width", "Image width", cxxopts::value<int>()->default_value("1000"))
-        ("h,height", "Image height",
-         cxxopts::value<int>()->default_value("1000"))
-        ("img-bandw", "Write Buffer to B&W Bitmap")
-        ("img-greyscale", "Write Buffer to Greyscale Bitmap")
-        ("img-color", "Write Buffer to RGB Bitmap")
-        ("colalgo", "Coloring algorithm 0->Escape Time, 1->Continuous Coloring",
-         cxxopts::value<int>()->default_value("0"))
-        ("grey-base", "Base grey color between 0 - 255",
-         cxxopts::value<int>()->default_value("55"))
-        ("grey-freq", "Frequency for grey shade computation",
-         cxxopts::value<int>()->default_value("5"))
-        ("rgb-base", "Base RGB color as comma separated string",
-         cxxopts::value<std::string>()->default_value("255,0,0"))
-        ("rgb-freq", "Frequency for RGB computation as comma separated string. You may use doubles but no negative values",
-         cxxopts::value<std::string>()->default_value("0,16,16"))
-        ("rgb-phase", "Phase for RGB computation as comma separated string",
-         cxxopts::value<std::string>()->default_value("0,2,4"))
-        ("zoom", "Zoom level. Use together with xcoord, ycoord",
-         cxxopts::value<int>())
-        ("xcoord", "Image X coordinate where you want to zoom into the fractal",
-         cxxopts::value<int>())
-        ("ycoord", "Image Y coordinate where you want to zoom into the fractal",
-         cxxopts::value<int>());
-
-    p.add_options("Export")
-        ("p,print", "Print Buffer to terminal")
-        ("csv", "Export data to csv files");
-    // clang-format on
 }
 }
 #endif /* ifndef GLOBAL_H */

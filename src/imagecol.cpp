@@ -36,7 +36,7 @@ Imagecol::~Imagecol() {}
 void Imagecol::out_format_write(std::ofstream &img,
                                 const constants::Iterations &data)
 {
-    int its = data.default_index;
+    unsigned int its = data.default_index;
     double continous_index = data.continous_index;
     if (its == this->params->bailout) {
         img << "0 0 0"

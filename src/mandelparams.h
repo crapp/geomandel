@@ -22,27 +22,29 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
 #include <string>
 
 struct MandelParameters {
-    int xrange;
+    unsigned int xrange;
     double xdelta;
     double x;
     double xl;
     double xh;
 
-    int yrange;
+    unsigned int yrange;
     double ydelta;
     double y;
     double yl;
     double yh;
 
-    int bailout;
+    unsigned int bailout;
 
-    int zoom;
+    unsigned int zoom;
 
     std::string image_base;
 
     MandelParameters() {}
-    MandelParameters(int xrange, double xl, double xh, int yrange, double yl,
-                     double yh, double bailout, int zoom, std::string image_base)
+    MandelParameters(unsigned int xrange, double xl, double xh,
+                     unsigned int yrange, double yl, double yh,
+                     unsigned int bailout, unsigned int zoom,
+                     std::string image_base)
         : xrange(xrange),
           xl(xl),
           xh(xh),

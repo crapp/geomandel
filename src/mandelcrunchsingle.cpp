@@ -18,9 +18,9 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
 
 #include "mandelcrunchsingle.h"
 
-Mandelcrunchsingle::Mandelcrunchsingle(constants::mandelbuff &buff,
-                                       const std::shared_ptr<MandelParameters> &params,
-                                       constants::COL_ALGO col_algo)
+Mandelcrunchsingle::Mandelcrunchsingle(
+    constants::mandelbuff &buff, const std::shared_ptr<MandelParameters> &params,
+    constants::COL_ALGO col_algo)
     : Mandelcruncher(buff, params, col_algo)
 {
 }
@@ -32,11 +32,11 @@ void Mandelcrunchsingle::fill_buffer()
     double y = this->params->y;
 
     // calculate pixel by pixel
-    for (int iy = 0; iy < this->params->yrange; iy++) {
-        for (int ix = 0; ix < this->params->xrange; ix++) {
+    for (unsigned int iy = 0; iy < this->params->yrange; iy++) {
+        for (unsigned int ix = 0; ix < this->params->xrange; ix++) {
             auto crunched_mandel =
                 this->crunch_mandel_complex(x, y, this->params->bailout);
-            int its = std::get<0>(crunched_mandel);
+            unsigned int its = std::get<0>(crunched_mandel);
             if (this->col_algo == constants::COL_ALGO::ESCAPE_TIME) {
                 constants::Iterations it = this->iterations_factory(its, 0, 0);
                 buff[iy][ix].default_index = it.default_index;

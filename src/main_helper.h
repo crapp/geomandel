@@ -26,19 +26,31 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
 inline void init_mandel_parameters(std::shared_ptr<MandelParameters> params,
                                    const cxxopts::Options &parser)
 {
+    // TODO: Thiy try catch block could be unnecessary as cxxopts does most of
+    // the checking itself when parse is called
     try {
-        int bailout = parser["b"].as<int>();
+        unsigned int bailout = parser["b"].as<unsigned int>();
 
         // define complex plane variables
         double xl = parser["creal-min"].as<double>();
         double xh = parser["creal-max"].as<double>();
-        int xrange = parser["w"].as<int>();
+        if (xh < xl) {
+            std::cerr << "Real part maximum can not be lower than minimum"
+                      << std::endl;
+            return;
+        }
+        unsigned int xrange = parser["w"].as<unsigned int>();
 
         double yl = parser["cima-min"].as<double>();
         double yh = parser["cima-max"].as<double>();
-        int yrange = parser["h"].as<int>();
+        if (yh < yl) {
+            std::cerr << "Imaginary part maximum can not be lower than minimum"
+                      << std::endl;
+            return;
+        }
+        unsigned int yrange = parser["h"].as<unsigned int>();
 
-        int zoomlvl = 0;
+        unsigned int zoomlvl = 0;
 
         // check if user wants to zoom
         if (parser.count("zoom")) {
@@ -48,9 +60,9 @@ inline void init_mandel_parameters(std::shared_ptr<MandelParameters> params,
                 exit(1);
             }
             // get zoom parameters and coordinate
-            zoomlvl = parser["zoom"].as<int>();
-            int xcoord = parser["xcoord"].as<int>();
-            int ycoord = parser["ycoord"].as<int>();
+            zoomlvl = parser["zoom"].as<unsigned int>();
+            unsigned int xcoord = parser["xcoord"].as<unsigned int>();
+            unsigned int ycoord = parser["ycoord"].as<unsigned int>();
             Mandelzoom zoomer;
             // calculate new complex plane
             zoomer.calcalute_zoom_cpane(xh, xl, yh, yl, zoomlvl, xcoord, ycoord,
@@ -67,4 +79,59 @@ inline void init_mandel_parameters(std::shared_ptr<MandelParameters> params,
     } catch (const cxxopts::OptionParseException &ex) {
         std::cerr << "Can not parse option value " << ex.what() << std::endl;
     }
+}
+
+inline void configure_command_line_parser(cxxopts::Options &p)
+{
+    // clang-format off
+    p.add_options()
+        ("help", "Show this help")
+        ("m,multi", "Use multiple cores",
+         cxxopts::value<unsigned int>()->implicit_value("2"));
+
+    p.add_options("Mandelbrot")
+        ("b,bailout", "Bailout value for the mandelbrot set algorithm",
+         cxxopts::value<unsigned int>()->default_value("1000"))
+        ("creal-min", "Real part minimum",
+         cxxopts::value<double>()->default_value("-2.5"))
+        ("creal-max", "Real part maximum",
+         cxxopts::value<double>()->default_value("1.0"))
+        ("cima-min", "Imaginary part minimum",
+         cxxopts::value<double>()->default_value("-1.5"))
+        ("cima-max", "Imaginary part maximum",
+         cxxopts::value<double>()->default_value("1.5"));
+
+    p.add_options("Image")
+        ("image-file", "Image file base name",
+         cxxopts::value<std::string>()->default_value("geomandel"))
+        ("w,width", "Image width",
+         cxxopts::value<unsigned int>()->default_value("1000"))
+        ("h,height", "Image height",
+         cxxopts::value<unsigned int>()->default_value("1000"))
+        ("img-bandw", "Write Buffer to B&W Bitmap")
+        ("img-greyscale", "Write Buffer to Greyscale Bitmap")
+        ("img-color", "Write Buffer to RGB Bitmap")
+        ("colalgo", "Coloring algorithm 0->Escape Time, 1->Continuous Coloring",
+         cxxopts::value<int>()->default_value("0"))
+        ("grey-base", "Base grey color between 0 - 255",
+         cxxopts::value<int>()->default_value("55"))
+        ("grey-freq", "Frequency for grey shade computation",
+         cxxopts::value<int>()->default_value("5"))
+        ("rgb-base", "Base RGB color as comma separated string",
+         cxxopts::value<std::string>()->default_value("255,0,0"))
+        ("rgb-freq", "Frequency for RGB computation as comma separated string. You may use doubles but no negative values",
+         cxxopts::value<std::string>()->default_value("0,16,16"))
+        ("rgb-phase", "Phase for RGB computation as comma separated string",
+         cxxopts::value<std::string>()->default_value("0,2,4"))
+        ("zoom", "Zoom level. Use together with xcoord, ycoord",
+         cxxopts::value<unsigned int>())
+        ("xcoord", "Image X coordinate where you want to zoom into the fractal",
+         cxxopts::value<unsigned int>())
+        ("ycoord", "Image Y coordinate where you want to zoom into the fractal",
+         cxxopts::value<unsigned int>());
+
+    p.add_options("Export")
+        ("p,print", "Print Buffer to terminal")
+        ("csv", "Export data to csv files");
+    // clang-format on
 }

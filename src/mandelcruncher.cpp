@@ -24,12 +24,12 @@ Mandelcruncher::Mandelcruncher(constants::mandelbuff &buff,
     : buff(buff), params(params), col_algo(col_algo)
 {
 }
-std::tuple<int, double, double> Mandelcruncher::crunch_mandel_complex(
-    double x, double y, int bailout)
+std::tuple<unsigned int, double, double> Mandelcruncher::crunch_mandel_complex(
+    double x, double y, unsigned int bailout)
 {
     // The Mandelbrot Set algorithm derived from pseudo code
     // std::cout << "Calculating [" << x << "/" << y << "]" << std::endl;
-    int iterations = 0;
+    unsigned int iterations = 0;
     double x0 = x;
     double y0 = y;
     while (x * x + y * y <= 4.0 && iterations < bailout) {
@@ -42,8 +42,8 @@ std::tuple<int, double, double> Mandelcruncher::crunch_mandel_complex(
 }
 
 Mandelcruncher::~Mandelcruncher() {}
-constants::Iterations Mandelcruncher::iterations_factory(int its, double Zx,
-                                                         double Zy)
+constants::Iterations Mandelcruncher::iterations_factory(unsigned int its,
+                                                         double Zx, double Zy)
 {
     constants::Iterations it;
     if (this->col_algo == constants::COL_ALGO::ESCAPE_TIME)

@@ -19,6 +19,7 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
 #include "catch.hpp"
 
 #include "global.h"
+#include "main_helper.h"
 
 #include <vector>
 #include <string>
@@ -30,7 +31,7 @@ TEST_CASE("Command line arguments", "[commandline]")
     const char *first_opt = "--help";
     test_argv[0] = first_opt;
     cxxopts::Options parser("Test command line parser");
-    utility::configure_command_line_parser(parser);
+    configure_command_line_parser(parser);
     char **test = const_cast<char **>(test_argv.data());
     parser.parse(test_argc, test);
 }

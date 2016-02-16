@@ -20,8 +20,9 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
 
 Mandelzoom::Mandelzoom() {}
 void Mandelzoom::calcalute_zoom_cpane(double &xh, double &xl, double &yh,
-                                      double &yl, int zoom, int xcoord,
-                                      int ycoord, int width, int height)
+                                      double &yl, unsigned int zoom,
+                                      unsigned int xcoord, unsigned int ycoord,
+                                      unsigned int width, unsigned int height)
 {
     /*
      * Nehme bisheriges delta und teile das durch das zoom level. Rechne

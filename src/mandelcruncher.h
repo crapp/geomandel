@@ -28,7 +28,8 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
 class Mandelcruncher
 {
 public:
-    Mandelcruncher(constants::mandelbuff &buff, const std::shared_ptr<MandelParameters> &params,
+    Mandelcruncher(constants::mandelbuff &buff,
+                   const std::shared_ptr<MandelParameters> &params,
                    constants::COL_ALGO col_algo);
     virtual ~Mandelcruncher();
 
@@ -56,8 +57,8 @@ protected:
      * @return Return number of iterations as well as Real and Imaginary Part of
      * the Complex Number.
      */
-    std::tuple<int, double, double> crunch_mandel_complex(double x, double y,
-                                                          int bailout);
+    std::tuple<unsigned int, double, double> crunch_mandel_complex(
+        double x, double y, unsigned int bailout);
     /**
      * @brief Returns an Iterations object based on the coloring algorithm
      *
@@ -68,7 +69,8 @@ protected:
      *
      * @return Mandelbrot Set Buffer tuple
      */
-    constants::Iterations iterations_factory(int its, double Zx, double Zy);
+    constants::Iterations iterations_factory(unsigned int its, double Zx,
+                                             double Zy);
 
 private:
 };

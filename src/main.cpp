@@ -51,7 +51,7 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
  * * http://krazydad.com/tutorials/makecolors.php
  */
 
-void prnt_buff(const constants::mandelbuff &buff, int bailout)
+void prnt_buff(const constants::mandelbuff &buff, unsigned int bailout)
 {
     for (auto &v : buff) {
         for (auto &val : v) {
@@ -69,7 +69,7 @@ void prnt_buff(const constants::mandelbuff &buff, int bailout)
 int main(int argc, char *argv[])
 {
     cxxopts::Options parser("geomandel", " - command line options");
-    utility::configure_command_line_parser(parser);
+    configure_command_line_parser(parser);
     try {
         parser.parse(argc, argv);
     } catch (const cxxopts::OptionParseException &ex) {
@@ -119,8 +119,8 @@ int main(int argc, char *argv[])
     std::unique_ptr<Mandelcruncher> crunchi;
 
     if (parser.count("m")) {
-        std::cout << "+ Multicore: " << std::to_string(parser["m"].as<int>())
-                  << std::endl;
+        std::cout << "+ Multicore: "
+                  << std::to_string(parser["m"].as<unsigned int>()) << std::endl;
         crunchi = std::unique_ptr<Mandelcrunchmulti>(new Mandelcrunchmulti(
             mandelbuffer, params,
             static_cast<constants::COL_ALGO>(parser["colalgo"].as<int>()),

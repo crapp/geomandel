@@ -79,7 +79,7 @@ void Imagewriter::write_buffer()
 }
 
 std::tuple<int, int, int> Imagewriter::rgb_linear(
-    int its, const std::tuple<int, int, int> &rgb_base,
+    unsigned int its, const std::tuple<int, int, int> &rgb_base,
     const std::tuple<double, double, double> &rgb_freq)
 {
     int red_base = std::get<0>(rgb_base);

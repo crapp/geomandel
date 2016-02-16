@@ -18,9 +18,9 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
 
 #include "mandelcrunchmulti.h"
 
-Mandelcrunchmulti::Mandelcrunchmulti(constants::mandelbuff &buff,
-                                     const std::shared_ptr<MandelParameters> &params,
-                                     constants::COL_ALGO col_algo, int cores)
+Mandelcrunchmulti::Mandelcrunchmulti(
+    constants::mandelbuff &buff, const std::shared_ptr<MandelParameters> &params,
+    constants::COL_ALGO col_algo, int cores)
     : Mandelcruncher(buff, params, col_algo), cores(cores)
 {
 }
@@ -44,10 +44,10 @@ void Mandelcrunchmulti::fill_buffer()
             double xpass = x;
             if (iy != 0)
                 ypass += this->params->ydelta * iy;
-            for (int ix = 0; ix < this->params->xrange; ix++) {
+            for (unsigned int ix = 0; ix < this->params->xrange; ix++) {
                 auto crunched_mandel = this->crunch_mandel_complex(
                     xpass, ypass, this->params->bailout);
-                int its = std::get<0>(crunched_mandel);
+                unsigned int its = std::get<0>(crunched_mandel);
                 if (this->col_algo == constants::COL_ALGO::ESCAPE_TIME)
                     int_vec[ix] = this->iterations_factory(its, 0, 0);
                 if (this->col_algo == constants::COL_ALGO::CONTINUOUS) {

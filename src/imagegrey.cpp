@@ -34,7 +34,7 @@ Imagegrey::~Imagegrey() {}
 void Imagegrey::out_format_write(std::ofstream &img,
                                  const constants::Iterations &data)
 {
-    int its = data.default_index;
+    unsigned int its = data.default_index;
     if (col_algo == constants::COL_ALGO::ESCAPE_TIME) {
         // Escape time algorithm coloring
         // not very efficient to do some of the math over
