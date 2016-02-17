@@ -20,10 +20,13 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
 
 #include "global.h"
 #include "main_helper.h"
+#include "mandelparams.h"
+#include "mandelzoom.h"
 
 #include <iostream>
 #include <vector>
 #include <string>
+#include <memory>
 
 cxxopts::Options generate_empty_parser()
 {
@@ -35,13 +38,15 @@ cxxopts::Options generate_empty_parser()
 TEST_CASE("Command line arguments", "[commandline]")
 {
     std::vector<const char *> test_argv_vec;
+    char **test_argv = const_cast<char **>(test_argv_vec.data());
+    int test_argc = static_cast<int>(test_argv_vec.size());
     SECTION("Basic parser checking, expecting exception")
     {
         auto parser = generate_empty_parser();
         test_argv_vec.clear();
         test_argv_vec = {"some", "idiotic", "--options"};
-        char **test_argv = const_cast<char **>(test_argv_vec.data());
-        int test_argc = static_cast<int>(test_argv_vec.size());
+        test_argv = const_cast<char **>(test_argv_vec.data());
+        test_argc = static_cast<int>(test_argv_vec.size());
         REQUIRE_THROWS(parser.parse(test_argc, test_argv));
     }
     SECTION("Test options that need an argument")
@@ -50,8 +55,8 @@ TEST_CASE("Command line arguments", "[commandline]")
         auto parser = generate_empty_parser();
         test_argv_vec.clear();
         test_argv_vec = {"Unittester", "-b"};
-        char **test_argv = const_cast<char **>(test_argv_vec.data());
-        int test_argc = static_cast<int>(test_argv_vec.size());
+        test_argv = const_cast<char **>(test_argv_vec.data());
+        test_argc = static_cast<int>(test_argv_vec.size());
         REQUIRE_THROWS(parser.parse(test_argc, test_argv));
         // creal-min
         parser = generate_empty_parser();
@@ -166,5 +171,36 @@ TEST_CASE("Command line arguments", "[commandline]")
         test_argc = static_cast<int>(test_argv_vec.size());
         REQUIRE_THROWS(parser.parse(test_argc, test_argv));
     }
-    SECTION("Test ") {}
+    SECTION("Test command line parameters \"logic\"")
+    {
+        // max lower min not allowed
+        std::shared_ptr<MandelParameters> params = nullptr;
+        auto parser = generate_empty_parser();
+        test_argv_vec.clear();
+        test_argv_vec = {"Unittester", "--creal-min=-1.0", "--creal-max=-2.0"};
+        test_argv = const_cast<char **>(test_argv_vec.data());
+        test_argc = static_cast<int>(test_argv_vec.size());
+        parser.parse(test_argc, test_argv);
+        init_mandel_parameters(params, parser);
+        REQUIRE(params == nullptr);
+        params = nullptr;
+        parser = generate_empty_parser();
+        test_argv_vec.clear();
+        test_argv_vec = {"Unittester", "--cima-min=5.2", "--cima-max=1.21"};
+        test_argv = const_cast<char **>(test_argv_vec.data());
+        test_argc = static_cast<int>(test_argv_vec.size());
+        parser.parse(test_argc, test_argv);
+        init_mandel_parameters(params, parser);
+        REQUIRE(params == nullptr);
+        // no parameters at all should give as a default Mandelparameters object
+        params = nullptr;
+        parser = generate_empty_parser();
+        test_argv_vec.clear();
+        test_argv_vec = {"Unittester"};
+        test_argv = const_cast<char **>(test_argv_vec.data());
+        test_argc = static_cast<int>(test_argv_vec.size());
+        parser.parse(test_argc, test_argv);
+        init_mandel_parameters(params, parser);
+        REQUIRE(params != nullptr);
+    }
 }

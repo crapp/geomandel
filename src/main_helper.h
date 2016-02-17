@@ -23,7 +23,8 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
 #include "mandelparams.h"
 #include "mandelzoom.h"
 
-inline void init_mandel_parameters(std::shared_ptr<MandelParameters> params,
+// TODO: params Argument could be a reference to avoid reference counting
+inline void init_mandel_parameters(std::shared_ptr<MandelParameters> &params,
                                    const cxxopts::Options &parser)
 {
     // TODO: Thiy try catch block could be unnecessary as cxxopts does most of
@@ -57,7 +58,7 @@ inline void init_mandel_parameters(std::shared_ptr<MandelParameters> params,
             if (!parser.count("xcoord") || !parser.count("ycoord")) {
                 std::cerr << "Please provide x/y coordinates to zoom"
                           << std::endl;
-                exit(1);
+                return;
             }
             // get zoom parameters and coordinate
             zoomlvl = parser["zoom"].as<unsigned int>();

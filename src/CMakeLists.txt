@@ -35,7 +35,7 @@ endif ()
 
 find_package(Threads REQUIRED)
 
-set (SOURCE
+set (MAIN_SOURCE
     ${CMAKE_CURRENT_SOURCE_DIR}/buffwriter.cpp
     ${CMAKE_CURRENT_SOURCE_DIR}/csvwriter.cpp
     ${CMAKE_CURRENT_SOURCE_DIR}/imagewriter.cpp
@@ -49,7 +49,8 @@ set (SOURCE
     ${CMAKE_CURRENT_SOURCE_DIR}/mandelzoom.cpp
 )
 
-set (HEADER
+
+set (MAIN_HEADER
     ${CMAKE_CURRENT_SOURCE_DIR}/buffwriter.h
     ${CMAKE_CURRENT_SOURCE_DIR}/csvwriter.h
     ${CMAKE_CURRENT_SOURCE_DIR}/global.h
@@ -65,6 +66,8 @@ set (HEADER
     ${CMAKE_CURRENT_SOURCE_DIR}/mandelzoom.h
 )
 
+
+
 set (HEADER_LIB
     ${CMAKE_CURRENT_SOURCE_DIR}/ctpl_stl.h
     ${CMAKE_CURRENT_SOURCE_DIR}/cxxopts.hpp
@@ -77,7 +80,7 @@ include_directories(
     ${CMAKE_CURRENT_SOURCE_DIR}
 )
 
-add_executable(geomandel ${HEADER} ${HEADER_LIB} ${SOURCE})
+add_executable(geomandel ${MAIN_HEADER} ${HEADER_LIB} ${MAIN_SOURCE})
 target_link_libraries(geomandel ${CMAKE_THREAD_LIBS_INIT})
 
 # TODO: It would be better to use this with CMAKEs test framework

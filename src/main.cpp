@@ -51,6 +51,7 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
  * * http://krazydad.com/tutorials/makecolors.php
  */
 
+// TODO: Put this code in a separate class derived from Buffwriter
 void prnt_buff(const constants::mandelbuff &buff, unsigned int bailout)
 {
     for (auto &v : buff) {
@@ -75,7 +76,7 @@ int main(int argc, char *argv[])
     } catch (const cxxopts::OptionParseException &ex) {
         std::cerr << parser.help({"", "Mandelbrot", "Image", "Export"})
                   << std::endl;
-        std::cerr << "Could not parse command line options" << std::endl;
+        std::cerr << "Could not parse command line arguments" << std::endl;
         std::cerr << ex.what() << std::endl;
         return 1;
     }
@@ -90,6 +91,9 @@ int main(int argc, char *argv[])
     init_mandel_parameters(params, parser);
 
     if (params == nullptr) {
+        std::cerr << parser.help({"", "Mandelbrot", "Image", "Export"})
+                  << std::endl;
+        std::cerr << "Could not parse command line arguments" << std::endl;
         return 1;
     }
 
@@ -119,8 +123,7 @@ int main(int argc, char *argv[])
     std::unique_ptr<Mandelcruncher> crunchi;
 
     if (parser.count("m")) {
-        std::cout << "+ Multicore: "
-                  << std::to_string(parser["m"].as<unsigned int>()) << std::endl;
+        std::cout << "+ Multicore: " << params->cores << std::endl;
         crunchi = std::unique_ptr<Mandelcrunchmulti>(
             new Mandelcrunchmulti(mandelbuffer, params));
     } else {
@@ -142,6 +145,10 @@ int main(int argc, char *argv[])
     std::cout << "+ Mandelcruncher time " << deltat.count() << "ms \n+"
               << std::endl;
 
+    // TODO: More refactoring needed here. Would be nice to move this somewhere
+    // else. Maybe we could put this into the Mandelparameters structure.
+    // The way we make it right now is not testable by Catch.
+    // TODO: Shouldn't we use unsigned int in rgb tuples
     // visualize/export the crunched numbers
     std::unique_ptr<Buffwriter> img;
     std::unique_ptr<Buffwriter> csv =

@@ -49,8 +49,7 @@ void Imagegrey::out_format_write(std::ofstream &img,
     if (this->params->col_algo == constants::COL_ALGO::CONTINUOUS) {
         if (its < this->params->bailout) {
             double continuous_index = data.continous_index;
-            // TODO: Clang format is producing some weird
-            // code formatting here.
+            // TODO: Clang format is producing some weird code formatting here.
             img << static_cast<int>(std::floor(std::abs(
                        std::sin(0.016 * continuous_index + 4) * 230 + 25)))
                 << " ";
