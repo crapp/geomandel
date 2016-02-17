@@ -26,8 +26,7 @@ class ImageBW : public Imagewriter
 {
 public:
     ImageBW(const constants::mandelbuff &buff,
-            const constants::COL_ALGO col_algo, const std::shared_ptr<MandelParameters> &params,
-            const constants::OUT_FORMAT format);
+            const std::shared_ptr<MandelParameters> &params);
     virtual ~ImageBW();
 
 private:

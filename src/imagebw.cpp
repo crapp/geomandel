@@ -19,10 +19,8 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
 #include "imagebw.h"
 
 ImageBW::ImageBW(const constants::mandelbuff &buff,
-                 const constants::COL_ALGO col_algo,
-                 const std::shared_ptr<MandelParameters> &params,
-                 const constants::OUT_FORMAT format)
-    : Imagewriter(buff, col_algo, params, format)
+                 const std::shared_ptr<MandelParameters> &params)
+    : Imagewriter(buff, params, constants::OUT_FORMAT::IMAGE_BW)
 {
 }
 

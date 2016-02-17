@@ -19,13 +19,11 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
 #include "imagecol.h"
 
 Imagecol::Imagecol(const constants::mandelbuff &buff,
-                   const constants::COL_ALGO col_algo,
                    const std::shared_ptr<MandelParameters> &params,
-                   const constants::OUT_FORMAT format,
                    std::tuple<int, int, int> rgb_base,
                    std::tuple<double, double, double> rgb_freq,
                    std::tuple<int, int, int> rgb_phase)
-    : Imagewriter(buff, col_algo, params, format),
+    : Imagewriter(buff, params, constants::OUT_FORMAT::IMAGE_COL),
       rgb_base(std::move(rgb_base)),
       rgb_freq(std::move(rgb_freq)),
       rgb_phase(std::move(rgb_phase))
@@ -43,14 +41,14 @@ void Imagecol::out_format_write(std::ofstream &img,
             << "\t";
         return;
     }
-    if (col_algo == constants::COL_ALGO::ESCAPE_TIME) {
+    if (this->params->col_algo == constants::COL_ALGO::ESCAPE_TIME) {
         auto rgb = this->rgb_linear(its, this->rgb_base, this->rgb_freq);
         //(green + ((its % 16) * 16))
 
         img << std::get<0>(rgb) << " " << std::get<1>(rgb) << " "
             << std::get<2>(rgb) << "\t";
     }
-    if (col_algo == constants::COL_ALGO::CONTINUOUS) {
+    if (this->params->col_algo == constants::COL_ALGO::CONTINUOUS) {
         auto rgb = this->rgb_continuous(continous_index, this->rgb_base,
                                         this->rgb_freq, this->rgb_phase);
 

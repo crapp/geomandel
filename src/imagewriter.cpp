@@ -19,10 +19,9 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
 #include "imagewriter.h"
 
 Imagewriter::Imagewriter(const constants::mandelbuff &buff,
-                         const constants::COL_ALGO col_algo,
                          const std::shared_ptr<MandelParameters> &params,
                          const constants::OUT_FORMAT format)
-    : Buffwriter(buff), col_algo(col_algo), params(params), format(format)
+    : Buffwriter(buff), params(params), format(format)
 {
 }
 

@@ -148,21 +148,16 @@ int main(int argc, char *argv[])
         std::unique_ptr<CSVWriter>(new CSVWriter(mandelbuffer, params));
     if (parser.count("img-bandw")) {
         std::cout << "+ Generating B/W image" << std::endl;
-        img = std::unique_ptr<ImageBW>(new ImageBW(
-            mandelbuffer,
-            static_cast<constants::COL_ALGO>(parser["colalgo"].as<int>()),
-            params, constants::OUT_FORMAT::IMAGE_BW));
+        img = std::unique_ptr<ImageBW>(new ImageBW(mandelbuffer, params));
         img->write_buffer();
     }
     if (parser.count("img-greyscale")) {
         std::cout << "+ Generating greyscale bitmap" << std::endl;
         int grey_base = parser["grey-base"].as<int>();
         int grey_freq = parser["grey-freq"].as<int>();
-        img = std::unique_ptr<Imagegrey>(new Imagegrey(
-            mandelbuffer,
-            static_cast<constants::COL_ALGO>(parser["colalgo"].as<int>()),
-            params, constants::OUT_FORMAT::IMAGE_GREY,
-            std::make_tuple(grey_base, 0, 0), std::make_tuple(grey_freq, 0, 0)));
+        img = std::unique_ptr<Imagegrey>(
+            new Imagegrey(mandelbuffer, params, std::make_tuple(grey_base, 0, 0),
+                          std::make_tuple(grey_freq, 0, 0)));
         img->write_buffer();
     }
     if (parser.count("img-color")) {
@@ -185,11 +180,9 @@ int main(int argc, char *argv[])
         auto rgb_phase = std::make_tuple(std::stoi(rgb_phase_vec.at(0)),
                                          std::stoi(rgb_phase_vec.at(1)),
                                          std::stoi(rgb_phase_vec.at(2)));
-        img = std::unique_ptr<Imagecol>(new Imagecol(
-            mandelbuffer,
-            static_cast<constants::COL_ALGO>(parser["colalgo"].as<int>()),
-            params, constants::OUT_FORMAT::IMAGE_COL, std::move(rgb_base),
-            std::move(rgb_freq), std::move(rgb_phase)));
+        img = std::unique_ptr<Imagecol>(
+            new Imagecol(mandelbuffer, params, std::move(rgb_base),
+                         std::move(rgb_freq), std::move(rgb_phase)));
         img->write_buffer();
     }
     if (parser.count("csv")) {

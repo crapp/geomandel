@@ -19,12 +19,10 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
 #include "imagegrey.h"
 
 Imagegrey::Imagegrey(const constants::mandelbuff &buff,
-                     const constants::COL_ALGO col_algo,
                      const std::shared_ptr<MandelParameters> &params,
-                     const constants::OUT_FORMAT format,
                      std::tuple<int, int, int> rgb_base,
                      std::tuple<double, double, double> rgb_freq)
-    : Imagewriter(buff, col_algo, params, format),
+    : Imagewriter(buff, params, constants::OUT_FORMAT::IMAGE_GREY),
       rgb_base(std::move(rgb_base)),
       rgb_freq(std::move(rgb_freq))
 {
@@ -35,7 +33,7 @@ void Imagegrey::out_format_write(std::ofstream &img,
                                  const constants::Iterations &data)
 {
     unsigned int its = data.default_index;
-    if (col_algo == constants::COL_ALGO::ESCAPE_TIME) {
+    if (this->params->col_algo == constants::COL_ALGO::ESCAPE_TIME) {
         // Escape time algorithm coloring
         // not very efficient to do some of the math over
         // and over again. Hopefully the compiler will
@@ -48,7 +46,7 @@ void Imagegrey::out_format_write(std::ofstream &img,
             img << std::get<0>(rgb) << " ";
         }
     }
-    if (col_algo == constants::COL_ALGO::CONTINUOUS) {
+    if (this->params->col_algo == constants::COL_ALGO::CONTINUOUS) {
         if (its < this->params->bailout) {
             double continuous_index = data.continous_index;
             // TODO: Clang format is producing some weird

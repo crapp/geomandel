@@ -73,8 +73,8 @@ inline void init_mandel_parameters(std::shared_ptr<MandelParameters> params,
         if (parser.count("m"))
             cores = parser["m"].as<unsigned int>();
 
-        constants::COL_ALGO col_algo =
-            static_cast<constants::COL_ALGO>(parser["colalgo"].as<int>());
+        constants::COL_ALGO col_algo = static_cast<constants::COL_ALGO>(
+            parser["colalgo"].as<unsigned int>());
 
         // Stores informations used by the mandel cruncher and some data
         // writer classes
@@ -122,7 +122,7 @@ inline void configure_command_line_parser(cxxopts::Options &p)
         ("img-greyscale", "Write Buffer to Greyscale Bitmap")
         ("img-color", "Write Buffer to RGB Bitmap")
         ("colalgo", "Coloring algorithm 0->Escape Time, 1->Continuous Coloring",
-         cxxopts::value<int>()->default_value("0"))
+         cxxopts::value<unsigned int>()->default_value("0"))
         ("grey-base", "Base grey color between 0 - 255",
          cxxopts::value<int>()->default_value("55"))
         ("grey-freq", "Frequency for grey shade computation",
