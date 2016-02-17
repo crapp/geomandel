@@ -18,13 +18,22 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
 
 #include "csvwriter.h"
 
-CSVWriter::CSVWriter(const constants::mandelbuff &buff) : Buffwriter(buff) {}
+CSVWriter::CSVWriter(const constants::mandelbuff &buff,
+                     const std::shared_ptr<MandelParameters> &params)
+    : Buffwriter(buff), params(params)
+{
+}
 CSVWriter::~CSVWriter() {}
 void CSVWriter::write_buffer()
 {
     // generate a csv file for iterations and modulus
-    std::ofstream csv_stream_iter("geomandel_iter.csv", std::ofstream::out);
-    std::ofstream csv_stream_modulus("geomandel_modulus.csv",
+    std::string filename = this->out_file_name(
+        this->params->image_base, this->params->bailout, this->params->xrange,
+        this->params->yrange, this->params->zoom, this->params->cores,
+        this->params->col_algo);
+    std::ofstream csv_stream_iter(filename + "_iterindex.csv",
+                                  std::ofstream::out);
+    std::ofstream csv_stream_modulus(filename + "_contindex.csv",
                                      std::ofstream::out);
     csv_stream_iter.exceptions(std::ofstream::failbit | std::ofstream::badbit);
     csv_stream_modulus.exceptions(std::ofstream::failbit |

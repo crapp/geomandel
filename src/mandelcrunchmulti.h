@@ -29,17 +29,13 @@ class Mandelcrunchmulti : public Mandelcruncher
 {
 public:
     Mandelcrunchmulti(constants::mandelbuff &buff,
-                      const std::shared_ptr<MandelParameters> &params,
-                      constants::COL_ALGO col_algo,
-                      int cores);
+                      const std::shared_ptr<MandelParameters> &params);
     virtual ~Mandelcrunchmulti();
 
     void fill_buffer();
 
 private:
     /* data */
-    int cores;
-
 };
 
 #endif /* ifndef MANDELCRUNCHMULTI_H */

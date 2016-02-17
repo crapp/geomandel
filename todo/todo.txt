@@ -8,5 +8,5 @@ x 2016-02-14 2016-02-04 Implement continuous coloring algorithm @color
 x 2016-02-14 2016-02-05 Add possibility to zoom mandelbrot at a given coordinate @zoom
 (B) 2016-02-05 Add a jupyter notebook to plot iterations using matplotlib  @zoom @color
 (A) 2016-02-14 Unit testing based on the Catch framework @test
-(C) 2016-02-14 Different algorithms for mandelbrot  computation. Currently only serial is implemented @computation
+(C) 2016-02-14 Different algorithms for mandelbrot computation. Currently only serial is implemented @computation
 

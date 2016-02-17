@@ -26,8 +26,7 @@ class Mandelcrunchsingle : public Mandelcruncher
 {
 public:
     Mandelcrunchsingle(constants::mandelbuff &buff,
-                       const std::shared_ptr<MandelParameters> &params,
-                       constants::COL_ALGO col_algo);
+                       const std::shared_ptr<MandelParameters> &params);
     virtual ~Mandelcrunchsingle();
 
     void fill_buffer();

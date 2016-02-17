@@ -19,9 +19,8 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
 #include "mandelcrunchmulti.h"
 
 Mandelcrunchmulti::Mandelcrunchmulti(
-    constants::mandelbuff &buff, const std::shared_ptr<MandelParameters> &params,
-    constants::COL_ALGO col_algo, int cores)
-    : Mandelcruncher(buff, params, col_algo), cores(cores)
+    constants::mandelbuff &buff, const std::shared_ptr<MandelParameters> &params)
+    : Mandelcruncher(buff, params)
 {
 }
 
@@ -30,7 +29,7 @@ void Mandelcrunchmulti::fill_buffer()
 {
     // a vector filled with futures. We will wait for all of them to be finished.
     std::vector<std::future<void>> futures;
-    ctpl::thread_pool tpl(cores);
+    ctpl::thread_pool tpl(this->params->cores);
 
     // calculate the mandelbrot set line by line. Each line will be pushed to the
     // thread pool as separate job. The id parameter of the lambda function
@@ -48,9 +47,9 @@ void Mandelcrunchmulti::fill_buffer()
                 auto crunched_mandel = this->crunch_mandel_complex(
                     xpass, ypass, this->params->bailout);
                 unsigned int its = std::get<0>(crunched_mandel);
-                if (this->col_algo == constants::COL_ALGO::ESCAPE_TIME)
+                if (this->params->col_algo == constants::COL_ALGO::ESCAPE_TIME)
                     int_vec[ix] = this->iterations_factory(its, 0, 0);
-                if (this->col_algo == constants::COL_ALGO::CONTINUOUS) {
+                if (this->params->col_algo == constants::COL_ALGO::CONTINUOUS) {
                     double Zx = std::get<1>(crunched_mandel);
                     double Zy = std::get<2>(crunched_mandel);
                     int_vec[ix] = this->iterations_factory(its, Zx, Zy);

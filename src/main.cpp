@@ -73,7 +73,7 @@ int main(int argc, char *argv[])
     try {
         parser.parse(argc, argv);
     } catch (const cxxopts::OptionParseException &ex) {
-        std::cout << parser.help({"", "Mandelbrot", "Image", "Export"})
+        std::cerr << parser.help({"", "Mandelbrot", "Image", "Export"})
                   << std::endl;
         std::cerr << "Could not parse command line options" << std::endl;
         std::cerr << ex.what() << std::endl;
@@ -121,15 +121,12 @@ int main(int argc, char *argv[])
     if (parser.count("m")) {
         std::cout << "+ Multicore: "
                   << std::to_string(parser["m"].as<unsigned int>()) << std::endl;
-        crunchi = std::unique_ptr<Mandelcrunchmulti>(new Mandelcrunchmulti(
-            mandelbuffer, params,
-            static_cast<constants::COL_ALGO>(parser["colalgo"].as<int>()),
-            parser["m"].as<int>()));
+        crunchi = std::unique_ptr<Mandelcrunchmulti>(
+            new Mandelcrunchmulti(mandelbuffer, params));
     } else {
         std::cout << "+ Singlecore " << std::endl;
-        crunchi = std::unique_ptr<Mandelcrunchsingle>(new Mandelcrunchsingle(
-            mandelbuffer, params,
-            static_cast<constants::COL_ALGO>(parser["colalgo"].as<int>())));
+        crunchi = std::unique_ptr<Mandelcrunchsingle>(
+            new Mandelcrunchsingle(mandelbuffer, params));
     }
 
     std::chrono::time_point<std::chrono::system_clock> tbegin;
@@ -148,7 +145,7 @@ int main(int argc, char *argv[])
     // visualize/export the crunched numbers
     std::unique_ptr<Buffwriter> img;
     std::unique_ptr<Buffwriter> csv =
-        std::unique_ptr<CSVWriter>(new CSVWriter(mandelbuffer));
+        std::unique_ptr<CSVWriter>(new CSVWriter(mandelbuffer, params));
     if (parser.count("img-bandw")) {
         std::cout << "+ Generating B/W image" << std::endl;
         img = std::unique_ptr<ImageBW>(new ImageBW(

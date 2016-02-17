@@ -19,9 +19,8 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
 #include "mandelcruncher.h"
 
 Mandelcruncher::Mandelcruncher(constants::mandelbuff &buff,
-                               const std::shared_ptr<MandelParameters> &params,
-                               constants::COL_ALGO col_algo)
-    : buff(buff), params(params), col_algo(col_algo)
+                               const std::shared_ptr<MandelParameters> &params)
+    : buff(buff), params(params)
 {
 }
 std::tuple<unsigned int, double, double> Mandelcruncher::crunch_mandel_complex(
@@ -46,15 +45,15 @@ constants::Iterations Mandelcruncher::iterations_factory(unsigned int its,
                                                          double Zx, double Zy)
 {
     constants::Iterations it;
-    if (this->col_algo == constants::COL_ALGO::ESCAPE_TIME)
+    if (this->params->col_algo == constants::COL_ALGO::ESCAPE_TIME)
         it.default_index = its;
-    if (this->col_algo == constants::COL_ALGO::CONTINUOUS) {
+    if (this->params->col_algo == constants::COL_ALGO::CONTINUOUS) {
         it.default_index = its;
         double cont_index =
             its + 1 -
             (std::log(2) / std::sqrt(Zx * Zx + Zy * Zy)) / std::log(2.0);
 
-        //its - (std::log(std::log(std::sqrt(Zx * Zx + Zy * Zy)))) / std::log(2.0);
+        // its - (std::log(std::log(std::sqrt(Zx * Zx + Zy * Zy)))) / std::log(2.0);
         it.continous_index = cont_index;
     }
     return it;

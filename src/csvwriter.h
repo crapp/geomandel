@@ -15,21 +15,29 @@ GNU General Public License for more details.
 You should have received a copy of the GNU General Public License
 along with this program.  If not, see <http://www.gnu.org/licenses/>.
 */
+#ifndef CSVWRITER_H
+#define CSVWRITER_H
 
 #include <fstream>
 #include <sstream>
+#include <memory>
 
 #include "global.h"
 #include "buffwriter.h"
+#include "mandelparams.h"
 
 class CSVWriter : public Buffwriter
 {
 public:
-    CSVWriter(const constants::mandelbuff &buff);
+    CSVWriter(const constants::mandelbuff &buff,
+              const std::shared_ptr<MandelParameters> &params);
     virtual ~CSVWriter();
 
     void write_buffer();
 
 private:
     /* data */
+    const std::shared_ptr<MandelParameters> &params;
 };
+
+#endif /* ifndef CSVWRITER_H */

@@ -69,15 +69,25 @@ inline void init_mandel_parameters(std::shared_ptr<MandelParameters> params,
                                         xrange, yrange);
         }
 
-        // Stores informations used by the mandel cruncher and some data writer
-        // classes
+        unsigned int cores = 0;
+        if (parser.count("m"))
+            cores = parser["m"].as<unsigned int>();
+
+        constants::COL_ALGO col_algo =
+            static_cast<constants::COL_ALGO>(parser["colalgo"].as<int>());
+
+        // Stores informations used by the mandel cruncher and some data
+        // writer classes
         params = std::make_shared<MandelParameters>(
             xrange, xl, xh, yrange, yl, yh, bailout, zoomlvl,
-            parser["image-file"].as<std::string>());
+            parser["image-file"].as<std::string>(), cores, col_algo);
     } catch (const cxxopts::missing_argument_exception &ex) {
-        std::cerr << "Missing argument " << ex.what() << std::endl;
+        std::cerr << "Missing argument \n  " << ex.what() << std::endl;
     } catch (const cxxopts::OptionParseException &ex) {
-        std::cerr << "Can not parse option value " << ex.what() << std::endl;
+        std::cerr << "Can not parse option value \n  " << ex.what() << std::endl;
+    } catch (const std::exception &ex) {
+        // last ressort catch
+        std::cerr << "Exception occured \n  " << ex.what() << std::endl;
     }
 }
 

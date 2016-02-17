@@ -20,3 +20,16 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
 
 Buffwriter::Buffwriter(const constants::mandelbuff &buff) : buff(buff) {}
 Buffwriter::~Buffwriter() {}
+std::string Buffwriter::out_file_name(const std::string &base_string,
+                                      unsigned int bailout, unsigned int xrange,
+                                      unsigned int yrange, unsigned int zoom,
+                                      unsigned int cores,
+                                      constants::COL_ALGO col_algo)
+{
+    std::stringstream ss;
+    ss << base_string << "_" << bailout << "_" << xrange << "x" << yrange << "_"
+       << zoom << "x"
+       << "_" << cores << "c"
+       << "_" << col_algo;
+    return ss.str();
+}

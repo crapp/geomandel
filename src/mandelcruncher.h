@@ -29,8 +29,7 @@ class Mandelcruncher
 {
 public:
     Mandelcruncher(constants::mandelbuff &buff,
-                   const std::shared_ptr<MandelParameters> &params,
-                   constants::COL_ALGO col_algo);
+                   const std::shared_ptr<MandelParameters> &params);
     virtual ~Mandelcruncher();
 
     virtual void fill_buffer() = 0;
@@ -38,7 +37,6 @@ public:
 protected:
     constants::mandelbuff &buff;
     const std::shared_ptr<MandelParameters> &params;
-    constants::COL_ALGO col_algo;
 
     /**
      * @brief Mandelbrot algorithm

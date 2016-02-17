@@ -21,6 +21,8 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
 
 #include <string>
 
+#include "global.h"
+
 struct MandelParameters {
     unsigned int xrange;
     double xdelta;
@@ -40,11 +42,16 @@ struct MandelParameters {
 
     std::string image_base;
 
+    unsigned int cores;
+
+    constants::COL_ALGO col_algo;
+
     MandelParameters() {}
     MandelParameters(unsigned int xrange, double xl, double xh,
                      unsigned int yrange, double yl, double yh,
                      unsigned int bailout, unsigned int zoom,
-                     std::string image_base)
+                     std::string image_base, unsigned int cores,
+                     constants::COL_ALGO col_algo)
         : xrange(xrange),
           xl(xl),
           xh(xh),
@@ -53,7 +60,9 @@ struct MandelParameters {
           yh(yh),
           bailout(bailout),
           zoom(zoom),
-          image_base(image_base)
+          image_base(image_base),
+          cores(cores),
+          col_algo(col_algo)
     {
         this->x = xl;
         this->y = yl;

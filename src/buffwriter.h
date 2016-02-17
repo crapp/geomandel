@@ -21,6 +21,9 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
 
 #include "global.h"
 
+#include <string>
+#include <sstream>
+
 class Buffwriter
 {
 public:
@@ -31,6 +34,11 @@ public:
 
 protected:
     const constants::mandelbuff &buff;
+
+    std::string out_file_name(const std::string &base_string,
+                              unsigned int bailout, unsigned int xrange,
+                              unsigned int yrange, unsigned int zoom,
+                              unsigned int cores, constants::COL_ALGO col_algo);
 };
 
 #endif /* ifndef BUFFWRITER_H */

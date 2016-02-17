@@ -34,12 +34,12 @@ void Imagewriter::write_buffer()
     // TODO: Maybe add coordinates for zoom
     // FIXME: Add zoom value to filename only when greater 0
     // File name: FILENAME_BAILOUT_WIDTHxHEIGHT_ZOOMx.FILE_TYPE
-    std::string filename = this->params->image_base + "_" +
-                           std::to_string(this->params->bailout) + "_" +
-                           std::to_string(this->params->xrange) + "x" +
-                           std::to_string(this->params->yrange) + "_" +
-                           std::to_string(this->params->zoom) + "x" + "." +
-                           constants::BITMAP_DEFS.at(this->format).at(0);
+    std::string filename =
+        this->out_file_name(this->params->image_base, this->params->bailout,
+                            this->params->xrange, this->params->yrange,
+                            this->params->zoom, this->params->cores,
+                            this->params->col_algo) +
+        "." + constants::BITMAP_DEFS.at(this->format).at(0);
     std::cout << "+ \u2937 " + filename << std::endl;
 
     std::ofstream img(filename, std::ofstream::out);
