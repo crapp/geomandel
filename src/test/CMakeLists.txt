@@ -1,6 +1,7 @@
 set(UNIT_SOURCE
     ${CMAKE_CURRENT_SOURCE_DIR}/test_main.cpp
     ${CMAKE_CURRENT_SOURCE_DIR}/test_commandline.cpp
+    ${CMAKE_CURRENT_SOURCE_DIR}/test_computation.cpp
 )
 
 set (MAIN_HEADER_TEST

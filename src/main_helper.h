@@ -64,6 +64,18 @@ inline void init_mandel_parameters(std::shared_ptr<MandelParameters> &params,
             zoomlvl = parser["zoom"].as<unsigned int>();
             unsigned int xcoord = parser["xcoord"].as<unsigned int>();
             unsigned int ycoord = parser["ycoord"].as<unsigned int>();
+
+            if (xcoord > xrange) {
+                std::cerr << "X Coordinate outside of the image space"
+                          << std::endl;
+                return;
+            }
+            if (ycoord > yrange) {
+                std::cerr << "Y Coordinate outside of the image space"
+                          << std::endl;
+                return;
+            }
+
             Mandelzoom zoomer;
             // calculate new complex plane
             zoomer.calcalute_zoom_cpane(xh, xl, yh, yl, zoomlvl, xcoord, ycoord,
