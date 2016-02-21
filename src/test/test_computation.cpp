@@ -30,7 +30,7 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
 /**
  * @brief Fills a vector<int> with escape time integers.
  *
- * @param tbuff 
+ * @param tbuff
  * @param z_real_min
  * @param z_real_max
  * @param z_ima_min
@@ -38,7 +38,7 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
  * @param bailout
  * @param width
  * @param height
- * @param crunch_test A mock like object that implements some wrapper methods so 
+ * @param crunch_test A mock like object that implements some wrapper methods so
  * we can access private Methods in Mandelcruncher class
  */
 void fill_test_buffer(std::vector<int> &tbuff, double z_real_min,
