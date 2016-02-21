@@ -23,26 +23,29 @@ Mandelcruncher::Mandelcruncher(constants::mandelbuff &buff,
     : buff(buff), params(params)
 {
 }
+Mandelcruncher::~Mandelcruncher() {}
 std::tuple<unsigned int, double, double> Mandelcruncher::crunch_mandel_complex(
-    double x, double y, unsigned int bailout)
+    double x, double y, unsigned int bailout) const
 {
     // The Mandelbrot Set algorithm derived from pseudo code
-    // std::cout << "Calculating [" << x << "/" << y << "]" << std::endl;
     unsigned int iterations = 0;
     double x0 = x;
     double y0 = y;
+    // std::cout << "zO(" << x << ", " << y << ")" << std::endl;
     while (x * x + y * y <= 4.0 && iterations < bailout) {
         double x_old = x;
         x = x * x - y * y + x0;
         y = 2 * x_old * y + y0;
         iterations++;
     }
+    // std::cout << "Iter: " << iterations << " zE(" << x << ", " << y << ")"
+    //           << std::endl;
     return std::make_tuple(iterations, x, y);
 }
 
-Mandelcruncher::~Mandelcruncher() {}
 constants::Iterations Mandelcruncher::iterations_factory(unsigned int its,
-                                                         double Zx, double Zy)
+                                                         double Zx,
+                                                         double Zy) const
 {
     constants::Iterations it;
     if (this->params->col_algo == constants::COL_ALGO::ESCAPE_TIME)

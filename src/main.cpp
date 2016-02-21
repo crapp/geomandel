@@ -113,6 +113,8 @@ int main(int argc, char *argv[])
     std::cout << "+ Image " << std::to_string(params->xrange) << "x"
               << std::to_string(params->yrange) << std::endl;
 
+    // TODO: Using a two dimensional vector is unnecessary. Have a look at
+    // test_computation.cpp for a better solution.
     // create the buffer that holds our data
     constants::mandelbuff mandelbuffer;
     mandelbuffer.assign(params->yrange, std::vector<constants::Iterations>());

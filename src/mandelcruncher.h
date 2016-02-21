@@ -56,7 +56,7 @@ protected:
      * the Complex Number.
      */
     std::tuple<unsigned int, double, double> crunch_mandel_complex(
-        double x, double y, unsigned int bailout);
+        double x, double y, unsigned int bailout) const;
     /**
      * @brief Returns an Iterations object based on the coloring algorithm
      *
@@ -68,7 +68,7 @@ protected:
      * @return Mandelbrot Set Buffer tuple
      */
     constants::Iterations iterations_factory(unsigned int its, double Zx,
-                                             double Zy);
+                                             double Zy) const;
 
 private:
 };

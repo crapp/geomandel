@@ -16,10 +16,48 @@ You should have received a copy of the GNU General Public License
 along with this program.  If not, see <http://www.gnu.org/licenses/>.
 */
 
+#include <vector>
+#include <memory>
+#include <algorithm>
+
 #include "catch.hpp"
 
 #include "global.h"
 #include "mandelzoom.h"
+
+#include "mandelcruncher_mock.h"
+
+/**
+ * @brief Fills a vector<int> with escape time integers.
+ *
+ * @param tbuff 
+ * @param z_real_min
+ * @param z_real_max
+ * @param z_ima_min
+ * @param z_ima_max
+ * @param bailout
+ * @param width
+ * @param height
+ * @param crunch_test A mock like object that implements some wrapper methods so 
+ * we can access private Methods in Mandelcruncher class
+ */
+void fill_test_buffer(std::vector<int> &tbuff, double z_real_min,
+                      double z_real_max, double z_ima_min, double z_ima_max,
+                      unsigned int bailout, unsigned int width,
+                      unsigned int height, const MandelcruncherMock &crunch_test)
+{
+    double real_delta = (z_real_max - z_real_min) / width;
+    double ima_delta = (z_ima_max - z_ima_min) / height;
+
+    for (unsigned int yi = 0; yi < height; yi++) {
+        for (unsigned int xi = 0; xi < width; xi++) {
+            auto crunched_mandel =
+                crunch_test.test_cruncher(z_real_min + (xi * real_delta),
+                                          z_ima_min + (yi * ima_delta), bailout);
+            tbuff.push_back(std::get<0>(crunched_mandel));
+        }
+    }
+}
 
 TEST_CASE("Computation of zoom values", "[computation]")
 {
@@ -100,5 +138,182 @@ TEST_CASE("Computation of zoom values", "[computation]")
         REQUIRE(real_max_zoom == Catch::Detail::Approx(-1.5813125));
         REQUIRE(ima_min_zoom == Catch::Detail::Approx(0.50475));
         REQUIRE(ima_max_zoom == Catch::Detail::Approx(0.50775));
+    }
+}
+
+TEST_CASE("Test computation of complex numbers and iteration count",
+          "[computation]")
+{
+    // creating a mock like object to be able to test computation. No need for
+    // a real buffer or MandelParameters object
+    constants::mandelbuff b;
+    std::shared_ptr<MandelParameters> params = nullptr;
+    MandelcruncherMock crunch_test(b, params);
+
+    SECTION(
+        "Test some single point computations, z1(-2.5, -1.5) - z2(1.0 - 1.5)")
+    {
+        double z_real_delta = (1.0 - (-2.5)) / 50;
+        double z_ima_delta = (1.5 - (-1.5)) / 50;
+
+        // testing point 10/15
+        auto crunched_mandel = crunch_test.test_cruncher(
+            -2.5 + 10 * z_real_delta, -1.5 + 15 * z_ima_delta, 100);
+        REQUIRE(std::get<0>(crunched_mandel) == 2);
+        REQUIRE(std::get<1>(crunched_mandel) == Catch::Detail::Approx(-3.0672));
+        REQUIRE(std::get<2>(crunched_mandel) == Catch::Detail::Approx(2.7696));
+
+        // testing point 33/25
+        crunched_mandel = crunch_test.test_cruncher(
+            -2.5 + 33 * z_real_delta, -1.5 + 25 * z_ima_delta, 100);
+        REQUIRE(std::get<0>(crunched_mandel) == 100);
+        REQUIRE(std::get<1>(crunched_mandel) ==
+                Catch::Detail::Approx(-0.16332495807107994));
+        REQUIRE(std::get<2>(crunched_mandel) == Catch::Detail::Approx(0));
+
+        // testing point 41/27
+        crunched_mandel = crunch_test.test_cruncher(
+            -2.5 + 41 * z_real_delta, -1.5 + 27 * z_ima_delta, 100);
+        REQUIRE(std::get<0>(crunched_mandel) == 55);
+        REQUIRE(std::get<1>(crunched_mandel) ==
+                Catch::Detail::Approx(2.3637850846657784));
+        REQUIRE(std::get<2>(crunched_mandel) ==
+                Catch::Detail::Approx(-2.264372597523388));
+    }
+
+    SECTION("Testing Mandelbrot 10x10, Bailout 10, -2.5 - 1.0 -1.5 - 1.5")
+    {
+        std::vector<int> result = {
+            0,  0,  0,  0,  1,  1,  1,  1,  1,  1,  0,  0,  0,  1,  2,  2,  2,
+            2,  1,  1,  0,  0,  0,  2,  2,  3,  4,  10, 3,  1,  0,  0,  2,  2,
+            3,  5,  10, 10, 10, 2,  0,  0,  3,  4,  10, 10, 10, 10, 10, 2,  0,
+            0,  10, 10, 10, 10, 10, 10, 10, 3,  0,  0,  3,  4,  10, 10, 10, 10,
+            10, 2,  0,  0,  2,  2,  3,  5,  10, 10, 10, 2,  0,  0,  0,  2,  2,
+            3,  4,  10, 3,  1,  0,  0,  0,  1,  2,  2,  2,  2,  1,  1};
+
+        std::vector<int> escape;
+
+        fill_test_buffer(escape, -2.5, 1.0, -1.5, 1.5, 10, 10, 10, crunch_test);
+
+        std::pair<std::vector<int>::iterator, std::vector<int>::iterator>
+            first_mismatch;
+        // search for first mismatch
+        first_mismatch =
+            std::mismatch(result.begin(), result.end(), escape.begin());
+        // okay if no mismatch
+        REQUIRE(first_mismatch.first == result.end());
+        REQUIRE(first_mismatch.second == escape.end());
+    };
+
+    SECTION("Testing Mandelbrot 20x40, Bailout 88, -2.5 - 1.0 -1.5 - 1.5")
+    {
+        std::vector<int> result = {
+            0,  0,  0,  0,  0,  0,  0,  1,  1,  1,  1,  1,  1,  1,  1,  1,  1,
+            1,  1,  1,  0,  0,  0,  0,  0,  0,  0,  1,  1,  1,  1,  1,  1,  1,
+            1,  1,  1,  1,  1,  1,  0,  0,  0,  0,  0,  0,  1,  1,  1,  1,  1,
+            1,  1,  1,  1,  1,  1,  1,  1,  1,  0,  0,  0,  0,  0,  0,  1,  1,
+            1,  1,  2,  2,  2,  2,  1,  1,  1,  1,  1,  1,  0,  0,  0,  0,  0,
+            0,  1,  1,  2,  2,  2,  2,  2,  2,  2,  2,  1,  1,  1,  1,  0,  0,
+            0,  0,  0,  1,  1,  2,  2,  2,  2,  2,  3,  5,  3,  2,  1,  1,  1,
+            1,  0,  0,  0,  0,  0,  1,  1,  2,  2,  2,  2,  3,  3,  5,  5,  3,
+            2,  1,  1,  1,  0,  0,  0,  0,  0,  1,  2,  2,  2,  2,  2,  3,  4,
+            6,  11, 3,  3,  2,  1,  1,  0,  0,  0,  0,  0,  1,  2,  2,  2,  2,
+            3,  3,  4,  8,  10, 4,  3,  2,  1,  1,  0,  0,  0,  0,  1,  2,  2,
+            2,  2,  2,  3,  3,  5,  24, 68, 4,  3,  2,  2,  1,  0,  0,  0,  0,
+            1,  2,  2,  2,  2,  3,  3,  5,  6,  88, 88, 6,  4,  2,  2,  1,  0,
+            0,  0,  0,  1,  2,  2,  2,  2,  3,  4,  10, 11, 16, 88, 12, 6,  3,
+            2,  1,  0,  0,  0,  0,  2,  2,  2,  2,  3,  4,  5,  13, 25, 88, 88,
+            88, 14, 4,  2,  2,  0,  0,  0,  0,  2,  2,  2,  3,  4,  4,  5,  12,
+            88, 88, 88, 88, 88, 4,  2,  2,  0,  0,  0,  0,  2,  2,  2,  5,  4,
+            5,  6,  88, 88, 88, 88, 88, 33, 4,  2,  2,  0,  0,  0,  0,  2,  3,
+            3,  8,  6,  6,  7,  88, 88, 88, 88, 88, 88, 6,  2,  2,  0,  0,  0,
+            1,  3,  3,  4,  7,  11, 16, 10, 88, 88, 88, 88, 88, 88, 5,  2,  2,
+            0,  0,  0,  2,  3,  3,  4,  8,  88, 88, 13, 88, 88, 88, 88, 88, 88,
+            5,  3,  2,  0,  0,  0,  2,  3,  4,  6,  11, 88, 88, 21, 88, 88, 88,
+            88, 88, 88, 4,  3,  2,  0,  0,  0,  3,  4,  5,  8,  19, 88, 88, 42,
+            88, 88, 88, 88, 88, 88, 4,  3,  2,  0,  0,  0,  88, 88, 88, 88, 88,
+            88, 88, 88, 88, 88, 88, 88, 88, 11, 4,  3,  2,  0,  0,  0,  3,  4,
+            5,  8,  19, 88, 88, 42, 88, 88, 88, 88, 88, 88, 4,  3,  2,  0,  0,
+            0,  2,  3,  4,  6,  11, 88, 88, 21, 88, 88, 88, 88, 88, 88, 4,  3,
+            2,  0,  0,  0,  2,  3,  3,  4,  8,  88, 88, 13, 88, 88, 88, 88, 88,
+            88, 5,  3,  2,  0,  0,  0,  1,  3,  3,  4,  7,  11, 16, 10, 88, 88,
+            88, 88, 88, 88, 5,  2,  2,  0,  0,  0,  0,  2,  3,  3,  8,  6,  6,
+            7,  88, 88, 88, 88, 88, 88, 6,  2,  2,  0,  0,  0,  0,  2,  2,  2,
+            5,  4,  5,  6,  88, 88, 88, 88, 88, 33, 4,  2,  2,  0,  0,  0,  0,
+            2,  2,  2,  3,  4,  4,  5,  12, 88, 88, 88, 88, 88, 4,  2,  2,  0,
+            0,  0,  0,  2,  2,  2,  2,  3,  4,  5,  13, 25, 88, 88, 88, 14, 4,
+            2,  2,  0,  0,  0,  0,  1,  2,  2,  2,  2,  3,  4,  10, 11, 16, 88,
+            12, 6,  3,  2,  1,  0,  0,  0,  0,  1,  2,  2,  2,  2,  3,  3,  5,
+            6,  88, 88, 6,  4,  2,  2,  1,  0,  0,  0,  0,  1,  2,  2,  2,  2,
+            2,  3,  3,  5,  24, 68, 4,  3,  2,  2,  1,  0,  0,  0,  0,  0,  1,
+            2,  2,  2,  2,  3,  3,  4,  8,  10, 4,  3,  2,  1,  1,  0,  0,  0,
+            0,  0,  1,  2,  2,  2,  2,  2,  3,  4,  6,  11, 3,  3,  2,  1,  1,
+            0,  0,  0,  0,  0,  1,  1,  2,  2,  2,  2,  3,  3,  5,  5,  3,  2,
+            1,  1,  1,  0,  0,  0,  0,  0,  1,  1,  2,  2,  2,  2,  2,  3,  5,
+            3,  2,  1,  1,  1,  1,  0,  0,  0,  0,  0,  0,  1,  1,  2,  2,  2,
+            2,  2,  2,  2,  2,  1,  1,  1,  1,  0,  0,  0,  0,  0,  0,  1,  1,
+            1,  1,  2,  2,  2,  2,  1,  1,  1,  1,  1,  1,  0,  0,  0,  0,  0,
+            0,  1,  1,  1,  1,  1,  1,  1,  1,  1,  1,  1,  1,  1,  1,  0,  0,
+            0,  0,  0,  0,  0,  1,  1,  1,  1,  1,  1,  1,  1,  1,  1,  1,  1,
+            1};
+
+        std::vector<int> escape;
+
+        fill_test_buffer(escape, -2.5, 1.0, -1.5, 1.5, 88, 20, 40, crunch_test);
+
+        std::pair<std::vector<int>::iterator, std::vector<int>::iterator>
+            first_mismatch;
+        // search for first mismatch
+        first_mismatch =
+            std::mismatch(result.begin(), result.end(), escape.begin());
+        // okay if no mismatch
+        REQUIRE(first_mismatch.first == result.end());
+        REQUIRE(first_mismatch.second == escape.end());
+    };
+}
+
+TEST_CASE("Test computation of continuous index", "[computation]")
+{
+    // creating a mock like object to be able to test computation. No need for
+    // a real buffer or MandelParameters object
+    constants::mandelbuff b;
+    std::shared_ptr<MandelParameters> params =
+        std::make_shared<MandelParameters>();
+    MandelcruncherMock crunch_test(b, params);
+
+    SECTION("Default index of its 2, -3.0672, 2.7696")
+    {
+        params->col_algo = constants::COL_ALGO::ESCAPE_TIME;
+        auto it_object = crunch_test.test_iterfactory(2, -3.0672, 2.7696);
+        REQUIRE(it_object.default_index == 2);
+        REQUIRE(it_object.continous_index == 0);
+    }
+
+    SECTION("Continuous index of its 2, -3.0672, 2.7696")
+    {
+        params->col_algo = constants::COL_ALGO::CONTINUOUS;
+        auto it_object = crunch_test.test_iterfactory(2, -3.0672, 2.7696);
+        REQUIRE(it_object.default_index == 2);
+        REQUIRE(it_object.continous_index ==
+                Catch::Detail::Approx(2.758021706608733));
+    }
+
+    SECTION("Default index of its 55, 2.3637850846657784, -2.264372597523388")
+    {
+        params->col_algo = constants::COL_ALGO::ESCAPE_TIME;
+        auto it_object = crunch_test.test_iterfactory(55, 2.3637850846657784,
+                                                      -2.264372597523388);
+        REQUIRE(it_object.default_index == 55);
+        REQUIRE(it_object.continous_index == 0);
+    }
+
+    SECTION("Continuous index of its 55, 2.3637850846657784, -2.264372597523388")
+    {
+        params->col_algo = constants::COL_ALGO::CONTINUOUS;
+        auto it_object = crunch_test.test_iterfactory(55, 2.3637850846657784,
+                                                      -2.264372597523388);
+        REQUIRE(it_object.default_index == 55);
+        REQUIRE(it_object.continous_index ==
+                Catch::Detail::Approx(55.69450318630743));
     }
 }
