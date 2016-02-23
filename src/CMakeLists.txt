@@ -33,6 +33,9 @@ else ()
     message(FATAL_ERROR "Your C++ compiler does not support C++11.")
 endif ()
 
+# Add custom cmake modules
+set(CMAKE_MODULE_PATH "${CMAKE_SOURCE_DIR}/cmake_modules" ${CMAKE_MODULE_PATH})
+
 find_package(Threads REQUIRED)
 
 set (MAIN_SOURCE
