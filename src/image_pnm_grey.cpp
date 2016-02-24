@@ -16,13 +16,13 @@ You should have received a copy of the GNU General Public License
 along with this program.  If not, see <http://www.gnu.org/licenses/>.
 */
 
-#include "imagegrey.h"
+#include "image_pnm_grey.h"
 
 Imagegrey::Imagegrey(const constants::mandelbuff &buff,
                      const std::shared_ptr<MandelParameters> &params,
                      std::tuple<int, int, int> rgb_base,
                      std::tuple<double, double, double> rgb_freq)
-    : Imagewriter(buff, params, constants::OUT_FORMAT::IMAGE_PNM_GREY),
+    : ImagePNM(buff, params, constants::OUT_FORMAT::IMAGE_PNM_GREY),
       rgb_base(std::move(rgb_base)),
       rgb_freq(std::move(rgb_freq))
 {

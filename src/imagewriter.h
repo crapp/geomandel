@@ -19,7 +19,6 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
 #ifndef IMAGEWRITER_H
 #define IMAGEWRITER_H
 
-#include <fstream>
 #include <string>
 #include <cmath>
 #include <tuple>
@@ -36,13 +35,11 @@ public:
                 const constants::OUT_FORMAT format);
     virtual ~Imagewriter();
 
-    void write_buffer();
+    virtual void write_buffer() = 0;
 
 protected:
     const std::shared_ptr<MandelParameters> &params;
-
-    virtual void out_format_write(std::ofstream &img,
-                                  const constants::Iterations &data) = 0;
+    const constants::OUT_FORMAT format;
 
     /**
      * @brief Map iteration count on RGB colors in a inear fashion
@@ -84,7 +81,6 @@ protected:
 
 private:
     /* data */
-    const constants::OUT_FORMAT format;
 };
 
 #endif /* ifndef IMAGEWRITER_H */

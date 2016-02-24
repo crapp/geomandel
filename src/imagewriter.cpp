@@ -26,57 +26,6 @@ Imagewriter::Imagewriter(const constants::mandelbuff &buff,
 }
 
 Imagewriter::~Imagewriter() {}
-void Imagewriter::write_buffer()
-{
-    // This will overwrite any existing image. Image is written into the
-    // directory from where the application was called.
-    // TODO: Maybe add coordinates for zoom
-    // FIXME: Add zoom value to filename only when greater 0
-    // File name: FILENAME_BAILOUT_WIDTHxHEIGHT_ZOOMx.FILE_TYPE
-    std::string filename =
-        this->out_file_name(this->params->image_base, this->params->bailout,
-                            this->params->xrange, this->params->yrange,
-                            this->params->zoom, this->params->cores,
-                            this->params->col_algo) +
-        "." + constants::BITMAP_DEFS.at(this->format).at(0);
-    std::cout << "+ \u2937 " + filename << std::endl;
-
-    std::ofstream img(filename, std::ofstream::out);
-    img.exceptions(std::ofstream::failbit | std::ofstream::badbit);
-    try {
-        if (img.is_open()) {
-            // magic number for bitmap
-            img << constants::BITMAP_DEFS.at(this->format).at(1) << std::endl;
-            // comments
-            img << "# Created with geomandel https://git.io/vgXRW" << std::endl;
-            // specify width and height of the bitmap
-            img << this->buff.at(0).size() << " " << this->buff.size()
-                << std::endl;
-            if (this->format == constants::OUT_FORMAT::IMAGE_PNM_GREY ||
-                this->format == constants::OUT_FORMAT::IMAGE_PNM_COL)
-                img << 255 << std::endl;
-            for (const auto &v : this->buff) {
-                int linepos = 1;
-                for (const auto &data : v) {
-                    // this kind of images don't allow for more than 70
-                    // characters in one row
-                    // FIXME: This kind of linepos handling is borked
-                    if (linepos % 70 == 0) {
-                        img << std::endl;
-                        linepos = 0;
-                    }
-                    // write data to image file stream
-                    this->out_format_write(img, data);
-                    linepos++;
-                }
-            }
-        }
-    } catch (const std::ifstream::failure &e) {
-        std::cerr << "Error writing image file" << std::endl;
-        std::cerr << e.what() << std::endl;
-    }
-}
-
 std::tuple<int, int, int> Imagewriter::rgb_linear(
     unsigned int its, const std::tuple<int, int, int> &rgb_base,
     const std::tuple<double, double, double> &rgb_freq)

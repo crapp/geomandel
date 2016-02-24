@@ -20,6 +20,8 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
 
 #include "cxxopts.hpp"
 
+#include "config.h"
+
 #include "mandelparams.h"
 #include "mandelzoom.h"
 
@@ -135,8 +137,8 @@ inline void configure_command_line_parser(cxxopts::Options &p)
         ("img-pnm-grey", "Write Buffer to grey scale PGM")
         ("img-pnm-col", "Write Buffer to PPM Bitmap")
 #ifdef HAVE_SFML
-        ("img-jpg", "Write buffer to jpg image")
-        ("img-png", "Write buffer to png image")
+        ("img-jpg", "Write Buffer to JPG image")
+        ("img-png", "Write Buffer to PNG image")
 #endif
         ("colalgo", "Coloring algorithm 0->Escape Time, 1->Continuous Coloring",
          cxxopts::value<unsigned int>()->default_value("0"))

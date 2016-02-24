@@ -38,9 +38,10 @@ set (MAIN_SOURCE
     ${CMAKE_CURRENT_SOURCE_DIR}/buffwriter.cpp
     ${CMAKE_CURRENT_SOURCE_DIR}/csvwriter.cpp
     ${CMAKE_CURRENT_SOURCE_DIR}/imagewriter.cpp
-    ${CMAKE_CURRENT_SOURCE_DIR}/imagebw.cpp
-    ${CMAKE_CURRENT_SOURCE_DIR}/imagecol.cpp
-    ${CMAKE_CURRENT_SOURCE_DIR}/imagegrey.cpp
+    ${CMAKE_CURRENT_SOURCE_DIR}/image_pnm.cpp
+    ${CMAKE_CURRENT_SOURCE_DIR}/image_pnm_bw.cpp
+    ${CMAKE_CURRENT_SOURCE_DIR}/image_pnm_col.cpp
+    ${CMAKE_CURRENT_SOURCE_DIR}/image_pnm_grey.cpp
     ${CMAKE_CURRENT_SOURCE_DIR}/main.cpp
     ${CMAKE_CURRENT_SOURCE_DIR}/mandelcruncher.cpp
     ${CMAKE_CURRENT_SOURCE_DIR}/mandelcrunchmulti.cpp
@@ -53,9 +54,10 @@ set (MAIN_HEADER
     ${CMAKE_CURRENT_SOURCE_DIR}/csvwriter.h
     ${CMAKE_CURRENT_SOURCE_DIR}/global.h
     ${CMAKE_CURRENT_SOURCE_DIR}/imagewriter.h
-    ${CMAKE_CURRENT_SOURCE_DIR}/imagebw.h
-    ${CMAKE_CURRENT_SOURCE_DIR}/imagecol.h
-    ${CMAKE_CURRENT_SOURCE_DIR}/imagegrey.h
+    ${CMAKE_CURRENT_SOURCE_DIR}/image_pnm.h
+    ${CMAKE_CURRENT_SOURCE_DIR}/image_pnm_bw.h
+    ${CMAKE_CURRENT_SOURCE_DIR}/image_pnm_col.h
+    ${CMAKE_CURRENT_SOURCE_DIR}/image_pnm_grey.h
     ${CMAKE_CURRENT_SOURCE_DIR}/main_helper.h
     ${CMAKE_CURRENT_SOURCE_DIR}/mandelcruncher.h
     ${CMAKE_CURRENT_SOURCE_DIR}/mandelcrunchmulti.h

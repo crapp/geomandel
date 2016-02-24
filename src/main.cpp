@@ -30,9 +30,9 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
 #include "main_helper.h"
 #include "config.h"
 
-#include "imagebw.h"
-#include "imagegrey.h"
-#include "imagecol.h"
+#include "image_pnm_bw.h"
+#include "image_pnm_grey.h"
+#include "image_pnm_col.h"
 
 #include "csvwriter.h"
 
@@ -169,7 +169,7 @@ int main(int argc, char *argv[])
                           std::make_tuple(grey_freq, 0, 0)));
         img->write_buffer();
     }
-    if (parser.count("img-ppm-col")) {
+    if (parser.count("img-pnm-col")) {
         std::cout << "+ Generating RGB bitmap" << std::endl;
         // read command line parameters and create rgb tuples
         std::vector<std::string> rgb_base_vec;

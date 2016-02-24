@@ -16,14 +16,14 @@ You should have received a copy of the GNU General Public License
 along with this program.  If not, see <http://www.gnu.org/licenses/>.
 */
 
-#include "imagecol.h"
+#include "image_pnm_col.h"
 
 Imagecol::Imagecol(const constants::mandelbuff &buff,
                    const std::shared_ptr<MandelParameters> &params,
                    std::tuple<int, int, int> rgb_base,
                    std::tuple<double, double, double> rgb_freq,
                    std::tuple<int, int, int> rgb_phase)
-    : Imagewriter(buff, params, constants::OUT_FORMAT::IMAGE_PNM_COL),
+    : ImagePNM(buff, params, constants::OUT_FORMAT::IMAGE_PNM_COL),
       rgb_base(std::move(rgb_base)),
       rgb_freq(std::move(rgb_freq)),
       rgb_phase(std::move(rgb_phase))

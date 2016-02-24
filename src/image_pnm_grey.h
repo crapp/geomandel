@@ -16,31 +16,28 @@ You should have received a copy of the GNU General Public License
 along with this program.  If not, see <http://www.gnu.org/licenses/>.
 */
 
-#ifndef IMAGECOL_H
-#define IMAGECOL_H
+#ifndef IMAGEGREY_H
+#define IMAGEGREY_H
 
 #include "global.h"
-#include "imagewriter.h"
+#include "image_pnm.h"
 
-class Imagecol : public Imagewriter
+class Imagegrey : public ImagePNM
 {
 public:
-    Imagecol(const constants::mandelbuff &buff,
-             const std::shared_ptr<MandelParameters> &params,
-             std::tuple<int, int, int> rgb_base,
-             std::tuple<double, double, double> rgb_freq,
-             std::tuple<int, int, int> rgb_phase);
-
-    virtual ~Imagecol();
+    Imagegrey(const constants::mandelbuff &buff,
+              const std::shared_ptr<MandelParameters> &params,
+              std::tuple<int, int, int> rgb_base,
+              std::tuple<double, double, double> rgb_freq);
+    virtual ~Imagegrey();
 
 private:
     /* data */
 
     std::tuple<int, int, int> rgb_base;
     std::tuple<double, double, double> rgb_freq;
-    std::tuple<int, int, int> rgb_phase;
 
     void out_format_write(std::ofstream &img, const constants::Iterations &data);
 };
 
-#endif /* ifndef IMAGECOL_H */
+#endif /* ifndef IMAGEGREY_H */

@@ -16,21 +16,23 @@ You should have received a copy of the GNU General Public License
 along with this program.  If not, see <http://www.gnu.org/licenses/>.
 */
 
-#include "imagebw.h"
+#ifndef IMAGEBW_H
+#define IMAGEBW_H
 
-ImageBW::ImageBW(const constants::mandelbuff &buff,
-                 const std::shared_ptr<MandelParameters> &params)
-    : Imagewriter(buff, params, constants::OUT_FORMAT::IMAGE_PNM_BW)
-{
-}
+#include "global.h"
+#include "image_pnm.h"
 
-ImageBW::~ImageBW() {}
-void ImageBW::out_format_write(std::ofstream &img,
-                               const constants::Iterations &data)
+class ImageBW : public ImagePNM
 {
-    if (data.default_index == this->params->bailout) {
-        img << 1 << " ";
-    } else {
-        img << 0 << " ";
-    }
-}
+public:
+    ImageBW(const constants::mandelbuff &buff,
+            const std::shared_ptr<MandelParameters> &params);
+    virtual ~ImageBW();
+
+private:
+    /* data */
+
+    void out_format_write(std::ofstream &img, const constants::Iterations &data);
+};
+
+#endif /* ifndef IMAGEBW_H */
