@@ -1,7 +1,7 @@
 (B) 2016-02-04 Write a proper README file @documentation
 (B) 2016-02-05 Add a jupyter notebook to plot iterations using matplotlib  @zoom @color
 (B) 2016-02-05 Make color variables configurable @color
-(C) 2016-02-04 Speed up mandelbrot serial cruncher code with CUDA for maximum parallelism @computation
+(C) 2016-02-04 Speed up mandelbrot serial cruncher code with openCL/Cuda for maximum parallelism. Have a look at Boost.Compute or Thrust @computation
 (C) 2016-02-05 Document code with doxygen and code comments @documentation
 (C) 2016-02-05 Linear RGB function extension like (255 - its * freq) % (255 - base) @color
 (C) 2016-02-05 Maybe add a plugin api based on python for rgb color @color

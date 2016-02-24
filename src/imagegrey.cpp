@@ -22,7 +22,7 @@ Imagegrey::Imagegrey(const constants::mandelbuff &buff,
                      const std::shared_ptr<MandelParameters> &params,
                      std::tuple<int, int, int> rgb_base,
                      std::tuple<double, double, double> rgb_freq)
-    : Imagewriter(buff, params, constants::OUT_FORMAT::IMAGE_GREY),
+    : Imagewriter(buff, params, constants::OUT_FORMAT::IMAGE_PNM_GREY),
       rgb_base(std::move(rgb_base)),
       rgb_freq(std::move(rgb_freq))
 {

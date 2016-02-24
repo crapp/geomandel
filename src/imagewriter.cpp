@@ -52,8 +52,8 @@ void Imagewriter::write_buffer()
             // specify width and height of the bitmap
             img << this->buff.at(0).size() << " " << this->buff.size()
                 << std::endl;
-            if (this->format == constants::OUT_FORMAT::IMAGE_GREY ||
-                this->format == constants::OUT_FORMAT::IMAGE_COL)
+            if (this->format == constants::OUT_FORMAT::IMAGE_PNM_GREY ||
+                this->format == constants::OUT_FORMAT::IMAGE_PNM_COL)
                 img << 255 << std::endl;
             for (const auto &v : this->buff) {
                 int linepos = 1;

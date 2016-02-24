@@ -20,7 +20,7 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
 
 ImageBW::ImageBW(const constants::mandelbuff &buff,
                  const std::shared_ptr<MandelParameters> &params)
-    : Imagewriter(buff, params, constants::OUT_FORMAT::IMAGE_BW)
+    : Imagewriter(buff, params, constants::OUT_FORMAT::IMAGE_PNM_BW)
 {
 }
 

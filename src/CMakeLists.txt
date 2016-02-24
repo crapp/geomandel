@@ -33,10 +33,6 @@ else ()
     message(FATAL_ERROR "Your C++ compiler does not support C++11.")
 endif ()
 
-# Add custom cmake modules
-set(CMAKE_MODULE_PATH "${CMAKE_SOURCE_DIR}/cmake_modules" ${CMAKE_MODULE_PATH})
-
-find_package(Threads REQUIRED)
 
 set (MAIN_SOURCE
     ${CMAKE_CURRENT_SOURCE_DIR}/buffwriter.cpp
@@ -51,7 +47,6 @@ set (MAIN_SOURCE
     ${CMAKE_CURRENT_SOURCE_DIR}/mandelcrunchsingle.cpp
     ${CMAKE_CURRENT_SOURCE_DIR}/mandelzoom.cpp
 )
-
 
 set (MAIN_HEADER
     ${CMAKE_CURRENT_SOURCE_DIR}/buffwriter.h
@@ -69,12 +64,21 @@ set (MAIN_HEADER
     ${CMAKE_CURRENT_SOURCE_DIR}/mandelzoom.h
 )
 
-
-
 set (HEADER_LIB
     ${CMAKE_CURRENT_SOURCE_DIR}/ctpl_stl.h
     ${CMAKE_CURRENT_SOURCE_DIR}/cxxopts.hpp
 )
+
+# Add custom cmake modules
+set(CMAKE_MODULE_PATH "${CMAKE_SOURCE_DIR}/cmake_modules" ${CMAKE_MODULE_PATH})
+
+find_package(Threads REQUIRED)
+find_package(SFML 2.3 COMPONENTS graphics)
+
+if (${SFML_FOUND})
+    include_directories(${SFML_INCLUDE_DIR})
+    set (HAVE_SFML ON)
+endif()
 
 configure_file(${CMAKE_CURRENT_SOURCE_DIR}/config.h.in config.h)
 
@@ -85,6 +89,9 @@ include_directories(
 
 add_executable(geomandel ${MAIN_HEADER} ${HEADER_LIB} ${MAIN_SOURCE})
 target_link_libraries(geomandel ${CMAKE_THREAD_LIBS_INIT})
+if (${SFML_FOUND})
+    target_link_libraries(geomandel ${SFML_LIBRARIES})
+endif()
 
 # TODO: It would be better to use this with CMAKEs test framework
 # check if we need to build unit test executable

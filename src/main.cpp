@@ -155,13 +155,13 @@ int main(int argc, char *argv[])
     std::unique_ptr<Buffwriter> img;
     std::unique_ptr<Buffwriter> csv =
         std::unique_ptr<CSVWriter>(new CSVWriter(mandelbuffer, params));
-    if (parser.count("img-bandw")) {
+    if (parser.count("img-pnm-bw")) {
         std::cout << "+ Generating B/W image" << std::endl;
         img = std::unique_ptr<ImageBW>(new ImageBW(mandelbuffer, params));
         img->write_buffer();
     }
-    if (parser.count("img-greyscale")) {
-        std::cout << "+ Generating greyscale bitmap" << std::endl;
+    if (parser.count("img-pnm-grey")) {
+        std::cout << "+ Generating grey scale bitmap" << std::endl;
         int grey_base = parser["grey-base"].as<int>();
         int grey_freq = parser["grey-freq"].as<int>();
         img = std::unique_ptr<Imagegrey>(
@@ -169,7 +169,7 @@ int main(int argc, char *argv[])
                           std::make_tuple(grey_freq, 0, 0)));
         img->write_buffer();
     }
-    if (parser.count("img-color")) {
+    if (parser.count("img-ppm-col")) {
         std::cout << "+ Generating RGB bitmap" << std::endl;
         // read command line parameters and create rgb tuples
         std::vector<std::string> rgb_base_vec;

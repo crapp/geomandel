@@ -32,13 +32,22 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
 namespace constants
 {
-enum OUT_FORMAT { IMAGE_BW, IMAGE_GREY, IMAGE_COL, GEOTIFF };
+enum OUT_FORMAT {
+    IMAGE_PNM_BW,
+    IMAGE_PNM_GREY,
+    IMAGE_PNM_COL,
+    IMAGE_PNG,
+    IMAGE_JPG,
+    GEOTIFF
+};
 enum COL_ALGO { ESCAPE_TIME, CONTINUOUS };
 
 const std::map<OUT_FORMAT, std::vector<std::string>> BITMAP_DEFS{
-    {OUT_FORMAT::IMAGE_BW, {"pbm", "P1"}},
-    {OUT_FORMAT::IMAGE_GREY, {"pgm", "P2"}},
-    {OUT_FORMAT::IMAGE_COL, {"ppm", "P3"}}};
+    {OUT_FORMAT::IMAGE_PNM_BW, {"pbm", "P1"}},
+    {OUT_FORMAT::IMAGE_PNM_GREY, {"pgm", "P2"}},
+    {OUT_FORMAT::IMAGE_PNM_COL, {"ppm", "P3"}},
+    {OUT_FORMAT::IMAGE_PNG, {"png"}},
+    {OUT_FORMAT::IMAGE_JPG, {"jpg"}}};
 
 struct Iterations {
     unsigned int default_index;

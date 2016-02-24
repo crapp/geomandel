@@ -131,9 +131,13 @@ inline void configure_command_line_parser(cxxopts::Options &p)
          cxxopts::value<unsigned int>()->default_value("1000"))
         ("h,height", "Image height",
          cxxopts::value<unsigned int>()->default_value("1000"))
-        ("img-bandw", "Write Buffer to B&W Bitmap")
-        ("img-greyscale", "Write Buffer to Greyscale Bitmap")
-        ("img-color", "Write Buffer to RGB Bitmap")
+        ("img-pnm-bw", "Write Buffer to PBM Bitmap")
+        ("img-pnm-grey", "Write Buffer to grey scale PGM")
+        ("img-pnm-col", "Write Buffer to PPM Bitmap")
+#ifdef HAVE_SFML
+        ("img-jpg", "Write buffer to jpg image")
+        ("img-png", "Write buffer to png image")
+#endif
         ("colalgo", "Coloring algorithm 0->Escape Time, 1->Continuous Coloring",
          cxxopts::value<unsigned int>()->default_value("0"))
         ("grey-base", "Base grey color between 0 - 255",
