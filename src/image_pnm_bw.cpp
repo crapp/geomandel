@@ -25,12 +25,12 @@ ImageBW::ImageBW(const constants::mandelbuff &buff,
 }
 
 ImageBW::~ImageBW() {}
-void ImageBW::out_format_write(std::ofstream &img,
+void ImageBW::out_format_write(std::stringstream &img_buf,
                                const constants::Iterations &data)
 {
     if (data.default_index == this->params->bailout) {
-        img << 1 << " ";
+        img_buf << 1 << " ";
     } else {
-        img << 0 << " ";
+        img_buf << 0 << " ";
     }
 }

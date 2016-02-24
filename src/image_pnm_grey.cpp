@@ -29,7 +29,7 @@ Imagegrey::Imagegrey(const constants::mandelbuff &buff,
 }
 
 Imagegrey::~Imagegrey() {}
-void Imagegrey::out_format_write(std::ofstream &img,
+void Imagegrey::out_format_write(std::stringstream &img_buf,
                                  const constants::Iterations &data)
 {
     unsigned int its = data.default_index;
@@ -39,22 +39,22 @@ void Imagegrey::out_format_write(std::ofstream &img,
         // and over again. Hopefully the compiler will
         // optimize this ;)
         if (its == this->params->bailout) {
-            img << 0 << " ";
+            img_buf << 0 << " ";
         } else {
             std::tuple<int, int, int> rgb = this->rgb_linear(
                 its, std::make_tuple(55, 0, 0), std::make_tuple(5, 0, 0));
-            img << std::get<0>(rgb) << " ";
+            img_buf << std::get<0>(rgb) << " ";
         }
     }
     if (this->params->col_algo == constants::COL_ALGO::CONTINUOUS) {
         if (its < this->params->bailout) {
             double continuous_index = data.continous_index;
             // TODO: Clang format is producing some weird code formatting here.
-            img << static_cast<int>(std::floor(std::abs(
-                       std::sin(0.016 * continuous_index + 4) * 230 + 25)))
-                << " ";
+            img_buf << static_cast<int>(std::floor(std::abs(
+                           std::sin(0.016 * continuous_index + 4) * 230 + 25)))
+                    << " ";
         } else {
-            img << 0 << " ";
+            img_buf << 0 << " ";
         }
     }
 }

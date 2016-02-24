@@ -32,7 +32,8 @@ public:
 private:
     /* data */
 
-    void out_format_write(std::ofstream &img, const constants::Iterations &data);
+    void out_format_write(std::stringstream &img_buf,
+                          const constants::Iterations &data);
 };
 
 #endif /* ifndef IMAGEBW_H */

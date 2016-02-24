@@ -56,15 +56,17 @@ void ImagePNM::write_buffer()
             for (const auto &v : this->buff) {
                 int linepos = 1;
                 for (const auto &data : v) {
+                    std::stringstream img_buf;
                     // this kind of images don't allow for more than 70
                     // characters in one row
                     // FIXME: This kind of linepos handling is borked
                     if (linepos % 70 == 0) {
-                        img << std::endl;
+                        img_buf << std::endl;
                         linepos = 0;
                     }
                     // write data to image file stream
-                    this->out_format_write(img, data);
+                    this->out_format_write(img_buf, data);
+                    img << img_buf.rdbuf();
                     linepos++;
                 }
             }

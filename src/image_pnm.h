@@ -20,6 +20,7 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
 #define IMAGE_PNM_H
 
 #include <fstream>
+#include <sstream>
 
 #include "imagewriter.h"
 
@@ -34,7 +35,7 @@ public:
     void write_buffer();
 
 protected:
-    virtual void out_format_write(std::ofstream &img,
+    virtual void out_format_write(std::stringstream &img_buf,
                                   const constants::Iterations &data) = 0;
 
 private:

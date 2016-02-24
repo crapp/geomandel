@@ -31,28 +31,28 @@ Imagecol::Imagecol(const constants::mandelbuff &buff,
 }
 
 Imagecol::~Imagecol() {}
-void Imagecol::out_format_write(std::ofstream &img,
+void Imagecol::out_format_write(std::stringstream &img_buf,
                                 const constants::Iterations &data)
 {
     unsigned int its = data.default_index;
     double continous_index = data.continous_index;
     if (its == this->params->bailout) {
-        img << "0 0 0"
-            << "\t";
+        img_buf << "0 0 0"
+                << "\t";
         return;
     }
     if (this->params->col_algo == constants::COL_ALGO::ESCAPE_TIME) {
         auto rgb = this->rgb_linear(its, this->rgb_base, this->rgb_freq);
         //(green + ((its % 16) * 16))
 
-        img << std::get<0>(rgb) << " " << std::get<1>(rgb) << " "
-            << std::get<2>(rgb) << "\t";
+        img_buf << std::get<0>(rgb) << " " << std::get<1>(rgb) << " "
+                << std::get<2>(rgb) << "\t";
     }
     if (this->params->col_algo == constants::COL_ALGO::CONTINUOUS) {
         auto rgb = this->rgb_continuous(continous_index, this->rgb_base,
                                         this->rgb_freq, this->rgb_phase);
 
-        img << std::get<0>(rgb) << " " << std::get<1>(rgb) << " "
-            << std::get<2>(rgb) << "\t";
+        img_buf << std::get<0>(rgb) << " " << std::get<1>(rgb) << " "
+                << std::get<2>(rgb) << "\t";
     }
 }
