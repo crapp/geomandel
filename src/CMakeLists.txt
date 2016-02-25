@@ -42,7 +42,6 @@ set (MAIN_SOURCE
     ${CMAKE_CURRENT_SOURCE_DIR}/image_pnm_bw.cpp
     ${CMAKE_CURRENT_SOURCE_DIR}/image_pnm_col.cpp
     ${CMAKE_CURRENT_SOURCE_DIR}/image_pnm_grey.cpp
-    ${CMAKE_CURRENT_SOURCE_DIR}/image_sfml.cpp
     ${CMAKE_CURRENT_SOURCE_DIR}/main.cpp
     ${CMAKE_CURRENT_SOURCE_DIR}/mandelcruncher.cpp
     ${CMAKE_CURRENT_SOURCE_DIR}/mandelcrunchmulti.cpp
@@ -59,7 +58,6 @@ set (MAIN_HEADER
     ${CMAKE_CURRENT_SOURCE_DIR}/image_pnm_bw.h
     ${CMAKE_CURRENT_SOURCE_DIR}/image_pnm_col.h
     ${CMAKE_CURRENT_SOURCE_DIR}/image_pnm_grey.h
-    ${CMAKE_CURRENT_SOURCE_DIR}/image_sfml.h
     ${CMAKE_CURRENT_SOURCE_DIR}/main_helper.h
     ${CMAKE_CURRENT_SOURCE_DIR}/mandelcruncher.h
     ${CMAKE_CURRENT_SOURCE_DIR}/mandelcrunchmulti.h
@@ -82,6 +80,14 @@ find_package(SFML 2.3 COMPONENTS graphics)
 if (${SFML_FOUND})
     include_directories(${SFML_INCLUDE_DIR})
     set (HAVE_SFML ON)
+    set (MAIN_SOURCE 
+        ${MAIN_SOURCE} 
+        ${CMAKE_CURRENT_SOURCE_DIR}/image_sfml.cpp
+        )
+    set (MAIN_HEADER 
+        ${MAIN_SOURCE} 
+        ${CMAKE_CURRENT_SOURCE_DIR}/image_sfml.h
+        )
 endif()
 
 configure_file(${CMAKE_CURRENT_SOURCE_DIR}/config.h.in config.h)
