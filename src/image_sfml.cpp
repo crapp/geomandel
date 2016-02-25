@@ -19,10 +19,12 @@ ImageSFML::~ImageSFML() {}
 void ImageSFML::write_buffer()
 {
     std::vector<uint8_t> sfml_img_buf;
-    // reserve the memory this will make push_back less costly
+    // reserve memory this will make push_back less costly
     sfml_img_buf.reserve(this->params->xrange * this->params->yrange);
+    // SFML needs a data structure with 4 uint8_t per RGBA pixel
     for (const auto &v : this->buff) {
         for (const auto &it : v) {
+            // TODO: This code is quite similar to the one used in the ppm class
             unsigned int its = it.default_index;
             double continous_index = it.continous_index;
             if (its == this->params->bailout) {
@@ -36,7 +38,6 @@ void ImageSFML::write_buffer()
             std::tuple<int, int, int> rgb;
             if (this->params->col_algo == constants::COL_ALGO::ESCAPE_TIME) {
                 rgb = this->rgb_linear(its, this->rgb_base, this->rgb_freq);
-                //(green + ((its % 16) * 16))
             }
             if (this->params->col_algo == constants::COL_ALGO::CONTINUOUS) {
                 rgb = this->rgb_continuous(continous_index, this->rgb_base,
