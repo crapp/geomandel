@@ -1,0 +1,53 @@
+language: cpp
+sudo: required
+dist: trusty
+os:
+- linux
+- osx
+
+matrix:
+  include:
+    - compiler: gcc
+      addons:
+        apt:
+          sources:
+            - ubuntu-toolchain-r-test
+          packages:
+            - g++-5
+      env: COMPILER=g++-5
+    - compiler: clang
+      addons:
+        apt:
+          sources:
+            - ubuntu-toolchain-r-test
+            - llvm-toolchain-precise-3.7
+          packages:
+            - clang-3.7
+      env: COMPILER=clang++-3.7
+
+#before_install:
+#  - sudo apt-get update -qq
+#  - sudo apt-get install -y sfml
+
+install:
+  - |
+    if [[ "${TRAVIS_OS_NAME}" == "linux" ]]; then
+      CMAKE_URL="http://www.cmake.org/files/v3.3/cmake-3.3.2-Linux-x86_64.tar.gz"
+      mkdir cmake && travis_retry wget --no-check-certificate --quiet -O - ${CMAKE_URL} | tar --strip-components=1 -xz -C cmake
+      export PATH=${DEPS_DIR}/cmake/bin:${PATH}
+    else
+      brew install cmake
+    fi
+    
+script:
+  - cd ${TRAVIS_BUILD_DIR}
+  - mkdir build
+  - cd build
+  - cmake -DUNIT_TEST=ON -DCMAKE_CXX_COMPILER=$COMPILER ../ && make
+  - src/test/geomandel_tests -s
+
+#notifications:
+#  webhooks:
+#    urls: https://webhooks.gitter.im/e/
+#    on_success: change
+#    on_failure: always
