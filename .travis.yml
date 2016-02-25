@@ -29,20 +29,20 @@ matrix:
 install:
   - |
     if [[ "${TRAVIS_OS_NAME}" == "linux" ]]; then
-      CMAKE_URL="https://cmake.org/files/v3.4/cmake-3.4.3-Linux-x86_64.tar.gz"
-      mkdir cmake && travis_retry wget --no-check-certificate --quiet -O - ${CMAKE_URL} | tar --strip-components=1 -xz -C cmake
-      export PATH=${DEPS_DIR}/cmake/bin:${PATH}
-      echo ${PATH}
+      CMAKE_URL="https://cmake.org/files/v3.4/cmake-3.4.3-Linux-x86_64.sh"
+      #mkdir cmake && travis_retry wget --no-check-certificate --quiet -O - ${CMAKE_URL} | tar --strip-components=1 -xz -C cmake
+      #export PATH=${DEPS_DIR}/cmake/bin:${PATH}
+      wget --no-check-certificate --quiet -O - ${CMAKE_URL}
+      sh cmake-3.4.3-Linux-x86_64.sh --prefix=$HOME --exclude-subdir
       cmake --version
     else
       brew install cmake
     fi
     
 script:
-  - echo ${PATH}
-  - cd ${TRAVIS_BUILD_DIR}
+  - cd ${TRAVIS_BUILD_DIR} && pwd
   - mkdir build
-  - cd build
+  - cd build && pwd
   - cmake -DUNIT_TEST=ON -DCMAKE_CXX_COMPILER=$COMPILER ../ && make
   - src/test/geomandel_tests -s
 
