@@ -16,31 +16,31 @@ You should have received a copy of the GNU General Public License
 along with this program.  If not, see <http://www.gnu.org/licenses/>.
 */
 
-#ifndef IMAGE_PNM_H
-#define IMAGE_PNM_H
+#ifndef IMAGE_SFML_H
+#define IMAGE_SFML_H
 
-#include <fstream>
-#include <sstream>
+#include <SFML/Graphics/Image.hpp>
 
 #include "imagewriter.h"
 
-class ImagePNM : public Imagewriter
+class ImageSFML : public Imagewriter
 {
 public:
-    ImagePNM(const constants::mandelbuff &buff,
-             const std::shared_ptr<MandelParameters> &params,
-             const constants::OUT_FORMAT format);
-    virtual ~ImagePNM();
+    ImageSFML(const constants::mandelbuff &buff,
+              const std::shared_ptr<MandelParameters> &params,
+              std::tuple<int, int, int> rgb_base,
+              std::tuple<double, double, double> rgb_freq,
+              std::tuple<int, int, int> rgb_phase, uint8_t outfmt);
+    virtual ~ImageSFML();
 
     void write_buffer();
 
-protected:
-    virtual void out_format_write(std::stringstream &img_buf,
-                                  const constants::Iterations &data) = 0;
-
 private:
     /* data */
-    const constants::OUT_FORMAT format;
+    std::tuple<int, int, int> rgb_base;
+    std::tuple<double, double, double> rgb_freq;
+    std::tuple<int, int, int> rgb_phase;
+    uint8_t outfmt;
 };
 
-#endif /* ifndef IMAGE_PNM_H */
+#endif /* ifndef IMAGE_SFML_H */

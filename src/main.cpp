@@ -33,6 +33,9 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
 #include "image_pnm_bw.h"
 #include "image_pnm_grey.h"
 #include "image_pnm_col.h"
+#ifdef HAVE_SFML
+#include "image_sfml.h"
+#endif
 
 #include "csvwriter.h"
 
@@ -171,29 +174,37 @@ int main(int argc, char *argv[])
     }
     if (parser.count("img-pnm-col")) {
         std::cout << "+ Generating RGB bitmap" << std::endl;
-        // read command line parameters and create rgb tuples
-        std::vector<std::string> rgb_base_vec;
-        utility::split(parser["rgb-base"].as<std::string>(), ',', rgb_base_vec);
-        auto rgb_base = std::make_tuple(std::stoi(rgb_base_vec.at(0)),
-                                        std::stoi(rgb_base_vec.at(1)),
-                                        std::stoi(rgb_base_vec.at(2)));
-        std::vector<std::string> rgb_freq_vec;
-        utility::split(parser["rgb-freq"].as<std::string>(), ',', rgb_freq_vec);
-        auto rgb_freq =
-            std::make_tuple(std::fabs(std::stod(rgb_freq_vec.at(0))),
-                            std::fabs(std::stod(rgb_freq_vec.at(1))),
-                            std::fabs(std::stod(rgb_freq_vec.at(2))));
-        std::vector<std::string> rgb_phase_vec;
-        utility::split(parser["rgb-phase"].as<std::string>(), ',',
-                       rgb_phase_vec);
-        auto rgb_phase = std::make_tuple(std::stoi(rgb_phase_vec.at(0)),
-                                         std::stoi(rgb_phase_vec.at(1)),
-                                         std::stoi(rgb_phase_vec.at(2)));
+        std::tuple<int, int, int> rgb_base;
+        std::tuple<double, double, double> rgb_freq;
+        std::tuple<int, int, int> rgb_phase;
+        parse_rgb_command_options(parser, rgb_base, rgb_freq, rgb_phase);
         img = std::unique_ptr<Imagecol>(
             new Imagecol(mandelbuffer, params, std::move(rgb_base),
                          std::move(rgb_freq), std::move(rgb_phase)));
         img->write_buffer();
     }
+    uint8_t png_jpg = 0;
+    if (parser.count("img-png"))
+        png_jpg |= static_cast<uint8_t>(constants::OUT_FORMAT::IMAGE_PNG);
+
+    if (parser.count("img-jpg"))
+        png_jpg |= static_cast<uint8_t>(constants::OUT_FORMAT::IMAGE_JPG);
+    if (png_jpg != 0) {
+        std::cout << "+ Generating jpg/png image" << std::endl;
+        std::tuple<int, int, int> rgb_base;
+        std::tuple<double, double, double> rgb_freq;
+        std::tuple<int, int, int> rgb_phase;
+        parse_rgb_command_options(parser, rgb_base, rgb_freq, rgb_phase);
+// TODO: Don't like ifdefs in code. Maybe better off with an "empty"
+// ImageSFML stub class
+#ifdef HAVE_SFML
+        img = std::unique_ptr<ImageSFML>(
+            new ImageSFML(mandelbuffer, params, std::move(rgb_base),
+                          std::move(rgb_freq), std::move(rgb_phase), png_jpg));
+        img->write_buffer();
+#endif
+    }
+
     if (parser.count("csv")) {
         std::cout << "+ Exporting data to csv files" << std::endl;
         csv->write_buffer();

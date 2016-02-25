@@ -31,15 +31,13 @@ class Imagewriter : public Buffwriter
 {
 public:
     Imagewriter(const constants::mandelbuff &buff,
-                const std::shared_ptr<MandelParameters> &params,
-                const constants::OUT_FORMAT format);
+                const std::shared_ptr<MandelParameters> &params);
     virtual ~Imagewriter();
 
     virtual void write_buffer() = 0;
 
 protected:
     const std::shared_ptr<MandelParameters> &params;
-    const constants::OUT_FORMAT format;
 
     /**
      * @brief Map iteration count on RGB colors in a inear fashion

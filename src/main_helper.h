@@ -25,7 +25,6 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
 #include "mandelparams.h"
 #include "mandelzoom.h"
 
-// TODO: params Argument could be a reference to avoid reference counting
 inline void init_mandel_parameters(std::shared_ptr<MandelParameters> &params,
                                    const cxxopts::Options &parser)
 {
@@ -163,4 +162,27 @@ inline void configure_command_line_parser(cxxopts::Options &p)
         ("p,print", "Print Buffer to terminal")
         ("csv", "Export data to csv files");
     // clang-format on
+}
+
+void parse_rgb_command_options(const cxxopts::Options &parser,
+                               std::tuple<int, int, int> &rgb_base,
+                               std::tuple<double, double, double> &rgb_freq,
+                               std::tuple<int, int, int> &rgb_phase)
+{
+    // read command line parameters and create rgb tuples
+    std::vector<std::string> rgb_base_vec;
+    utility::split(parser["rgb-base"].as<std::string>(), ',', rgb_base_vec);
+    rgb_base = std::make_tuple(std::stoi(rgb_base_vec.at(0)),
+                               std::stoi(rgb_base_vec.at(1)),
+                               std::stoi(rgb_base_vec.at(2)));
+    std::vector<std::string> rgb_freq_vec;
+    utility::split(parser["rgb-freq"].as<std::string>(), ',', rgb_freq_vec);
+    rgb_freq = std::make_tuple(std::fabs(std::stod(rgb_freq_vec.at(0))),
+                               std::fabs(std::stod(rgb_freq_vec.at(1))),
+                               std::fabs(std::stod(rgb_freq_vec.at(2))));
+    std::vector<std::string> rgb_phase_vec;
+    utility::split(parser["rgb-phase"].as<std::string>(), ',', rgb_phase_vec);
+    rgb_phase = std::make_tuple(std::stoi(rgb_phase_vec.at(0)),
+                                std::stoi(rgb_phase_vec.at(1)),
+                                std::stoi(rgb_phase_vec.at(2)));
 }
