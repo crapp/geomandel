@@ -38,8 +38,8 @@ cxxopts::Options generate_empty_parser()
 TEST_CASE("Command line arguments", "[commandline]")
 {
     std::vector<const char *> test_argv_vec;
-    char **test_argv = const_cast<char **>(test_argv_vec.data());
-    int test_argc = static_cast<int>(test_argv_vec.size());
+    char **test_argv = nullptr;
+    int test_argc = 0;
     SECTION("Basic parser checking, expecting exception")
     {
         auto parser = generate_empty_parser();
