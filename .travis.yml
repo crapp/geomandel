@@ -13,6 +13,7 @@ matrix:
           packages:
             - g++-4.9
       env: COMPILER=g++-4.9
+    - os: linux
       compiler: gcc
       addons:
         apt:
@@ -21,6 +22,7 @@ matrix:
           packages:
             - g++-5
       env: COMPILER=g++-5
+    - os: linux
       compiler: clang
       addons:
         apt:
@@ -30,6 +32,7 @@ matrix:
           packages:
             - clang-3.6
       env: COMPILER=clang++-3.6
+    - os: linux
       compiler: clang
       addons:
         apt:
@@ -39,7 +42,7 @@ matrix:
           packages:
             - clang-3.7
       env: COMPILER=clang++-3.7
-  - os: osx
+    - os: osx
       compiler: clang
 
 #before_install:
@@ -51,8 +54,6 @@ install:
     if [[ "${TRAVIS_OS_NAME}" == "linux" ]]; then
       CMAKE_URL="https://cmake.org/files/v3.4/cmake-3.4.3-Linux-x86_64.sh"
       CMAKE_INSTALLER="cmake-3.4.3-Linux-x86_64.sh"
-      #mkdir cmake && travis_retry wget --no-check-certificate --quiet -O - ${CMAKE_URL} | tar --strip-components=1 -xz -C cmake
-      #export PATH=${DEPS_DIR}/cmake/bin:${PATH}
       wget --no-check-certificate --quiet -O ${CMAKE_INSTALLER} - ${CMAKE_URL}
       sh ${CMAKE_INSTALLER} --prefix=$HOME --exclude-subdir
     else
@@ -71,4 +72,4 @@ script:
 #  webhooks:
 #    urls: https://webhooks.gitter.im/e/
 #    on_success: change
-#    on_failure: always
+#
