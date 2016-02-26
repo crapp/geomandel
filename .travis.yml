@@ -4,7 +4,16 @@ dist: precise
 
 matrix:
   include:
-    - compiler: gcc
+    - os: linux
+      compiler: gcc
+      addons:
+        apt:
+          sources:
+            - ubuntu-toolchain-r-test
+          packages:
+            - g++-4.9
+      env: COMPILER=g++-4.9
+      compiler: gcc
       addons:
         apt:
           sources:
@@ -12,7 +21,16 @@ matrix:
           packages:
             - g++-5
       env: COMPILER=g++-5
-    - compiler: clang
+      compiler: clang
+      addons:
+        apt:
+          sources:
+            - ubuntu-toolchain-r-test
+            - llvm-toolchain-precise-3.6
+          packages:
+            - clang-3.6
+      env: COMPILER=clang++-3.6
+      compiler: clang
       addons:
         apt:
           sources:
@@ -21,6 +39,8 @@ matrix:
           packages:
             - clang-3.7
       env: COMPILER=clang++-3.7
+  - os: osx
+      compiler: clang
 
 #before_install:
 #  - sudo apt-get update -qq
@@ -35,11 +55,11 @@ install:
       #export PATH=${DEPS_DIR}/cmake/bin:${PATH}
       wget --no-check-certificate --quiet -O ${CMAKE_INSTALLER} - ${CMAKE_URL}
       sh ${CMAKE_INSTALLER} --prefix=$HOME --exclude-subdir
-      cmake --version
     else
+      brew update
       brew install cmake
     fi
-    
+
 script:
   - cd ${TRAVIS_BUILD_DIR} && pwd
   - mkdir build
