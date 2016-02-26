@@ -51,12 +51,12 @@ void CSVWriter::write_buffer()
                 // write the buffers into the file streams and make sure the last
                 // colon gets deleted.
                 std::string iter_line = ss_iter.str();
-                iter_line.erase(--(iter_line.cend()));
+                iter_line.erase(--(iter_line.end()));
                 csv_stream_iter << iter_line << std::endl;
                 ss_iter.str(std::string());
 
                 std::string modulus_line = ss_modulus.str();
-                modulus_line.erase(--(modulus_line.cend()));
+                modulus_line.erase(--(modulus_line.end()));
                 csv_stream_modulus << modulus_line << std::endl;
                 ss_modulus.str(std::string());
             }
