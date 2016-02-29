@@ -63,11 +63,12 @@ install:
     fi
 
 script:
-  - cd ${TRAVIS_BUILD_DIR} && pwd
-  - mkdir build
-  - cd build && pwd
-  - cmake -DUNIT_TEST=ON -DCMAKE_CXX_COMPILER=$COMPILER ../ && make
-  - src/test/geomandel_tests -s
+  - |
+    cd ${TRAVIS_BUILD_DIR} && pwd
+    mkdir build
+    cd build && pwd
+    cmake -DUNIT_TEST=ON -DCMAKE_CXX_COMPILER=$COMPILER ../ && make
+    src/test/geomandel_tests -s
 
 #notifications:
 #  webhooks:
