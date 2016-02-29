@@ -1,0 +1,189 @@
+<?xml version="1.0" encoding="UTF-8" standalone="no"?>
+<!-- Created with Inkscape (http://www.inkscape.org/) -->
+
+<svg
+   xmlns:dc="http://purl.org/dc/elements/1.1/"
+   xmlns:cc="http://creativecommons.org/ns#"
+   xmlns:rdf="http://www.w3.org/1999/02/22-rdf-syntax-ns#"
+   xmlns:svg="http://www.w3.org/2000/svg"
+   xmlns="http://www.w3.org/2000/svg"
+   xmlns:sodipodi="http://sodipodi.sourceforge.net/DTD/sodipodi-0.dtd"
+   xmlns:inkscape="http://www.inkscape.org/namespaces/inkscape"
+   id="svg2"
+   version="1.1"
+   inkscape:version="0.91 r13725"
+   xml:space="preserve"
+   width="122.67786"
+   height="57.250977"
+   viewBox="0 0 122.67786 57.250977"
+   sodipodi:docname="mandelbrot_math.svg"><metadata
+     id="metadata8"><rdf:RDF><cc:Work
+         rdf:about=""><dc:format>image/svg+xml</dc:format><dc:type
+           rdf:resource="http://purl.org/dc/dcmitype/StillImage" /><dc:title></dc:title></cc:Work></rdf:RDF></metadata><defs
+     id="defs6"><clipPath
+       clipPathUnits="userSpaceOnUse"
+       id="clipPath16"><path
+         d="M 0,0 612,0 612,792 0,792 0,0 Z"
+         id="path18"
+         inkscape:connector-curvature="0"
+         style="clip-rule:evenodd" /></clipPath><clipPath
+       clipPathUnits="userSpaceOnUse"
+       id="clipPath24"><path
+         d="m 280,655.1 51.8,0 0,25 -51.8,0 0,-25 z"
+         id="path26"
+         inkscape:connector-curvature="0"
+         style="clip-rule:evenodd" /></clipPath><clipPath
+       clipPathUnits="userSpaceOnUse"
+       id="clipPath56"><path
+         d="m 253.4,627.2 105.1,0 0,27.8 -105.1,0 0,-27.8 z"
+         id="path58"
+         inkscape:connector-curvature="0"
+         style="clip-rule:evenodd" /></clipPath></defs><sodipodi:namedview
+     pagecolor="#ffffff"
+     bordercolor="#666666"
+     borderopacity="1"
+     objecttolerance="10"
+     gridtolerance="10"
+     guidetolerance="10"
+     inkscape:pageopacity="0"
+     inkscape:pageshadow="2"
+     inkscape:window-width="1920"
+     inkscape:window-height="1053"
+     id="namedview4"
+     showgrid="false"
+     fit-margin-top="0"
+     fit-margin-left="0"
+     fit-margin-right="0"
+     fit-margin-bottom="0"
+     inkscape:zoom="1.3485026"
+     inkscape:cx="42.08153"
+     inkscape:cy="-18.414145"
+     inkscape:window-x="0"
+     inkscape:window-y="27"
+     inkscape:window-maximized="1"
+     inkscape:current-layer="g10" /><g
+     id="g10"
+     inkscape:groupmode="layer"
+     inkscape:label="mandelbrot"
+     transform="matrix(1.25,0,0,-1.25,-321.09564,844.12598)"><g
+       id="g12"><g
+         id="g14"
+         clip-path="url(#clipPath16)" /></g><g
+       id="g20"><g
+         id="g22"
+         clip-path="url(#clipPath24)"><g
+           id="g28"><text
+             transform="matrix(0.9941,0,0,-1,283.8,662)"
+             style="font-style:italic;font-variant:normal;font-size:20px;font-family:'Liberation Serif';-inkscape-font-specification:LiberationSerif-Italic;writing-mode:lr-tb;fill:#000000;fill-opacity:1;fill-rule:nonzero;stroke:none"
+             id="text30"><tspan
+               x="0"
+               y="0"
+               id="tspan32">z</tspan></text>
+</g><g
+           id="g34"><text
+             transform="matrix(0.9941,0,0,-1,292.8,657.5)"
+             style="font-variant:normal;font-weight:normal;font-size:12px;font-family:'Liberation Serif';-inkscape-font-specification:LiberationSerif;writing-mode:lr-tb;fill:#000000;fill-opacity:1;fill-rule:nonzero;stroke:none"
+             id="text36"><tspan
+               x="0"
+               y="0"
+               id="tspan38">0</tspan></text>
+</g><g
+           id="g40"><text
+             transform="matrix(0.9941,0,0,-1,301.1,662)"
+             style="font-variant:normal;font-weight:normal;font-size:20px;font-family:OpenSymbol;-inkscape-font-specification:OpenSymbol;writing-mode:lr-tb;fill:#000000;fill-opacity:1;fill-rule:nonzero;stroke:none"
+             id="text42"><tspan
+               x="0"
+               y="0"
+               id="tspan44">=</tspan></text>
+</g><g
+           id="g46"><text
+             transform="matrix(0.9941,0,0,-1,319,662)"
+             style="font-variant:normal;font-weight:normal;font-size:20px;font-family:'Liberation Serif';-inkscape-font-specification:LiberationSerif;writing-mode:lr-tb;fill:#000000;fill-opacity:1;fill-rule:nonzero;stroke:none"
+             id="text48"><tspan
+               x="0"
+               y="0"
+               id="tspan50">0</tspan></text>
+</g></g></g><g
+       id="g52"><g
+         id="g54"
+         clip-path="url(#clipPath56)"><g
+           id="g60"><text
+             transform="matrix(1,0,0,-1,257.1,634)"
+             style="font-style:italic;font-variant:normal;font-size:19.89999962px;font-family:'Liberation Serif';-inkscape-font-specification:LiberationSerif-Italic;writing-mode:lr-tb;fill:#000000;fill-opacity:1;fill-rule:nonzero;stroke:none"
+             id="text62"><tspan
+               x="0"
+               y="0"
+               id="tspan64">z</tspan></text>
+</g><g
+           id="g66"><text
+             transform="matrix(1,0,0,-1,266.1,629.5)"
+             style="font-style:italic;font-variant:normal;font-size:11.89999962px;font-family:'Liberation Serif';-inkscape-font-specification:LiberationSerif-Italic;writing-mode:lr-tb;fill:#000000;fill-opacity:1;fill-rule:nonzero;stroke:none"
+             id="text68"><tspan
+               x="0"
+               y="0"
+               id="tspan70">n</tspan></text>
+</g><g
+           id="g72"><text
+             transform="matrix(1,0,0,-1,273.6,629.5)"
+             style="font-variant:normal;font-weight:normal;font-size:11.89999962px;font-family:OpenSymbol;-inkscape-font-specification:OpenSymbol;writing-mode:lr-tb;fill:#000000;fill-opacity:1;fill-rule:nonzero;stroke:none"
+             id="text74"><tspan
+               x="0"
+               y="0"
+               id="tspan76">+</tspan></text>
+</g><g
+           id="g78"><text
+             transform="matrix(1,0,0,-1,281.9,629.5)"
+             style="font-variant:normal;font-weight:normal;font-size:11.89999962px;font-family:'Liberation Serif';-inkscape-font-specification:LiberationSerif;writing-mode:lr-tb;fill:#000000;fill-opacity:1;fill-rule:nonzero;stroke:none"
+             id="text80"><tspan
+               x="0"
+               y="0"
+               id="tspan82">1</tspan></text>
+</g><g
+           id="g84"><text
+             transform="matrix(1,0,0,-1,289.4,634)"
+             style="font-variant:normal;font-weight:normal;font-size:19.89999962px;font-family:OpenSymbol;-inkscape-font-specification:OpenSymbol;writing-mode:lr-tb;fill:#000000;fill-opacity:1;fill-rule:nonzero;stroke:none"
+             id="text86"><tspan
+               x="0"
+               y="0"
+               id="tspan88">=</tspan></text>
+</g><g
+           id="g90"><text
+             transform="matrix(1,0,0,-1,308.9,634)"
+             style="font-style:italic;font-variant:normal;font-size:19.89999962px;font-family:'Liberation Serif';-inkscape-font-specification:LiberationSerif-Italic;writing-mode:lr-tb;fill:#000000;fill-opacity:1;fill-rule:nonzero;stroke:none"
+             id="text92"><tspan
+               x="0"
+               y="0"
+               id="tspan94">z</tspan></text>
+</g><g
+           id="g96"><text
+             transform="matrix(1,0,0,-1,317.1,629.5)"
+             style="font-style:italic;font-variant:normal;font-size:11.89999962px;font-family:'Liberation Serif';-inkscape-font-specification:LiberationSerif-Italic;writing-mode:lr-tb;fill:#000000;fill-opacity:1;fill-rule:nonzero;stroke:none"
+             id="text98"><tspan
+               x="0"
+               y="0"
+               id="tspan100">n</tspan></text>
+</g><g
+           id="g102"><text
+             transform="matrix(1,0,0,-1,323.9,644.5)"
+             style="font-variant:normal;font-weight:normal;font-size:11.89999962px;font-family:'Liberation Serif';-inkscape-font-specification:LiberationSerif;writing-mode:lr-tb;fill:#000000;fill-opacity:1;fill-rule:nonzero;stroke:none"
+             id="text104"><tspan
+               x="0"
+               y="0"
+               id="tspan106">2</tspan></text>
+</g><g
+           id="g108"><text
+             transform="matrix(1,0,0,-1,332.1,634)"
+             style="font-variant:normal;font-weight:normal;font-size:19.89999962px;font-family:OpenSymbol;-inkscape-font-specification:OpenSymbol;writing-mode:lr-tb;fill:#000000;fill-opacity:1;fill-rule:nonzero;stroke:none"
+             id="text110"><tspan
+               x="0"
+               y="0"
+               id="tspan112">+</tspan></text>
+</g><g
+           id="g114"><text
+             transform="matrix(1,0,0,-1,346.4,634)"
+             style="font-style:italic;font-variant:normal;font-size:19.89999962px;font-family:'Liberation Serif';-inkscape-font-specification:LiberationSerif-Italic;writing-mode:lr-tb;fill:#000000;fill-opacity:1;fill-rule:nonzero;stroke:none"
+             id="text116"><tspan
+               x="0"
+               y="0"
+               id="tspan118">c</tspan></text>
+</g></g></g></g></svg>
