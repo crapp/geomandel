@@ -12,6 +12,7 @@ Session.vim
 ### Custom
 
 build
+gh-pages
 
 # tools
 .ycm_extra_conf.py*
