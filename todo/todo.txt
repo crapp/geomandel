@@ -9,6 +9,7 @@
 (C) 2016-02-24 Zoom Range and automatic zoom coordinate algorithm @computation
 (A) 2016-02-21 Add unit tests for output operations @test
 (B) 2016-02-21 More sets can be calculated with this code, like the julia set @computation
+(A) 2016-03-01 Format specifiers for filename generation @output
 x 2016-02-14 2016-02-04 Implement continuous coloring algorithm @color
 x 2016-02-14 2016-02-05 Add possibility to zoom mandelbrot at a given coordinate @zoom
 x 2016-02-21 2016-02-14 Unit testing based on the Catch framework @test

@@ -53,6 +53,8 @@ inline void init_mandel_parameters(std::shared_ptr<MandelParameters> &params,
         unsigned int yrange = parser["h"].as<unsigned int>();
 
         unsigned int zoomlvl = 0;
+        unsigned int xcoord = 0;
+        unsigned int ycoord = 0;
 
         // check if user wants to zoom
         if (parser.count("zoom")) {
@@ -62,9 +64,12 @@ inline void init_mandel_parameters(std::shared_ptr<MandelParameters> &params,
                 return;
             }
             // get zoom parameters and coordinate
+            // FIXME: Zero not allowed as zoom lvl but not checked.
             zoomlvl = parser["zoom"].as<unsigned int>();
-            unsigned int xcoord = parser["xcoord"].as<unsigned int>();
-            unsigned int ycoord = parser["ycoord"].as<unsigned int>();
+            // TODO: Allow double coordinates, makes fine grain adjustments
+            // possible
+            xcoord = parser["xcoord"].as<unsigned int>();
+            ycoord = parser["ycoord"].as<unsigned int>();
 
             if (xcoord > xrange) {
                 std::cerr << "X Coordinate outside of the image space"
@@ -93,7 +98,7 @@ inline void init_mandel_parameters(std::shared_ptr<MandelParameters> &params,
         // Stores informations used by the mandel cruncher and some data
         // writer classes
         params = std::make_shared<MandelParameters>(
-            xrange, xl, xh, yrange, yl, yh, bailout, zoomlvl,
+            xrange, xl, xh, yrange, yl, yh, bailout, zoomlvl, xcoord, ycoord,
             parser["image-file"].as<std::string>(), cores, col_algo);
     } catch (const cxxopts::missing_argument_exception &ex) {
         std::cerr << "Missing argument \n  " << ex.what() << std::endl;
@@ -126,7 +131,9 @@ inline void configure_command_line_parser(cxxopts::Options &p)
          cxxopts::value<double>()->default_value("1.5"));
 
     p.add_options("Image")
-        ("image-file", "Image file base name",
+        ("image-file", "Image file name pattern. You can use different printf " 
+        "like '%' items interspersed with normal text for the output " 
+        "file name. Have a look in the README for more instructions.",
          cxxopts::value<std::string>()->default_value("geomandel"))
         ("w,width", "Image width",
          cxxopts::value<unsigned int>()->default_value("1000"))

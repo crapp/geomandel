@@ -35,7 +35,9 @@ void ImagePNM::write_buffer()
         this->out_file_name(this->params->image_base, this->params->bailout,
                             this->params->xrange, this->params->yrange,
                             this->params->zoom, this->params->cores,
-                            this->params->col_algo) +
+                            this->params->xcoord, this->params->ycoord,
+                            this->params->xl, this->params->xh, this->params->yl,
+                            this->params->yh) +
         "." + constants::BITMAP_DEFS.at(this->format).at(0);
     std::cout << "+ \u2937 " + filename << std::endl;
 

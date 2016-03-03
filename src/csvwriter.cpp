@@ -30,7 +30,8 @@ void CSVWriter::write_buffer()
     std::string filename = this->out_file_name(
         this->params->image_base, this->params->bailout, this->params->xrange,
         this->params->yrange, this->params->zoom, this->params->cores,
-        this->params->col_algo);
+        this->params->xcoord, this->params->ycoord, this->params->xl,
+        this->params->xh, this->params->yl, this->params->yh);
     std::ofstream csv_stream_iter(filename + "_iterindex.csv",
                                   std::ofstream::out);
     std::ofstream csv_stream_modulus(filename + "_contindex.csv",

@@ -39,6 +39,8 @@ struct MandelParameters {
     unsigned int bailout;
 
     unsigned int zoom;
+    unsigned int xcoord;
+    unsigned int ycoord;
 
     std::string image_base;
 
@@ -50,6 +52,7 @@ struct MandelParameters {
     MandelParameters(unsigned int xrange, double xl, double xh,
                      unsigned int yrange, double yl, double yh,
                      unsigned int bailout, unsigned int zoom,
+                     unsigned int xcoord, unsigned int ycoord,
                      std::string image_base, unsigned int cores,
                      constants::COL_ALGO col_algo)
         : xrange(xrange),
@@ -60,6 +63,8 @@ struct MandelParameters {
           yh(yh),
           bailout(bailout),
           zoom(zoom),
+          xcoord(xcoord),
+          ycoord(ycoord),
           image_base(image_base),
           cores(cores),
           col_algo(col_algo)

@@ -20,16 +20,34 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
 
 Buffwriter::Buffwriter(const constants::mandelbuff &buff) : buff(buff) {}
 Buffwriter::~Buffwriter() {}
-std::string Buffwriter::out_file_name(const std::string &base_string,
+std::string Buffwriter::out_file_name(const std::string &string_pattern,
                                       unsigned int bailout, unsigned int xrange,
                                       unsigned int yrange, unsigned int zoom,
-                                      unsigned int cores,
-                                      constants::COL_ALGO col_algo)
+                                      unsigned int cores, unsigned int xcoord,
+                                      unsigned int ycoord, double z_real_min,
+                                      double z_real_max, double z_ima_min,
+                                      double z_ima_max)
 {
-    std::stringstream ss;
-    ss << base_string << "_" << bailout << "_" << xrange << "x" << yrange << "_"
-       << zoom << "x"
-       << "_" << cores << "c"
-       << "_" << col_algo;
-    return ss.str();
+    // this might represent the classic example of overengineering
+
+    std::vector<std::unique_ptr<RegexpatternIface>> regex_patterns;
+    regex_patterns.emplace_back(new Regexpattern<unsigned int>(bailout, "%b"));
+    regex_patterns.emplace_back(new Regexpattern<unsigned int>(xrange, "%w"));
+    regex_patterns.emplace_back(new Regexpattern<unsigned int>(yrange, "%h"));
+    regex_patterns.emplace_back(new Regexpattern<unsigned int>(zoom, "%z"));
+    regex_patterns.emplace_back(new Regexpattern<unsigned int>(cores, "%c"));
+    regex_patterns.emplace_back(new Regexpattern<unsigned int>(xcoord, "%x"));
+    regex_patterns.emplace_back(new Regexpattern<unsigned int>(ycoord, "%y"));
+    regex_patterns.emplace_back(new Regexpattern<double>(z_real_min, "%Zr"));
+    regex_patterns.emplace_back(new Regexpattern<double>(z_real_max, "%ZR"));
+    regex_patterns.emplace_back(new Regexpattern<double>(z_ima_min, "%Zi"));
+    regex_patterns.emplace_back(new Regexpattern<double>(z_ima_max, "%ZI"));
+
+    std::string filename = string_pattern;
+
+    for (const auto &p : regex_patterns) {
+        p->parse_filename(filename);
+    }
+
+    return filename;
 }
