@@ -52,6 +52,7 @@ TEST_CASE("Filename Patterns", "[output]")
 
     SECTION("Complex file name with all patterns")
     {
+        // %a is a fake pattern
         std::string pattern =
             "mandeltest_%a_%wx%h_b%b_m%c_[%x, %y --> %z]_(%Zr, %Zi)->(%ZR, %ZI)";
         std::string filename = bmock.test_filename_patterns(

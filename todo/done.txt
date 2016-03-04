@@ -1,0 +1,6 @@
+x 2016-03-04 2016-02-05 Make color variables configurable @color
+x 2016-03-04 2016-03-01 Format specifiers for filename generation @output
+x 2016-02-14 2016-02-04 Implement continuous coloring algorithm @color
+x 2016-02-14 2016-02-05 Add possibility to zoom mandelbrot at a given coordinate @zoom
+x 2016-02-21 2016-02-14 Unit testing based on the Catch framework @test
+x 2016-03-04 2016-02-05 Linear RGB function extension like (255 - its * freq) % (255 - base) @color
