@@ -8,4 +8,4 @@
 (A) 2016-02-21 Add unit tests for output operations @test
 (B) 2016-02-21 More sets can be calculated with this code, like the julia set @computation
 (B) 2016-03-04 Zoom coordinates as doubles which allows improved precision @zoom
-(A) 2016-03-09 Command line parameter quiet @commandline
+x 2016-03-09 2016-03-09 Command line parameter quiet @commandline
