@@ -26,7 +26,8 @@ class ImageBW : public ImagePNM
 {
 public:
     ImageBW(const constants::mandelbuff &buff,
-            const std::shared_ptr<MandelParameters> &params);
+            const std::shared_ptr<MandelParameters> &params,
+            const std::shared_ptr<Printer> &prnt);
     virtual ~ImageBW();
 
 private:

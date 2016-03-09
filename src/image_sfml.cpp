@@ -4,10 +4,11 @@
 
 ImageSFML::ImageSFML(const constants::mandelbuff &buff,
                      const std::shared_ptr<MandelParameters> &params,
+                     const std::shared_ptr<Printer> &prnt,
                      std::tuple<int, int, int> rgb_base,
                      std::tuple<double, double, double> rgb_freq,
                      std::tuple<int, int, int> rgb_phase, uint8_t outfmt)
-    : Imagewriter(buff, params),
+    : Imagewriter(buff, params, prnt),
       rgb_base(rgb_base),
       rgb_freq(rgb_freq),
       rgb_phase(rgb_phase),
@@ -60,12 +61,12 @@ void ImageSFML::write_buffer()
     img.create(this->params->xrange, this->params->yrange, sfml_img_buf.data());
     if ((outfmt & static_cast<uint8_t>(constants::OUT_FORMAT::IMAGE_JPG)) ==
         static_cast<uint8_t>(constants::OUT_FORMAT::IMAGE_JPG)) {
-        std::cout << "+ \u2937 " + filename + ".jpg" << std::endl;
+        this->prnt << "+ \u2937 " + filename + ".jpg" << std::endl;
         img.saveToFile(filename + ".jpg");
     }
     if ((outfmt & static_cast<uint8_t>(constants::OUT_FORMAT::IMAGE_PNG)) ==
         static_cast<uint8_t>(constants::OUT_FORMAT::IMAGE_PNG)) {
-        std::cout << "+ \u2937 " + filename + ".png" << std::endl;
+        this->prnt << "+ \u2937 " + filename + ".png" << std::endl;
         img.saveToFile(filename + ".png");
     }
 }

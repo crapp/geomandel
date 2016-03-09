@@ -67,6 +67,5 @@ TEST_CASE("Filename Patterns", "[output]")
                 std::to_string(z_real_min) + ", " + std::to_string(z_ima_min) +
                 ")->(" + std::to_string(z_real_max) + ", " +
                 std::to_string(z_ima_max) + ")");
-        std::cout << pattern << std::endl;
     }
 }

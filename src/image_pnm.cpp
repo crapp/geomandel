@@ -20,8 +20,9 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
 
 ImagePNM::ImagePNM(const constants::mandelbuff &buff,
                    const std::shared_ptr<MandelParameters> &params,
+                   const std::shared_ptr<Printer> &prnt,
                    const constants::OUT_FORMAT format)
-    : Imagewriter(buff, params), format(format){};
+    : Imagewriter(buff, params, prnt), format(format){};
 ImagePNM::~ImagePNM(){};
 
 void ImagePNM::write_buffer()

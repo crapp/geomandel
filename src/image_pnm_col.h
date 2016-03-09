@@ -27,6 +27,7 @@ class Imagecol : public ImagePNM
 public:
     Imagecol(const constants::mandelbuff &buff,
              const std::shared_ptr<MandelParameters> &params,
+             const std::shared_ptr<Printer> &prnt,
              std::tuple<int, int, int> rgb_base,
              std::tuple<double, double, double> rgb_freq,
              std::tuple<int, int, int> rgb_phase);

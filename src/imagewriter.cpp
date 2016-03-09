@@ -19,8 +19,9 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
 #include "imagewriter.h"
 
 Imagewriter::Imagewriter(const constants::mandelbuff &buff,
-                         const std::shared_ptr<MandelParameters> &params)
-    : Buffwriter(buff), params(params)
+                         const std::shared_ptr<MandelParameters> &params,
+                         const std::shared_ptr<Printer> &prnt)
+    : Buffwriter(buff), params(params), prnt(prnt)
 {
 }
 

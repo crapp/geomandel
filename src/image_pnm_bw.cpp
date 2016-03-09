@@ -19,8 +19,9 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
 #include "image_pnm_bw.h"
 
 ImageBW::ImageBW(const constants::mandelbuff &buff,
-                 const std::shared_ptr<MandelParameters> &params)
-    : ImagePNM(buff, params, constants::OUT_FORMAT::IMAGE_PNM_BW)
+                 const std::shared_ptr<MandelParameters> &params,
+                 const std::shared_ptr<Printer> &prnt)
+    : ImagePNM(buff, params, prnt, constants::OUT_FORMAT::IMAGE_PNM_BW)
 {
 }
 

@@ -28,7 +28,7 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
 inline void init_mandel_parameters(std::shared_ptr<MandelParameters> &params,
                                    const cxxopts::Options &parser)
 {
-    // TODO: Thiy try catch block could be unnecessary as cxxopts does most of
+    // TODO: This try catch block could be unnecessary as cxxopts does most of
     // the checking itself when parse is called
     try {
         unsigned int bailout = parser["b"].as<unsigned int>();
@@ -116,7 +116,8 @@ inline void configure_command_line_parser(cxxopts::Options &p)
     p.add_options()
         ("help", "Show this help")
         ("m,multi", "Use multiple cores",
-         cxxopts::value<unsigned int>()->implicit_value("2"));
+         cxxopts::value<unsigned int>()->implicit_value("2"))
+        ("q,quiet", "Do not write to stdout");
 
     p.add_options("Mandelbrot")
         ("b,bailout", "Bailout value for the mandelbrot set algorithm",

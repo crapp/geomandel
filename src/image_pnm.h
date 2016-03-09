@@ -29,6 +29,7 @@ class ImagePNM : public Imagewriter
 public:
     ImagePNM(const constants::mandelbuff &buff,
              const std::shared_ptr<MandelParameters> &params,
+             const std::shared_ptr<Printer> &prnt,
              const constants::OUT_FORMAT format);
     virtual ~ImagePNM();
 
