@@ -73,6 +73,12 @@ script:
     cmake -DUNIT_TEST=ON -DCMAKE_CXX_COMPILER=$COMPILER ../ && make
     src/test/geomandel_tests -s
 
+# blacklist
+branches:
+  except:
+    - dev
+    - gh-pages
+
 #notifications:
 #  webhooks:
 #    urls: https://webhooks.gitter.im/e/

@@ -64,10 +64,9 @@ inline void init_mandel_parameters(std::shared_ptr<MandelParameters> &params,
                 return;
             }
             // get zoom parameters and coordinate
-            // FIXME: Zero not allowed as zoom lvl but not checked.
-            zoomlvl = parser["zoom"].as<unsigned int>();
-            // TODO: Allow double coordinates, makes fine grain adjustments
-            // possible
+            parser["zoom"].as<unsigned int>() == 0
+                ? zoomlvl = 1
+                : zoomlvl = parser["zoom"].as<unsigned int>();
             xcoord = parser["xcoord"].as<unsigned int>();
             ycoord = parser["ycoord"].as<unsigned int>();
 
@@ -117,7 +116,7 @@ inline void configure_command_line_parser(cxxopts::Options &p)
         ("help", "Show this help")
         ("m,multi", "Use multiple cores",
          cxxopts::value<unsigned int>()->implicit_value("2"))
-        ("q,quiet", "Do not write to stdout");
+        ("q,quiet", "Don't write to stdout (This does not influence stderr)");
 
     p.add_options("Mandelbrot")
         ("b,bailout", "Bailout value for the mandelbrot set algorithm",
@@ -132,8 +131,8 @@ inline void configure_command_line_parser(cxxopts::Options &p)
          cxxopts::value<double>()->default_value("1.5"));
 
     p.add_options("Image")
-        ("image-file", "Image file name pattern. You can use different printf " 
-        "like '%' items interspersed with normal text for the output " 
+        ("image-file", "Image file name pattern. You can use different printf "
+        "like '%' items interspersed with normal text for the output "
         "file name. Have a look in the README for more instructions.",
          cxxopts::value<std::string>()->default_value("geomandel"))
         ("w,width", "Image width",

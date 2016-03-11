@@ -215,7 +215,7 @@ int main(int argc, char *argv[])
     if (parser.count("p"))
         prnt_buff(mandelbuffer, params->bailout);  // print the buffer
 
-    prnt << "+\n+ All data written, Good Bye" << std::endl;
+    prnt << "+\n+" << std::endl;
     prnt << "+++++++++++++++++++++++++++++++++++++" << std::endl << std::endl;
     return 0;
 }

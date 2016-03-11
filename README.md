@@ -8,12 +8,15 @@ geomandel is a command line application that allows you to calculate mandelbrot
 fractals and visualize them using different image formats or export the
 calculated data as csv.
 
-The [Mandelbrot set](https://en.wikipedia.org/wiki/Mandelbrot_set), named after Benoit Mandelbrot, is a [fractal](https://en.wikipedia.org/wiki/Fractal).
-A fractal is for example a natural phenomenon or mathematical set that display self-similarity at various scales.
+The [Mandelbrot set](https://en.wikipedia.org/wiki/Mandelbrot_set), named after
+Benoit Mandelbrot, is a [fractal](https://en.wikipedia.org/wiki/Fractal).
+A fractal is for example a natural phenomenon or mathematical set that display
+self-similarity at various scales.
 
-One can define the Mandelbrot Set as the set of complex numbers (complex plane) for whom the progression
+One can define the Mandelbrot Set as the set of complex numbers (complex plane)
+for whom the progression
 
-<img align="center" src="https://crapp.github.io/geomandel/mandelbrot_math.svg" alt="Mandelbrot set mathematical definition">
+![Mandelbrot set mathematical definition](https://crapp.github.io/geomandel/mandelbrot_set_equation.png "Mandelbrot set mathematical definition")
 
 converges to. This is a rather complicated subset of the complex plane. If you
 try to plot this set you will find areas that are similar to the main area. You
@@ -24,18 +27,18 @@ Here is a video showing a zoom into the seahorse valley.
 
 LINK TO VIDEO
 
-The coloring algorithm used in the images that were used for this video is called
-the Escape Time algorithm. The application can generate images with a continuous coloring
-algorithm as well.
+The coloring algorithm used in the video frames is called the Escape Time algorithm.
+The application can generate images with a continuous coloring algorithm as well.
 
-You may ask yourself how I came up with this name for my application. Well my initial
+You may ask yourself how I came up with the name for this application. Well my initial
 idea was to play with fractals and GeoTIFF to see what kind of effects I could achieve.
 This is not yet implemented but still on my agenda :)
 
-I also want to make you aware of the [Mandelbrot project](https://github.com/willi-kappler/mandel-rust) of a friend of
-mine. He uses Rust for his project and it motivated me to see how a C++11 solution
-would perform in comparison to his solution. I will provide some comparison charts
-in the future.
+I also want to make you aware of the
+[Mandelbrot project](https://github.com/willi-kappler/mandel-rust) a friend of
+mine started. He uses Rust for his project and it motivated me to see how a C++11
+solution would perform in comparison to his solution. I will provide some comparison
+charts in the future.
 
 ## Setting up geomandel
 
@@ -112,7 +115,7 @@ Precompiled Linux packages are available for
 
 ## Usage
 
-The command line application has sane default values for most options and you only
+The command line application has sane default values for all options and you only
 have to specify what kind of output you want to have. When the application is
 started it will calculate the iteration count for all complex numbers in the complex
 plane you defined. The iteration count can then be used to visualize the mandelbrot
@@ -132,6 +135,7 @@ Usage:
 
       --help              Show this help
   -m, --multi [=arg(=2)]  Use multiple cores
+  -q, --quit              Don't write to stdout (This does not influence stderr)
 
  Mandelbrot options:
 
@@ -210,12 +214,14 @@ while ( x*x + y*y <= ESCAPE  AND  iteration < BAILOUT  )
 ```
 
 Computation speed can be reduced by using the ```--multi``` option. This will
-distribute the workload on different cpu (cores). See the performance section for
+distribute the workload on different threads. See the *performance* section for
 more details.
 
 #### Image Options
 
 geomandel is able to generate different image formats from the image algorithms.
+How this images are generated can be influenced by command line parameters.
+
 
 ##### File name
 
@@ -249,6 +255,17 @@ my_fractals_%bb_z(%Zr, %Zi)_z(%ZR, %ZI) -> my_fractals_2048b_z(-2.5, -1.5)_z(1.0
 Please note the naming scheme used for image files also applies for csv files
 that will be generated when you use the ```--csv``` command line option.
 
+##### Image size
+
+Use the following parameters to control the image size
+
+```
+-w, --width
+-h, --height
+```
+
+These parameters have a large impact on memory footprint and computation time
+
 ##### Image formats
 
 The application can generate images in the [portable anymap format (PNM)](https://en.wikipedia.org/wiki/Netpbm_format).
@@ -262,17 +279,46 @@ using grey scale to render the mandelbrot fractal and `--img-pnm-col` that gener
 a RGB color image.
 
 Additionally [SFML](http://www.sfml-dev.org/) can be used to generate jpg/png images.
-These image formats you use very little space and the library is fast quite fast.
-You have to install the library yourself if you want this kind of images.
+These image formats use very little space on your disk and the library is quite fast.
+You have to install the library and recompile geomandel if you want this kind of images.
 
 ##### Color Options
 
-This is just a brief introduction into color command line options. See ***Color***
+This is just a brief introduction into color command line options. See **Color**
 for more information on this topic.
+
+The `colalgo` parameter determines which coloring algorithm to use. Continuous
+coloring will produce images without visible color bands. Computation time might
+increase slightly though.
+```
+--colalgo arg     Coloring algorithm 0->Escape Time, 1->Continuous Coloring
+```
+
+Grey scale fractals are a nice alternative to colored ones. These parameters
+control how the pgm images look like. Continuous coloring is not available for
+grey scale images.
+```
+--grey-base arg   Base grey color between 0 - 255
+--grey-freq arg   Frequency for grey shade computation
+
+```
+
+The RGB options apply to PPM as well as PNG and JPG images. The base color
+(background color) is set with `--rgb-base`. The distribution of the colors in
+the color spectrum for the escape time or continuous index can be defined with
+`--rgb-freq` and `--rgb-base`. These options do different things depending on the
+chosen coloring algorithm
+
+```
+--rgb-base arg    Base RGB color as comma separated string
+--rgb-freq arg    Frequency for RGB computation as comma separated
+                  string. You may use doubles but no negative values
+--rgb-phase arg   Phase for RGB computation as comma separated string
+```
 
 ## Color
 
-## Performance
+## Performance and Memory usage
 
 Calculating the escape time for a Mandelbrot Set is costly and may consume large
 amounts of RAM. The computation benefits greatly from parallelism and it is easy
@@ -281,6 +327,8 @@ Parameter. geomandel will create the amount of threads specified by the multi
 Parameter and uses the modern and efficient thread pool library
 [CTPL](https://github.com/vit-vit/CTPL) to distribute the workload.
 
+### Benchmarks
+
 ![Performance Chart](https://crapp.github.io/geomandel/geomandel_benchmark.png "Performance Chart")
 
 The chart shows how geomandel performs on different CPUs. The overhead seems to
@@ -288,14 +336,60 @@ be pretty small as doubling the number of threads nearly halves the time needed
 for the computation.
 
 While the Apple clang compiler generated binary performed as good as the gcc
-binary on OS X (and even slightly better) the default clang compiler is
-outperformed by gcc on linux by a factor of 2:1.
+binary on OS X (and even slightly better) the clang compiler on linux is
+outperformed by gcc by a factor of 2:1.
+
+### Performance breakdown
+
+Calculating the mandelbrot set seems to be costly. But how much time is really
+spend on computation? In order to answer this question it is necessary to
+look at an application with a performance analyzing tool. Luckily we have
+[perf](https://en.wikipedia.org/wiki/Perf_%28Linux%29) on Linux.
+
+![Perf analyze graph](https://crapp.github.io/geomandel/perf_analyze.png "Perf analyze graph")
+
+*Graph generated from perf data with gprof2dot*
+
+Well as you can see ~97% of the applications cpu cycles were used to calculate the
+mandelbrot set. So if you want to speed up this application this is the place to
+start. I will try to maximize parallel computation with the use of GPUs in the
+future.
+
+### Memory Footprint
+
+The amount of memory used by geomandel is mostly dependant from image size and
+image format. The internal buffer that stores the results of the mandelbrot set
+number cruncher is preallocated at the beginning of the application. Therefor it
+is simple to calculate the minimum amount of free memory you need to run geomandel.
+The internal Buffer stores the modulus of the complex numbers (double) and the
+escape time (int32).
+
+![Memory Footprint equation](https://crapp.github.io/geomandel/memory_footprint_equation.png "Memory Footprint equation")
+
+As you can see in this equation you need around 12.6 MB for an image of the size
+1024x1024. Of course this will be more in real life as we did not account for
+[padding space](http://stackoverflow.com/a/937800/1127601) between data members
+that is inserted by compilers to meet platform alignment requirements. In this
+case 16 Bytes will be used meaning the application needs around 16 MB of free memory.
+
+Lets see if valgrinds memory profiler massif is telling us the same values that
+we just calculated
+
+![Memory Footprint massif visualization](https://crapp.github.io/geomandel/geomandel_massif_memory_pngout.png "Memory profile")
+*Memory profile derived from valgrinds massif tool*
+
+Directly at the beginning the memory for the internal buffer is acquired and this
+is close to our 16 MB assumption. At the end you can see another sharp rise in
+memory usage. This is because we used SFML to generate a PNG image. SFML needs a
+uint8_t data structure consisting of 4 bytes per pixel (RGBA). This leads to another
+12 MB of memory acquired by geomandel. That comes to a total of ~28 MB of memory.
+Please note this extra memory is only acquired when you use SFML (PNG/JPG).
 
 ## Development
 
 Brief overview over the development process.
 
-### Repositories
+## Repositories
 The [github repository](https://github.com/crapp/geomandel) of geomandel has
 several different branches.
 
@@ -349,6 +443,11 @@ history for the master branch and all release branches on the [travis project pa
 Besides testing compilation on different systems and compilers we also run the
 unit tests after the application was compiled successfully.
 
+## ToDo
+
+Have a look in the todo folder. I am using the [todo.txt](http://todotxt.com/)
+format for my todo lists.
+
 ## License
 ```
 Copyright (C) 2015, 2016 Christian Rapp
@@ -366,3 +465,6 @@ GNU General Public License for more details.
 You should have received a copy of the GNU General Public License
 along with this program.  If not, see <http://www.gnu.org/licenses/>.
 ```
+
+Have a look into the license sub folder where license files of the used libraries
+are located.
