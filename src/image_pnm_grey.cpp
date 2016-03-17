@@ -43,7 +43,7 @@ void Imagegrey::out_format_write(std::stringstream &img_buf,
             img_buf << 0 << " ";
         } else {
             std::tuple<int, int, int> rgb = this->rgb_linear(
-                its, std::make_tuple(55, 0, 0), std::make_tuple(5, 0, 0));
+                its, this->rgb_base, this->rgb_freq);
             img_buf << std::get<0>(rgb) << " ";
         }
     }

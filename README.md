@@ -16,7 +16,7 @@ self-similarity at various scales.
 One can define the Mandelbrot Set as the set of complex numbers (complex plane)
 for whom the progression
 
-![Mandelbrot set mathematical definition](https://crapp.github.io/geomandel/mandelbrot_set_equation.png "Mandelbrot set mathematical definition")
+![Mandelbrot set mathematical definition](gh-pages/mandelbrot_set_equation.png "Mandelbrot set mathematical definition")
 
 converges to. This is a rather complicated subset of the complex plane. If you
 try to plot this set you will find areas that are similar to the main area. You
@@ -48,8 +48,8 @@ source code or use precompiled packages/installers.
 ### Source Code
 
 To get the source code of the application
-you may either download our [latest release](https://github.com/crapp/geomandel/releases/latest)
-or you can check out the code from our [repository on github](https://github.com/crapp/geomandel).
+you may either download the [latest release](https://github.com/crapp/geomandel/releases/latest)
+or you can check out the code from the [repository on github](https://github.com/crapp/geomandel).
 Please use the master branch or one of the release branches.
 
 In order to compile the source code on your machine the following requirements have to be met:
@@ -270,7 +270,7 @@ These parameters have a large impact on memory footprint and computation time
 
 The application can generate images in the [portable anymap format (PNM)](https://en.wikipedia.org/wiki/Netpbm_format).
 The big advantage of this format it is easy to implement and doesn't need any external
-libraries. The downside is large files, as we do not write in binary format, and
+libraries. The downside is large files, as geomandel does not use a binary format, and
 low writing speed. You may also these images with a text editor of your choice
 to what values geomandel actually wrote into the image file.
 
@@ -318,6 +318,44 @@ chosen coloring algorithm
 
 ## Color
 
+The algorithms are well known and easy to implement. The more challenging part is
+to draw beautiful fractals using different coloring algorithms. geomandel offers
+two different color strategies, escape time based and continuous coloring. You
+can use the `--colalgo` parameter too chose which one you want to apply.
+
+### Escape Time
+
+The Escape Time algorithm is the most common method to color fractals. This is
+because the method is fast, easy to understand and there are a lot of implementations
+out there one can build on.
+
+The pseudo code example in [command line options](#Mandelbrot-Options) section
+shows how the escape time is calculated. geomandel takes this value and calculates
+a RGB tuple or a grey scale value.
+
+#### Grey Scale
+
+Lets have a look at grey scale PGM images first. You can provide a base grey
+shade with `--grey-base` and a frequency value `--grey-frequency` which determines
+how often grey shades repeat and their grading. This is best explained with some
+images and plots.
+
+The following Images and Plots were generated with `--grey-base=55`
+
+!["Plotplot"](gh-pages/color_escapetime_grey_plot.jpg)
+!["asdasd"](gh-pages/color_escapetime_append_greymandel_2.jpg)
+
+As you can see increasing the frequency will add better visual effects but also
+worsen the problem of colour banding. Grey scale PGM images can not be generated
+with the continuous coloring algorithm.
+
+#### RGB Images
+
+Generating RGB images with the Escape Time algorithm works similar to grey scale
+images. You now have to use `--rgb-base=R,G,B` to provide a base color and
+`--rgb-freq=FREQ_R,FREQ_G,FREQ_B` to determine the frequencies. Setting a
+frequency to **0** will leave the respective color band untouched.
+
 ## Performance and Memory usage
 
 Calculating the escape time for a Mandelbrot Set is costly and may consume large
@@ -329,7 +367,7 @@ Parameter and uses the modern and efficient thread pool library
 
 ### Benchmarks
 
-![Performance Chart](https://crapp.github.io/geomandel/geomandel_benchmark.png "Performance Chart")
+![Performance Chart](gh-pages/geomandel_benchmark.png "Performance Chart")
 
 The chart shows how geomandel performs on different CPUs. The overhead seems to
 be pretty small as doubling the number of threads nearly halves the time needed
@@ -346,7 +384,7 @@ spend on computation? In order to answer this question it is necessary to
 look at an application with a performance analyzing tool. Luckily we have
 [perf](https://en.wikipedia.org/wiki/Perf_%28Linux%29) on Linux.
 
-![Perf analyze graph](https://crapp.github.io/geomandel/perf_analyze.png "Perf analyze graph")
+![Perf analyze graph](gh-pages/perf_analyze.png "Perf analyze graph")
 
 *Graph generated from perf data with gprof2dot*
 
@@ -364,23 +402,23 @@ is simple to calculate the minimum amount of free memory you need to run geomand
 The internal Buffer stores the modulus of the complex numbers (double) and the
 escape time (int32).
 
-![Memory Footprint equation](https://crapp.github.io/geomandel/memory_footprint_equation.png "Memory Footprint equation")
+![Memory Footprint equation](gh-pages/memory_footprint_equation.png "Memory Footprint equation")
 
 As you can see in this equation you need around 12.6 MB for an image of the size
-1024x1024. Of course this will be more in real life as we did not account for
+1024x1024. Of course this will be more in real life as I did not account for
 [padding space](http://stackoverflow.com/a/937800/1127601) between data members
 that is inserted by compilers to meet platform alignment requirements. In this
 case 16 Bytes will be used meaning the application needs around 16 MB of free memory.
 
-Lets see if valgrinds memory profiler massif is telling us the same values that
-we just calculated
+Lets see if valgrinds memory profiler massif is showing us the same values that
+I just calculated
 
-![Memory Footprint massif visualization](https://crapp.github.io/geomandel/geomandel_massif_memory_pngout.png "Memory profile")
+![Memory Footprint massif visualization](gh-pages/geomandel_massif_memory_pngout.png "Memory profile")
 *Memory profile derived from valgrinds massif tool*
 
 Directly at the beginning the memory for the internal buffer is acquired and this
-is close to our 16 MB assumption. At the end you can see another sharp rise in
-memory usage. This is because we used SFML to generate a PNG image. SFML needs a
+is close to my 16 MB assumption. At the end you can see another sharp rise in
+memory usage. This is because I used SFML to generate a PNG image. SFML needs a
 uint8_t data structure consisting of 4 bytes per pixel (RGBA). This leads to another
 12 MB of memory acquired by geomandel. That comes to a total of ~28 MB of memory.
 Please note this extra memory is only acquired when you use SFML (PNG/JPG).
@@ -440,7 +478,7 @@ you can use to run only specific test cases or change the test results are displ
 The geomandel github repository is linked to Travis CI. You can see the build
 history for the master branch and all release branches on the [travis project page](https://travis-ci.org/crapp/geomandel).
 
-Besides testing compilation on different systems and compilers we also run the
+Besides testing compilation on different systems and compilers I also run the
 unit tests after the application was compiled successfully.
 
 ## ToDo
