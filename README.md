@@ -16,7 +16,7 @@ self-similarity at various scales.
 One can define the Mandelbrot Set as the set of complex numbers (complex plane)
 for whom the progression
 
-![Mandelbrot set mathematical definition](gh-pages/mandelbrot_set_equation.png "Mandelbrot set mathematical definition")
+![Mandelbrot set mathematical definition](https://crapp.github.io/geomandel/mandelbrot_set_equation.png "Mandelbrot set mathematical definition")
 
 converges to. This is a rather complicated subset of the complex plane. If you
 try to plot this set you will find areas that are similar to the main area. You
@@ -342,8 +342,8 @@ images and plots.
 
 The following Images and Plots were generated with `--grey-base=55`
 
-!["Plotplot"](gh-pages/color_escapetime_grey_plot.jpg)
-!["asdasd"](gh-pages/color_escapetime_append_greymandel_2.jpg)
+!["Escape Time - Grey Scale Plots"](https://crapp.github.io/geomandel/color_escapetime_grey_plot.jpg)
+!["Escape Time Fractals"](https://crapp.github.io/geomandel/color_escapetime_append_greymandel_2.jpg)
 
 As you can see increasing the frequency will add better visual effects but also
 worsen the problem of colour banding. Grey scale PGM images can not be generated
@@ -367,7 +367,7 @@ Parameter and uses the modern and efficient thread pool library
 
 ### Benchmarks
 
-![Performance Chart](gh-pages/geomandel_benchmark.png "Performance Chart")
+![Performance Chart](https://crapp.github.io/geomandel/geomandel_benchmark.png "Performance Chart")
 
 The chart shows how geomandel performs on different CPUs. The overhead seems to
 be pretty small as doubling the number of threads nearly halves the time needed
@@ -384,7 +384,7 @@ spend on computation? In order to answer this question it is necessary to
 look at an application with a performance analyzing tool. Luckily we have
 [perf](https://en.wikipedia.org/wiki/Perf_%28Linux%29) on Linux.
 
-![Perf analyze graph](gh-pages/perf_analyze.png "Perf analyze graph")
+![Perf analyze graph](https://crapp.github.io/geomandel/perf_analyze.png "Perf analyze graph")
 
 *Graph generated from perf data with gprof2dot*
 
@@ -402,7 +402,7 @@ is simple to calculate the minimum amount of free memory you need to run geomand
 The internal Buffer stores the modulus of the complex numbers (double) and the
 escape time (int32).
 
-![Memory Footprint equation](gh-pages/memory_footprint_equation.png "Memory Footprint equation")
+![Memory Footprint equation](https://crapp.github.io/geomandel/memory_footprint_equation.png "Memory Footprint equation")
 
 As you can see in this equation you need around 12.6 MB for an image of the size
 1024x1024. Of course this will be more in real life as I did not account for
@@ -413,7 +413,7 @@ case 16 Bytes will be used meaning the application needs around 16 MB of free me
 Lets see if valgrinds memory profiler massif is showing us the same values that
 I just calculated
 
-![Memory Footprint massif visualization](gh-pages/geomandel_massif_memory_pngout.png "Memory profile")
+![Memory Footprint massif visualization](https://crapp.github.io/geomandel/geomandel_massif_memory_pngout.png "Memory profile")
 *Memory profile derived from valgrinds massif tool*
 
 Directly at the beginning the memory for the internal buffer is acquired and this
