@@ -45,15 +45,15 @@ std::tuple<int, int, int> Imagewriter::rgb_linear(
     // we only touch the base color if frequency is higher than 0
     // Have a look at the readme for some charts how color values change using
     // this method
-    if (red_freq > 0) {
+    if (red_freq > 0 && 255 - red_base > 0) {
         std::get<0>(rgb) =
             red_base + (static_cast<int>((red_freq * its)) % (255 - red_base));
     }
-    if (green_freq > 0) {
+    if (green_freq > 0 && 255 - green_base > 0) {
         std::get<1>(rgb) = green_base + (static_cast<int>((green_freq * its)) %
                                          (255 - green_base));
     }
-    if (blue_freq > 0) {
+    if (blue_freq > 0 && 255 - blue_base > 0) {
         std::get<2>(rgb) = blue_base + (static_cast<int>((blue_freq * its)) %
                                         (255 - blue_base));
     }

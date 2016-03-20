@@ -331,14 +331,16 @@ out there one can build on.
 
 The pseudo code example in [command line options](#Mandelbrot-Options) section
 shows how the escape time is calculated. geomandel takes this value and calculates
-a RGB tuple or a grey scale value.
+a RGB tuple or a grey scale value with the following formula.
+
+!["Escape Time Coloring Formula"](https://crapp.github.io/geomandel/escape_time_coloring.png)
 
 #### Grey Scale
 
 Lets have a look at grey scale PGM images first. You can provide a base grey
 shade with `--grey-base` and a frequency value `--grey-frequency` which determines
-how often grey shades repeat and their grading. This is best explained with some
-images and plots.
+how often sequences of grey shades repeat and their grading. This is best explained
+with some images and plots.
 
 The following Images and Plots were generated with `--grey-base=55`
 
@@ -346,7 +348,7 @@ The following Images and Plots were generated with `--grey-base=55`
 !["Escape Time Fractals"](https://crapp.github.io/geomandel/color_escapetime_append_greymandel_2.jpg)
 
 As you can see increasing the frequency will add better visual effects but also
-worsen the problem of colour banding. Grey scale PGM images can not be generated
+worsen the problem of color banding. Grey scale PGM images can not be generated
 with the continuous coloring algorithm.
 
 #### RGB Images
@@ -354,7 +356,29 @@ with the continuous coloring algorithm.
 Generating RGB images with the Escape Time algorithm works similar to grey scale
 images. You now have to use `--rgb-base=R,G,B` to provide a base color and
 `--rgb-freq=FREQ_R,FREQ_G,FREQ_B` to determine the frequencies. Setting a
-frequency to **0** will leave the respective color band untouched.
+frequency to **0** will leave the respective color component untouched.
+
+The first three colorbars were created with a base color of `255,0,0` and a
+RGB frequency of `0,2,0;0,8,0;0,16,0`. So only the green color component will
+be changed.
+
+![Escape Time colorbars](https://crapp.github.io/geomandel/escape_colorbar_1band.png)
+
+The next three colorbars were created with the same base color and the same frequency
+values for the green primary. Additionally I have added a frequency of 4 for the
+blue primary.
+
+![Escape Time colorbars two color components](https://crapp.github.io/geomandel/escape_colorbar_2band.png)
+
+Here is what this values will look like as mandelbrot fractals.
+
+![Escape time fractals](https://crapp.github.io/geomandel/escape_time_fractals_all_border.png)
+
+
+Feel free to experiment with this values to get the result you want. There is a
+jupyter notebook `EscapeTimeRGB` in the resources folder that makes it easy to
+visualize different values for RGB fractals generated with the escape time
+algorithm.
 
 ## Performance and Memory usage
 

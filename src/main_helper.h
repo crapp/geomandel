@@ -151,7 +151,7 @@ inline void configure_command_line_parser(cxxopts::Options &p)
         ("grey-base", "Base grey color between 0 - 255",
          cxxopts::value<int>()->default_value("55"))
         ("grey-freq", "Frequency for grey shade computation",
-         cxxopts::value<int>()->default_value("5"))
+         cxxopts::value<int>()->default_value("10"))
         ("rgb-base", "Base RGB color as comma separated string",
          cxxopts::value<std::string>()->default_value("255,0,0"))
         ("rgb-freq", "Frequency for RGB computation as comma separated string. You may use doubles but no negative values",
