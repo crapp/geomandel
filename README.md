@@ -1,6 +1,23 @@
+
 # Geomandel
 
 [![Build Status](https://travis-ci.org/crapp/geomandel.svg?branch=master)](https://travis-ci.org/crapp/geomandel)
+
+<!-- START doctoc generated TOC please keep comment here to allow auto update -->
+<!-- DON'T EDIT THIS SECTION, INSTEAD RE-RUN doctoc TO UPDATE -->
+
+
+- [Introduction](#introduction)
+- [Setting up geomandel](#setting-up-geomandel)
+- [Usage](#usage)
+- [Color](#color)
+- [Performance and Memory usage](#performance-and-memory-usage)
+- [Development](#development)
+- [Repositories](#repositories)
+- [ToDo](#todo)
+- [License](#license)
+
+<!-- END doctoc generated TOC please keep comment here to allow auto update -->
 
 ## Introduction
 
@@ -370,7 +387,7 @@ blue primary.
 
 ![Escape Time colorbars two color components](https://crapp.github.io/geomandel/escape_colorbar_2band.png)
 
-Here is what this values will look like as mandelbrot fractals.
+Here is what these values will look like as mandelbrot fractals.
 
 ![Escape time fractals](https://crapp.github.io/geomandel/escape_time_fractals_all_border.png)
 
@@ -379,6 +396,40 @@ Feel free to experiment with this values to get the result you want. There is a
 jupyter notebook `EscapeTimeRGB` in the resources folder that makes it easy to
 visualize different values for RGB fractals generated with the escape time
 algorithm.
+
+### Continuous Coloring
+
+Computing RGB values from the escape time in the mandelbrot algorithm is easy but
+has the disadvantage to produce visible color bands. This is because integer based
+escape time consists of discrete values and this will result in a discrete color
+scale. If the escape time is increased by 1 step we omit all values in between and
+thus loosing the precision to color the fractal in a continuous way.
+
+Getting around this is a bit more tricky and needs some additional computation steps.
+A well known method is mapping the escape time on a logarithmic scale which will
+give us a continuous gradient. Using a natural logarithm allows us to transform
+the magnitude of every escaped pixel into a value between 0 and 1.
+
+Here is the formula I use to calculate a continuous index for every complex number
+of the complex plane.
+
+![Continuous Index Formula](https://crapp.github.io/geomandel/continuous_index.png)
+
+Next step involves finding a good color map that which colors blend smoothly and
+of course endlessly as we can zoom a mandelbrot fractal indefinitely. Mathematical
+functions used to model periodic and repeating phenomenas are the sine and
+cosine functions. So a formula that uses out of phase sine functions to generate
+real-time color blending could look like this:
+
+![Continuous Coloring Formula](https://crapp.github.io/geomandel/continuous_coloring.png)
+
+If you are interested in how this exactly works I highly recommend to read the article
+about generating color sequences using sine and cosine by [Jim Bumgardner](http://krazydad.com/tutorials/makecolors.php). Reading this will help you understand how to use the options
+`--rgb-base`, `--rgb-freq` and `--rgb-phase` with the continuous coloring algorithm
+correctly.
+
+As with escape time coloring using a frequency of 0 for a color component will
+leave the appropriate base color channel untouched.
 
 ## Performance and Memory usage
 

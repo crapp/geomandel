@@ -81,13 +81,19 @@ std::tuple<int, int, int> Imagewriter::rgb_continuous(
     int green_phase = std::get<1>(rgb_phase);
     int blue_phase = std::get<2>(rgb_phase);
 
-    std::get<0>(rgb) = static_cast<int>(std::fabs(
-        std::sin(red_freq * its + red_phase) * red_base + (255 - red_base)));
-    std::get<1>(rgb) = static_cast<int>(
-        std::fabs(std::sin(green_freq * its + green_phase) * green_base +
-                  (255 - green_base)));
-    std::get<2>(rgb) = static_cast<int>(std::fabs(
-        std::sin(blue_freq * its + blue_phase) * blue_base + (255 - blue_base)));
-
+    if (red_freq > 0) {
+        std::get<0>(rgb) = static_cast<int>(std::fabs(
+            std::sin(red_freq * its + red_phase) * red_base + (255 - red_base)));
+    }
+    if (green_freq > 0) {
+        std::get<1>(rgb) = static_cast<int>(
+            std::fabs(std::sin(green_freq * its + green_phase) * green_base +
+                      (255 - green_base)));
+    }
+    if (blue_freq > 0) {
+        std::get<2>(rgb) = static_cast<int>(
+            std::fabs(std::sin(blue_freq * its + blue_phase) * blue_base +
+                      (255 - blue_base)));
+    }
     return rgb;
 }

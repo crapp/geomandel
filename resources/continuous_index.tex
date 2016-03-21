@@ -1,0 +1,14 @@
+\documentclass[preview, border=10pt]{standalone}
+\usepackage{mathtools}
+% \usepackage{empheq}
+
+\newcommand*\widefbox[1]{\fbox{\hspace{2em}#1\hspace{2em}}}
+
+\begin{document}
+% http://tex.stackexchange.com/a/39687
+\abovedisplayskip=-3pt
+% \begin{emphq}[box=\widefbox]{align*} for a border around all equations
+\begin{align*}
+\text{continuous\_index} = \text{escape\_time} + 1 - \left( \frac{\log 2}{\sqrt{\text{Zreal}^2 + \text{Zima}^2}} \right) \div \log 2
+\end{align*}
+\end{document}
