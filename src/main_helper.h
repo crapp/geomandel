@@ -53,8 +53,8 @@ inline void init_mandel_parameters(std::shared_ptr<MandelParameters> &params,
         unsigned int yrange = parser["h"].as<unsigned int>();
 
         unsigned int zoomlvl = 0;
-        unsigned int xcoord = 0;
-        unsigned int ycoord = 0;
+        double xcoord = 0;
+        double ycoord = 0;
 
         // check if user wants to zoom
         if (parser.count("zoom")) {
@@ -67,8 +67,8 @@ inline void init_mandel_parameters(std::shared_ptr<MandelParameters> &params,
             parser["zoom"].as<unsigned int>() == 0
                 ? zoomlvl = 1
                 : zoomlvl = parser["zoom"].as<unsigned int>();
-            xcoord = parser["xcoord"].as<unsigned int>();
-            ycoord = parser["ycoord"].as<unsigned int>();
+            xcoord = parser["xcoord"].as<double>();
+            ycoord = parser["ycoord"].as<double>();
 
             if (xcoord > xrange) {
                 std::cerr << "X Coordinate outside of the image space"
@@ -161,9 +161,9 @@ inline void configure_command_line_parser(cxxopts::Options &p)
         ("zoom", "Zoom level. Use together with xcoord, ycoord",
          cxxopts::value<unsigned int>())
         ("xcoord", "Image X coordinate where you want to zoom into the fractal",
-         cxxopts::value<unsigned int>())
+         cxxopts::value<double>())
         ("ycoord", "Image Y coordinate where you want to zoom into the fractal",
-         cxxopts::value<unsigned int>());
+         cxxopts::value<double>());
 
     p.add_options("Export")
         ("p,print", "Print Buffer to terminal")

@@ -23,8 +23,8 @@ Buffwriter::~Buffwriter() {}
 std::string Buffwriter::out_file_name(const std::string &string_pattern,
                                       unsigned int bailout, unsigned int xrange,
                                       unsigned int yrange, unsigned int zoom,
-                                      unsigned int cores, unsigned int xcoord,
-                                      unsigned int ycoord, double z_real_min,
+                                      unsigned int cores, double xcoord,
+                                      double ycoord, double z_real_min,
                                       double z_real_max, double z_ima_min,
                                       double z_ima_max)
 {
@@ -36,8 +36,8 @@ std::string Buffwriter::out_file_name(const std::string &string_pattern,
     regex_patterns.emplace_back(new Regexpattern<unsigned int>(yrange, "%h"));
     regex_patterns.emplace_back(new Regexpattern<unsigned int>(zoom, "%z"));
     regex_patterns.emplace_back(new Regexpattern<unsigned int>(cores, "%c"));
-    regex_patterns.emplace_back(new Regexpattern<unsigned int>(xcoord, "%x"));
-    regex_patterns.emplace_back(new Regexpattern<unsigned int>(ycoord, "%y"));
+    regex_patterns.emplace_back(new Regexpattern<double>(xcoord, "%x"));
+    regex_patterns.emplace_back(new Regexpattern<double>(ycoord, "%y"));
     regex_patterns.emplace_back(new Regexpattern<double>(z_real_min, "%Zr"));
     regex_patterns.emplace_back(new Regexpattern<double>(z_real_max, "%ZR"));
     regex_patterns.emplace_back(new Regexpattern<double>(z_ima_min, "%Zi"));

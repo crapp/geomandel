@@ -21,7 +21,7 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
 Mandelzoom::Mandelzoom() {}
 void Mandelzoom::calcalute_zoom_cpane(double &xh, double &xl, double &yh,
                                       double &yl, unsigned int zoom,
-                                      unsigned int xcoord, unsigned int ycoord,
+                                      double xcoord, double ycoord,
                                       unsigned int width, unsigned int height)
 {
     /*

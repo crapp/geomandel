@@ -382,8 +382,8 @@ be changed.
 ![Escape Time colorbars](https://crapp.github.io/geomandel/escape_colorbar_1band.png)
 
 The next three colorbars were created with the same base color and the same frequency
-values for the green primary. Additionally I have added a frequency of 4 for the
-blue primary.
+values for the green channel. Additionally I have added a frequency of 4 for the
+blue channel.
 
 ![Escape Time colorbars two color components](https://crapp.github.io/geomandel/escape_colorbar_2band.png)
 

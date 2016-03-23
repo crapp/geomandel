@@ -80,8 +80,8 @@ TEST_CASE("Computation of zoom values", "[computation]")
     // zoom level
     unsigned int zoom = 30;
     // x/y coordinate in the image space
-    unsigned int xcoord = 200;
-    unsigned int ycoord = 300;
+    double xcoord = 200;
+    double ycoord = 300;
 
     SECTION("Test 30x zoom")
     {
