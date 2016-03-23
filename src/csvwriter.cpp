@@ -27,6 +27,7 @@ CSVWriter::~CSVWriter() {}
 void CSVWriter::write_buffer()
 {
     // generate a csv file for iterations and modulus
+    // TODO: Why not simply pass the MandelParameters object?
     std::string filename = this->out_file_name(
         this->params->image_base, this->params->bailout, this->params->xrange,
         this->params->yrange, this->params->zoom, this->params->cores,

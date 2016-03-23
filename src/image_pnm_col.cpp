@@ -44,7 +44,6 @@ void Imagecol::out_format_write(std::stringstream &img_buf,
     }
     if (this->params->col_algo == constants::COL_ALGO::ESCAPE_TIME) {
         auto rgb = this->rgb_linear(its, this->rgb_base, this->rgb_freq);
-        //(green + ((its % 16) * 16))
 
         img_buf << std::get<0>(rgb) << " " << std::get<1>(rgb) << " "
                 << std::get<2>(rgb) << "\t";

@@ -71,6 +71,7 @@ script:
     mkdir build
     cd build && pwd
     cmake -DUNIT_TEST=ON -DCMAKE_CXX_COMPILER=$COMPILER ../ && make
+    # valgrind --leak-check=full --error-exitcode=1 src/geomandel
     src/test/geomandel_tests -s
 
 # blacklist

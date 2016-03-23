@@ -410,6 +410,8 @@ A well known method is mapping the escape time on a logarithmic scale which will
 give us a continuous gradient. Using a natural logarithm allows us to transform
 the magnitude of every escaped pixel into a value between 0 and 1.
 
+#### Mathematical Bases
+
 Here is the formula I use to calculate a continuous index for every complex number
 of the complex plane.
 
@@ -423,13 +425,42 @@ real-time color blending could look like this:
 
 ![Continuous Coloring Formula](https://crapp.github.io/geomandel/continuous_coloring.png)
 
+#### Influence of base color, frequency and phase
+
 If you are interested in how this exactly works I highly recommend to read the article
 about generating color sequences using sine and cosine by [Jim Bumgardner](http://krazydad.com/tutorials/makecolors.php). Reading this will help you understand how to use the options
-`--rgb-base`, `--rgb-freq` and `--rgb-phase` with the continuous coloring algorithm
-correctly.
+`rgb-base`, `rgb-freq` and `rgb-phase` with the continuous coloring algorithm
+to get the result you want.
 
 As with escape time coloring using a frequency of 0 for a color component will
 leave the appropriate base color channel untouched.
+
+Here are some examples that show what you can achieve using this type of coloring.
+
+![Continuous Coloring rainbow](https://crapp.github.io/geomandel/continuous_rainbow.png)
+
+The first graph and colorbar show how you can get rainbow colors by using out of 
+phase color channel waves. If you would use the same phase and the same frequency
+this would produce grey shades.
+
+![Continuous coloring different frequencies](https://crapp.github.io/geomandel/continuous_grey_to_color.png)
+
+In the second example I used the same phase but different frequencies. If the base
+color for all color channels is the same this will lead to a transition from
+grey shades to colors.
+
+![Continuous coloring pastel colors](https://crapp.github.io/geomandel/continuous_pastel.png)
+
+Interested in pastel colors? The last example shows exactly this using a higher
+base color, different frequencies for the color channels and they are out of phase.
+
+Choosing the right frequencies is highly dependent on the bailout value you used
+for the mandelbrot set algorithm.
+
+### Comparison between escape time and continuous coloring
+
+geomandel allows you to render mandelbrot fractals using two different coloring
+algorithms. Here are some images for comparison.
 
 ## Performance and Memory usage
 
@@ -548,6 +579,9 @@ output the result. See the Catch framework documentation for command line option
 you can use to run only specific test cases or change the test results are displayed.
 
 ### Continuous Integration
+
+[![Build Status](https://travis-ci.org/crapp/geomandel.svg?branch=master)](https://travis-ci.org/crapp/geomandel)
+
 
 [Travis CI](https://travis-ci.org/) is used as continous integration service.
 The geomandel github repository is linked to Travis CI. You can see the build
