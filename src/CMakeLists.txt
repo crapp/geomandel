@@ -46,7 +46,7 @@ set (MAIN_SOURCE
     ${CMAKE_CURRENT_SOURCE_DIR}/mandelcruncher.cpp
     ${CMAKE_CURRENT_SOURCE_DIR}/mandelcrunchmulti.cpp
     ${CMAKE_CURRENT_SOURCE_DIR}/mandelcrunchsingle.cpp
-    ${CMAKE_CURRENT_SOURCE_DIR}/mandelzoom.cpp
+    ${CMAKE_CURRENT_SOURCE_DIR}/fractalzoom.cpp
     ${CMAKE_CURRENT_SOURCE_DIR}/printer.cpp
 )
 
@@ -64,7 +64,7 @@ set (MAIN_HEADER
     ${CMAKE_CURRENT_SOURCE_DIR}/mandelcrunchmulti.h
     ${CMAKE_CURRENT_SOURCE_DIR}/mandelcrunchsingle.h
     ${CMAKE_CURRENT_SOURCE_DIR}/fractalparams.h
-    ${CMAKE_CURRENT_SOURCE_DIR}/mandelzoom.h
+    ${CMAKE_CURRENT_SOURCE_DIR}/fractalzoom.h
     ${CMAKE_CURRENT_SOURCE_DIR}/printer.h
 )
 

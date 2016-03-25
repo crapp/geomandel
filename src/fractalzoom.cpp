@@ -1,5 +1,5 @@
 /*
-This file is part of geomandel. Mandelbrot Set infused by GeoTIFF
+This file is part of geomandel. An artful fractal generator
 Copyright © 2015, 2016 Christian Rapp
 
 This program is free software: you can redistribute it and/or modify
@@ -16,10 +16,10 @@ You should have received a copy of the GNU General Public License
 along with this program.  If not, see <http://www.gnu.org/licenses/>.
 */
 
-#include "mandelzoom.h"
+#include "fractalzoom.h"
 
-Mandelzoom::Mandelzoom() {}
-void Mandelzoom::calcalute_zoom_cpane(double &xh, double &xl, double &yh,
+Fractalzoom::Fractalzoom() {}
+void Fractalzoom::calcalute_zoom_cpane(double &xh, double &xl, double &yh,
                                       double &yl, unsigned int zoom,
                                       double xcoord, double ycoord,
                                       unsigned int width, unsigned int height)

@@ -1,5 +1,5 @@
 /*
-This file is part of geomandel. Mandelbrot Set infused by GeoTIFF
+This file is part of geomandel. An artful fractal generator
 Copyright © 2015, 2016 Christian Rapp
 
 This program is free software: you can redistribute it and/or modify
@@ -23,7 +23,7 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
 #include "catch.hpp"
 
 #include "global.h"
-#include "mandelzoom.h"
+#include "fractalzoom.h"
 
 #include "mandelcruncher_mock.h"
 
@@ -61,7 +61,7 @@ void fill_test_buffer(std::vector<int> &tbuff, double z_real_min,
 
 TEST_CASE("Computation of zoom values", "[computation]")
 {
-    Mandelzoom zoomer;
+    Fractalzoom zoomer;
     const double real_min = -2.0;
     const double real_max = 1.0;
     const double ima_min = -1.5;

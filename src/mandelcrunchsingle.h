@@ -1,5 +1,5 @@
 /*
-This file is part of geomandel. Mandelbrot Set infused by GeoTIFF
+This file is part of geomandel. An artful fractal generator
 Copyright © 2015, 2016 Christian Rapp
 
 This program is free software: you can redistribute it and/or modify

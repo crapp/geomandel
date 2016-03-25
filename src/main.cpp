@@ -1,5 +1,5 @@
 /*
-This file is part of geomandel. Mandelbrot Set infused by GeoTIFF
+This file is part of geomandel. An artful fractal generator
 Copyright © 2015, 2016 Christian Rapp
 
 This program is free software: you can redistribute it and/or modify
@@ -40,7 +40,7 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
 
 #include "csvwriter.h"
 
-#include "mandelzoom.h"
+#include "fractalzoom.h"
 
 #include "mandelcrunchsingle.h"
 #include "mandelcrunchmulti.h"

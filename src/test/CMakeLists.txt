@@ -18,13 +18,13 @@ set (MAIN_HEADER_TEST
     ${CMAKE_CURRENT_SOURCE_DIR}/../main_helper.h
     ${CMAKE_CURRENT_SOURCE_DIR}/../mandelcruncher.cpp
     ${CMAKE_CURRENT_SOURCE_DIR}/../fractalparams.h
-    ${CMAKE_CURRENT_SOURCE_DIR}/../mandelzoom.h
+    ${CMAKE_CURRENT_SOURCE_DIR}/../fractalzoom.h
 )
 
 set (MAIN_SOURCE_TEST
     ${CMAKE_CURRENT_SOURCE_DIR}/../buffwriter.cpp
     ${CMAKE_CURRENT_SOURCE_DIR}/../mandelcruncher.cpp
-    ${CMAKE_CURRENT_SOURCE_DIR}/../mandelzoom.cpp
+    ${CMAKE_CURRENT_SOURCE_DIR}/../fractalzoom.cpp
 )
 
 add_executable(geomandel_tests
