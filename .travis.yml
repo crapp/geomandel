@@ -61,8 +61,7 @@ install:
       sh ${CMAKE_INSTALLER} --prefix=$HOME --exclude-subdir
     else
       brew update
-      brew rm cmake
-      brew cleanup
+      brew uninstall --force cmake
       brew install cmake
     fi
 
