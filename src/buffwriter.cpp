@@ -18,7 +18,7 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
 
 #include "buffwriter.h"
 
-Buffwriter::Buffwriter(const constants::mandelbuff &buff) : buff(buff) {}
+Buffwriter::Buffwriter(const constants::fracbuff &buff) : buff(buff) {}
 Buffwriter::~Buffwriter() {}
 std::string Buffwriter::out_file_name(const std::string &string_pattern,
                                       unsigned int bailout, unsigned int xrange,

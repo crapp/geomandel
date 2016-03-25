@@ -18,8 +18,8 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
 
 #include "mandelcruncher.h"
 
-Mandelcruncher::Mandelcruncher(constants::mandelbuff &buff,
-                               const std::shared_ptr<MandelParameters> &params)
+Mandelcruncher::Mandelcruncher(constants::fracbuff &buff,
+                               const std::shared_ptr<FractalParameters> &params)
     : buff(buff), params(params)
 {
 }
@@ -34,8 +34,8 @@ std::tuple<unsigned int, double, double> Mandelcruncher::crunch_mandel_complex(
     // std::cout << "zO(" << x << ", " << y << ")" << std::endl;
     while (x * x + y * y <= 4.0 && iterations < bailout) {
         double x_old = x;
-        x = x * x - y * y + -0.7;
-        y = 2 * x_old * y + 0.27015;
+        x = x * x - y * y + x0;
+        y = 2 * x_old * y + y0;
         iterations++;
     }
     // std::cout << "Iter: " << iterations << " zE(" << x << ", " << y << ")"

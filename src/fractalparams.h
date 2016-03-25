@@ -16,14 +16,14 @@ You should have received a copy of the GNU General Public License
 along with this program.  If not, see <http://www.gnu.org/licenses/>.
 */
 
-#ifndef MANDELPARAMS_H
-#define MANDELPARAMS_H
+#ifndef FRACTALPARAMS_H
+#define FRACTALPARAMS_H
 
 #include <string>
 
 #include "global.h"
 
-struct MandelParameters {
+struct FractalParameters {
     unsigned int xrange;
     double xdelta;
     double x;
@@ -48,13 +48,12 @@ struct MandelParameters {
 
     constants::COL_ALGO col_algo;
 
-    MandelParameters() {}
-    MandelParameters(unsigned int xrange, double xl, double xh,
-                     unsigned int yrange, double yl, double yh,
-                     unsigned int bailout, unsigned int zoom,
-                     double xcoord, double ycoord,
-                     std::string image_base, unsigned int cores,
-                     constants::COL_ALGO col_algo)
+    FractalParameters() {}
+    FractalParameters(unsigned int xrange, double xl, double xh,
+                      unsigned int yrange, double yl, double yh,
+                      unsigned int bailout, unsigned int zoom, double xcoord,
+                      double ycoord, std::string image_base, unsigned int cores,
+                      constants::COL_ALGO col_algo)
         : xrange(xrange),
           xl(xl),
           xh(xh),
@@ -76,4 +75,4 @@ struct MandelParameters {
         this->ydelta = (yh - yl) / yrange;
     }
 };
-#endif /* ifndef MANDELPARAMS_H */
+#endif /* ifndef FRACTALPARAMS_H */

@@ -24,7 +24,7 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
 class BuffwriterMock : public Buffwriter
 {
 public:
-    BuffwriterMock(const constants::mandelbuff &buff);
+    BuffwriterMock(const constants::fracbuff &buff);
     virtual ~BuffwriterMock();
 
     void write_buffer();

@@ -19,7 +19,7 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
 #include "mandelcruncher_mock.h"
 
 MandelcruncherMock::MandelcruncherMock(
-    constants::mandelbuff &buff, const std::shared_ptr<MandelParameters> &params)
+    constants::fracbuff &buff, const std::shared_ptr<FractalParameters> &params)
     : Mandelcruncher(buff, params)
 {
 }

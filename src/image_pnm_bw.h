@@ -25,8 +25,8 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
 class ImageBW : public ImagePNM
 {
 public:
-    ImageBW(const constants::mandelbuff &buff,
-            const std::shared_ptr<MandelParameters> &params,
+    ImageBW(const constants::fracbuff &buff,
+            const std::shared_ptr<FractalParameters> &params,
             const std::shared_ptr<Printer> &prnt);
     virtual ~ImageBW();
 

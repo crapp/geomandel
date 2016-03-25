@@ -18,7 +18,7 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
 
 #include "buffwriter_mock.h"
 
-BuffwriterMock::BuffwriterMock(const constants::mandelbuff &buff)
+BuffwriterMock::BuffwriterMock(const constants::fracbuff &buff)
     : Buffwriter(buff)
 {
 }
@@ -27,9 +27,9 @@ void BuffwriterMock::write_buffer(){};
 
 std::string BuffwriterMock::test_filename_patterns(
     std::string filename_pattern, unsigned int bailout, unsigned int xrange,
-    unsigned int yrange, unsigned int zoom, unsigned int cores,
-    double xcoord, double ycoord, double z_real_min,
-    double z_real_max, double z_ima_min, double z_ima_max)
+    unsigned int yrange, unsigned int zoom, unsigned int cores, double xcoord,
+    double ycoord, double z_real_min, double z_real_max, double z_ima_min,
+    double z_ima_max)
 {
     return this->out_file_name(filename_pattern, bailout, xrange, yrange, zoom,
                                cores, xcoord, ycoord, z_real_min, z_real_max,

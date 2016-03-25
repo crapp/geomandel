@@ -21,7 +21,7 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
 
 #include "global.h"
 
-#include "mandelparams.h"
+#include "fractalparams.h"
 
 #include <string>
 #include <regex>
@@ -78,13 +78,13 @@ private:
 class Buffwriter
 {
 public:
-    Buffwriter(const constants::mandelbuff &buff);
+    Buffwriter(const constants::fracbuff &buff);
     virtual ~Buffwriter();
 
     virtual void write_buffer() = 0;
 
 protected:
-    const constants::mandelbuff &buff;
+    const constants::fracbuff &buff;
 
     std::string out_file_name(const std::string &string_pattern,
                               unsigned int bailout, unsigned int xrange,

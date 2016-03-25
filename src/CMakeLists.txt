@@ -63,7 +63,7 @@ set (MAIN_HEADER
     ${CMAKE_CURRENT_SOURCE_DIR}/mandelcruncher.h
     ${CMAKE_CURRENT_SOURCE_DIR}/mandelcrunchmulti.h
     ${CMAKE_CURRENT_SOURCE_DIR}/mandelcrunchsingle.h
-    ${CMAKE_CURRENT_SOURCE_DIR}/mandelparams.h
+    ${CMAKE_CURRENT_SOURCE_DIR}/fractalparams.h
     ${CMAKE_CURRENT_SOURCE_DIR}/mandelzoom.h
     ${CMAKE_CURRENT_SOURCE_DIR}/printer.h
 )

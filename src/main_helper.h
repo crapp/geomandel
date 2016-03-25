@@ -22,10 +22,10 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
 
 #include "config.h"
 
-#include "mandelparams.h"
+#include "fractalparams.h"
 #include "mandelzoom.h"
 
-inline void init_mandel_parameters(std::shared_ptr<MandelParameters> &params,
+inline void init_mandel_parameters(std::shared_ptr<FractalParameters> &params,
                                    const cxxopts::Options &parser)
 {
     // TODO: This try catch block could be unnecessary as cxxopts does most of
@@ -96,7 +96,7 @@ inline void init_mandel_parameters(std::shared_ptr<MandelParameters> &params,
 
         // Stores informations used by the mandel cruncher and some data
         // writer classes
-        params = std::make_shared<MandelParameters>(
+        params = std::make_shared<FractalParameters>(
             xrange, xl, xh, yrange, yl, yh, bailout, zoomlvl, xcoord, ycoord,
             parser["img-file"].as<std::string>(), cores, col_algo);
     } catch (const cxxopts::missing_argument_exception &ex) {
@@ -118,7 +118,14 @@ inline void configure_command_line_parser(cxxopts::Options &p)
          cxxopts::value<unsigned int>()->implicit_value("2"))
         ("q,quiet", "Don't write to stdout (This does not influence stderr)");
 
-    p.add_options("Mandelbrot")
+    p.add_options("Fractal")
+        ("s,set", "Choose which kind of set you want to compute and render",
+         cxxopts::value<unsigned int>()->default_value("0"))
+        ("j,julia-set", "Generate a julia set for the chosen fractal")
+        ("julia-real", "Julia set real part",
+         cxxopts::value<double>()->default_value("-0.7"))
+        ("julia-ima", "Julia set imaginary part",
+         cxxopts::value<double>()->default_value("0.27015"))
         ("b,bailout", "Bailout value for the mandelbrot set algorithm",
          cxxopts::value<unsigned int>()->default_value("1000"))
         ("creal-min", "Real part minimum",
@@ -159,6 +166,8 @@ inline void configure_command_line_parser(cxxopts::Options &p)
          cxxopts::value<std::string>()->default_value("0.1,0.1,0.1"))
         ("rgb-phase", "Phase for RGB computation as comma separated string",
          cxxopts::value<std::string>()->default_value("0,2,4"))
+        ("set-color", "Color for pixels inside the set",
+         cxxopts::value<std::string>()->default_value("0,0,0"))
         ("zoom", "Zoom level. Use together with xcoord, ycoord",
          cxxopts::value<unsigned int>())
         ("xcoord", "Image X coordinate where you want to zoom into the fractal",

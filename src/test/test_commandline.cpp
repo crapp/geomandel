@@ -20,7 +20,7 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
 
 #include "global.h"
 #include "main_helper.h"
-#include "mandelparams.h"
+#include "fractalparams.h"
 #include "mandelzoom.h"
 
 #include <iostream>
@@ -140,7 +140,7 @@ TEST_CASE("Command line arguments", "[commandline]")
     SECTION("Test command line parameters \"logic\"")
     {
         // max lower min not allowed
-        std::shared_ptr<MandelParameters> params = nullptr;
+        std::shared_ptr<FractalParameters> params = nullptr;
         auto parser = generate_empty_parser();
         const char *test_argv_max_low_min[] = {"Unittester", "--creal-min=-1.8",
                                                "--creal-max=-2.9"};

@@ -25,8 +25,8 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
 class Imagegrey : public ImagePNM
 {
 public:
-    Imagegrey(const constants::mandelbuff &buff,
-              const std::shared_ptr<MandelParameters> &params,
+    Imagegrey(const constants::fracbuff &buff,
+              const std::shared_ptr<FractalParameters> &params,
               const std::shared_ptr<Printer> &prnt,
               std::tuple<int, int, int> rgb_base,
               std::tuple<double, double, double> rgb_freq);

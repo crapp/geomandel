@@ -26,8 +26,8 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
 class MandelcruncherMock : public Mandelcruncher
 {
 public:
-    MandelcruncherMock(constants::mandelbuff &buff,
-                       const std::shared_ptr<MandelParameters> &params);
+    MandelcruncherMock(constants::fracbuff &buff,
+                       const std::shared_ptr<FractalParameters> &params);
     virtual ~MandelcruncherMock();
 
     void fill_buffer();

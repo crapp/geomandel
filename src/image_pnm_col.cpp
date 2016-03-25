@@ -18,8 +18,8 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
 
 #include "image_pnm_col.h"
 
-Imagecol::Imagecol(const constants::mandelbuff &buff,
-                   const std::shared_ptr<MandelParameters> &params,
+Imagecol::Imagecol(const constants::fracbuff &buff,
+                   const std::shared_ptr<FractalParameters> &params,
                    const std::shared_ptr<Printer> &prnt,
                    std::tuple<int, int, int> rgb_base,
                    std::tuple<double, double, double> rgb_freq,
@@ -50,7 +50,7 @@ void Imagecol::out_format_write(std::stringstream &img_buf,
     }
     if (this->params->col_algo == constants::COL_ALGO::ESCAPE_TIME_2) {
         auto rgb = this->rgb_continuous(static_cast<double>(its), this->rgb_base,
-                this->rgb_freq, this->rgb_phase);
+                                        this->rgb_freq, this->rgb_phase);
 
         img_buf << std::get<0>(rgb) << " " << std::get<1>(rgb) << " "
                 << std::get<2>(rgb) << "\t";

@@ -145,9 +145,9 @@ TEST_CASE("Test computation of complex numbers and iteration count",
           "[computation]")
 {
     // creating a mock like object to be able to test computation. No need for
-    // a real buffer or MandelParameters object
-    constants::mandelbuff b;
-    std::shared_ptr<MandelParameters> params = nullptr;
+    // a real buffer or FractalParameters object
+    constants::fracbuff b;
+    std::shared_ptr<FractalParameters> params = nullptr;
     MandelcruncherMock crunch_test(b, params);
 
     SECTION(
@@ -275,10 +275,10 @@ TEST_CASE("Test computation of complex numbers and iteration count",
 TEST_CASE("Test computation of continuous index", "[computation]")
 {
     // creating a mock like object to be able to test computation. No need for
-    // a real buffer or MandelParameters object
-    constants::mandelbuff b;
-    std::shared_ptr<MandelParameters> params =
-        std::make_shared<MandelParameters>();
+    // a real buffer or FractalParameters object
+    constants::fracbuff b;
+    std::shared_ptr<FractalParameters> params =
+        std::make_shared<FractalParameters>();
     MandelcruncherMock crunch_test(b, params);
 
     SECTION("Default index of its 2, -3.0672, 2.7696")

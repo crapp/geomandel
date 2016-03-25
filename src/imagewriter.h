@@ -25,21 +25,21 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
 
 #include "buffwriter.h"
 #include "global.h"
-#include "mandelparams.h"
+#include "fractalparams.h"
 #include "printer.h"
 
 class Imagewriter : public Buffwriter
 {
 public:
-    Imagewriter(const constants::mandelbuff &buff,
-                const std::shared_ptr<MandelParameters> &params,
+    Imagewriter(const constants::fracbuff &buff,
+                const std::shared_ptr<FractalParameters> &params,
                 const std::shared_ptr<Printer> &prnt);
     virtual ~Imagewriter();
 
     virtual void write_buffer() = 0;
 
 protected:
-    const std::shared_ptr<MandelParameters> &params;
+    const std::shared_ptr<FractalParameters> &params;
     const std::shared_ptr<Printer> &prnt;
 
     /**

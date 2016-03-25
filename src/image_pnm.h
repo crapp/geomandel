@@ -27,8 +27,8 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
 class ImagePNM : public Imagewriter
 {
 public:
-    ImagePNM(const constants::mandelbuff &buff,
-             const std::shared_ptr<MandelParameters> &params,
+    ImagePNM(const constants::fracbuff &buff,
+             const std::shared_ptr<FractalParameters> &params,
              const std::shared_ptr<Printer> &prnt,
              const constants::OUT_FORMAT format);
     virtual ~ImagePNM();

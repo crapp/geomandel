@@ -28,8 +28,8 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
 class Mandelcrunchmulti : public Mandelcruncher
 {
 public:
-    Mandelcrunchmulti(constants::mandelbuff &buff,
-                      const std::shared_ptr<MandelParameters> &params);
+    Mandelcrunchmulti(constants::fracbuff &buff,
+                      const std::shared_ptr<FractalParameters> &params);
     virtual ~Mandelcrunchmulti();
 
     void fill_buffer();

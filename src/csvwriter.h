@@ -24,20 +24,20 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
 
 #include "global.h"
 #include "buffwriter.h"
-#include "mandelparams.h"
+#include "fractalparams.h"
 
 class CSVWriter : public Buffwriter
 {
 public:
-    CSVWriter(const constants::mandelbuff &buff,
-              const std::shared_ptr<MandelParameters> &params);
+    CSVWriter(const constants::fracbuff &buff,
+              const std::shared_ptr<FractalParameters> &params);
     virtual ~CSVWriter();
 
     void write_buffer();
 
 private:
     /* data */
-    const std::shared_ptr<MandelParameters> &params;
+    const std::shared_ptr<FractalParameters> &params;
 };
 
 #endif /* ifndef CSVWRITER_H */

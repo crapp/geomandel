@@ -17,7 +17,7 @@ set (MAIN_HEADER_TEST
     ${CMAKE_CURRENT_SOURCE_DIR}/../global.h
     ${CMAKE_CURRENT_SOURCE_DIR}/../main_helper.h
     ${CMAKE_CURRENT_SOURCE_DIR}/../mandelcruncher.cpp
-    ${CMAKE_CURRENT_SOURCE_DIR}/../mandelparams.h
+    ${CMAKE_CURRENT_SOURCE_DIR}/../fractalparams.h
     ${CMAKE_CURRENT_SOURCE_DIR}/../mandelzoom.h
 )
 

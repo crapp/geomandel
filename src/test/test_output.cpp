@@ -64,7 +64,7 @@ TEST_CASE("Filename Patterns", "[output]")
     double z_ima_min = -1.5;      // %Zi
     double z_ima_max = 1.5;       // %ZI
 
-    constants::mandelbuff b;
+    constants::fracbuff b;
     BuffwriterMock bmock(b);
 
     SECTION("Simple filename with three patterns")

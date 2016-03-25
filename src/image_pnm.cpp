@@ -18,8 +18,8 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
 
 #include "image_pnm.h"
 
-ImagePNM::ImagePNM(const constants::mandelbuff &buff,
-                   const std::shared_ptr<MandelParameters> &params,
+ImagePNM::ImagePNM(const constants::fracbuff &buff,
+                   const std::shared_ptr<FractalParameters> &params,
                    const std::shared_ptr<Printer> &prnt,
                    const constants::OUT_FORMAT format)
     : Imagewriter(buff, params, prnt), format(format){};

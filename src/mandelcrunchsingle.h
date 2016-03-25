@@ -25,8 +25,8 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
 class Mandelcrunchsingle : public Mandelcruncher
 {
 public:
-    Mandelcrunchsingle(constants::mandelbuff &buff,
-                       const std::shared_ptr<MandelParameters> &params);
+    Mandelcrunchsingle(constants::fracbuff &buff,
+                       const std::shared_ptr<FractalParameters> &params);
     virtual ~Mandelcrunchsingle();
 
     void fill_buffer();

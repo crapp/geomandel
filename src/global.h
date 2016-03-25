@@ -40,6 +40,8 @@ enum OUT_FORMAT {
     IMAGE_JPG,
     GEOTIFF
 };
+
+enum FRACTAL { MANDELBROT, TRICORN };
 // TODO: Underscore 2 might not be the best name for this :/
 enum COL_ALGO { ESCAPE_TIME, ESCAPE_TIME_2, CONTINUOUS };
 
@@ -67,7 +69,7 @@ struct Iterations {
     }
 };
 
-typedef std::vector<std::vector<Iterations>> mandelbuff;
+typedef std::vector<std::vector<Iterations>> fracbuff;
 }
 
 namespace utility

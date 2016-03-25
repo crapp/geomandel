@@ -23,20 +23,20 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
 #include <cmath>
 
 #include "global.h"
-#include "mandelparams.h"
+#include "fractalparams.h"
 
 class Mandelcruncher
 {
 public:
-    Mandelcruncher(constants::mandelbuff &buff,
-                   const std::shared_ptr<MandelParameters> &params);
+    Mandelcruncher(constants::fracbuff &buff,
+                   const std::shared_ptr<FractalParameters> &params);
     virtual ~Mandelcruncher();
 
     virtual void fill_buffer() = 0;
 
 protected:
-    constants::mandelbuff &buff;
-    const std::shared_ptr<MandelParameters> &params;
+    constants::fracbuff &buff;
+    const std::shared_ptr<FractalParameters> &params;
 
     /**
      * @brief Mandelbrot algorithm

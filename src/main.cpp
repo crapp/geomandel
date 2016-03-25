@@ -56,7 +56,7 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
 
 // TODO: Put this code in a separate class derived from Buffwriter
-void prnt_buff(const constants::mandelbuff &buff, unsigned int bailout)
+void prnt_buff(const constants::fracbuff &buff, unsigned int bailout)
 {
     for (auto &v : buff) {
         for (auto &val : v) {
@@ -78,7 +78,7 @@ int main(int argc, char *argv[])
     try {
         parser.parse(argc, argv);
     } catch (const cxxopts::OptionParseException &ex) {
-        std::cerr << parser.help({"", "Mandelbrot", "Image", "Export"})
+        std::cerr << parser.help({"", "Fractal", "Image", "Export"})
                   << std::endl;
         std::cerr << "Could not parse command line arguments" << std::endl;
         std::cerr << ex.what() << std::endl;
@@ -86,7 +86,7 @@ int main(int argc, char *argv[])
     }
 
     if (parser.count("help")) {
-        std::cout << parser.help({"", "Mandelbrot", "Image", "Export"})
+        std::cout << parser.help({"", "Fractal", "Image", "Export"})
                   << std::endl;
         return 0;
     }
@@ -94,11 +94,11 @@ int main(int argc, char *argv[])
     std::shared_ptr<Printer> prnt =
         std::make_shared<Printer>(parser.count("quiet"));
 
-    std::shared_ptr<MandelParameters> params = nullptr;
+    std::shared_ptr<FractalParameters> params = nullptr;
     init_mandel_parameters(params, parser);
 
     if (params == nullptr) {
-        std::cerr << parser.help({"", "Mandelbrot", "Image", "Export"})
+        std::cerr << parser.help({"", "Fractal", "Image", "Export"})
                   << std::endl;
         std::cerr << "Could not parse command line arguments" << std::endl;
         return 1;
@@ -123,7 +123,7 @@ int main(int argc, char *argv[])
     // TODO: Using a two dimensional vector is unnecessary. Have a look at
     // test_computation.cpp for a better solution.
     // create the buffer that holds our data
-    constants::mandelbuff mandelbuffer;
+    constants::fracbuff mandelbuffer;
     mandelbuffer.assign(params->yrange, std::vector<constants::Iterations>());
     for (auto &v : mandelbuffer) {
         v.assign(params->xrange, constants::Iterations());

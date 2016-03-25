@@ -25,8 +25,8 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
 class Imagecol : public ImagePNM
 {
 public:
-    Imagecol(const constants::mandelbuff &buff,
-             const std::shared_ptr<MandelParameters> &params,
+    Imagecol(const constants::fracbuff &buff,
+             const std::shared_ptr<FractalParameters> &params,
              const std::shared_ptr<Printer> &prnt,
              std::tuple<int, int, int> rgb_base,
              std::tuple<double, double, double> rgb_freq,
