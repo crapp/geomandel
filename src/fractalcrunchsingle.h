@@ -16,28 +16,23 @@ You should have received a copy of the GNU General Public License
 along with this program.  If not, see <http://www.gnu.org/licenses/>.
 */
 
-#ifndef MANDELCRUNCHER_MOCK_H
-#define MANDELCRUNCHER_MOCK_H
+#ifndef FRACTALCRUNCHSINGLE_H
+#define FRACTALCRUNCHSINGLE_H
 
-#include <tuple>
+#include "global.h"
+#include "fractalcruncher.h"
 
-#include "mandelcruncher.h"
-
-class MandelcruncherMock : public Mandelcruncher
+class Fractalcrunchsingle : public Fractalcruncher
 {
 public:
-    MandelcruncherMock(constants::fracbuff &buff,
+    Fractalcrunchsingle(constants::fracbuff &buff,
                        const std::shared_ptr<FractalParameters> &params);
-    virtual ~MandelcruncherMock();
+    virtual ~Fractalcrunchsingle();
 
     void fill_buffer();
-    std::tuple<unsigned int, double, double> test_cruncher(
-        double real, double ima, unsigned int bailout) const;
-    constants::Iterations test_iterfactory(unsigned int its, double z_real,
-                                           double z_ima) const;
 
 private:
     /* data */
 };
 
-#endif /* ifndef MANDELCRUNCHER_MOCK_H */
+#endif /* ifndef FRACTALCRUNCHSINGLE_H */

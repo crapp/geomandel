@@ -16,21 +16,21 @@ You should have received a copy of the GNU General Public License
 along with this program.  If not, see <http://www.gnu.org/licenses/>.
 */
 
-#ifndef MANDELCRUNCHMULTI_H
-#define MANDELCRUNCHMULTI_H
+#ifndef FRACTALCRUNCHMULTI_H
+#define FRACTALCRUNCHMULTI_H
 
 #include <thread>
 #include "ctpl_stl.h"
 
 #include "global.h"
-#include "mandelcruncher.h"
+#include "fractalcruncher.h"
 
-class Mandelcrunchmulti : public Mandelcruncher
+class Fractalcrunchmulti : public Fractalcruncher
 {
 public:
-    Mandelcrunchmulti(constants::fracbuff &buff,
+    Fractalcrunchmulti(constants::fracbuff &buff,
                       const std::shared_ptr<FractalParameters> &params);
-    virtual ~Mandelcrunchmulti();
+    virtual ~Fractalcrunchmulti();
 
     void fill_buffer();
 
@@ -38,4 +38,4 @@ private:
     /* data */
 };
 
-#endif /* ifndef MANDELCRUNCHMULTI_H */
+#endif /* ifndef FRACTALCRUNCHMULTI_H */

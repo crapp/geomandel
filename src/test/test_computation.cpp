@@ -25,7 +25,7 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
 #include "global.h"
 #include "fractalzoom.h"
 
-#include "mandelcruncher_mock.h"
+#include "fractalcruncher_mock.h"
 
 /**
  * @brief Fills a vector<int> with escape time integers.
@@ -39,12 +39,12 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
  * @param width
  * @param height
  * @param crunch_test A mock like object that implements some wrapper methods so
- * we can access private Methods in Mandelcruncher class
+ * we can access private Methods in Fractalcruncher class
  */
 void fill_test_buffer(std::vector<int> &tbuff, double z_real_min,
                       double z_real_max, double z_ima_min, double z_ima_max,
                       unsigned int bailout, unsigned int width,
-                      unsigned int height, const MandelcruncherMock &crunch_test)
+                      unsigned int height, const FractalcruncherMock &crunch_test)
 {
     double real_delta = (z_real_max - z_real_min) / width;
     double ima_delta = (z_ima_max - z_ima_min) / height;
@@ -148,7 +148,7 @@ TEST_CASE("Test computation of complex numbers and iteration count",
     // a real buffer or FractalParameters object
     constants::fracbuff b;
     std::shared_ptr<FractalParameters> params = nullptr;
-    MandelcruncherMock crunch_test(b, params);
+    FractalcruncherMock crunch_test(b, params);
 
     SECTION(
         "Test some single point computations, z1(-2.5, -1.5) - z2(1.0 - 1.5)")
@@ -279,7 +279,7 @@ TEST_CASE("Test computation of continuous index", "[computation]")
     constants::fracbuff b;
     std::shared_ptr<FractalParameters> params =
         std::make_shared<FractalParameters>();
-    MandelcruncherMock crunch_test(b, params);
+    FractalcruncherMock crunch_test(b, params);
 
     SECTION("Default index of its 2, -3.0672, 2.7696")
     {

@@ -16,22 +16,22 @@ You should have received a copy of the GNU General Public License
 along with this program.  If not, see <http://www.gnu.org/licenses/>.
 */
 
-#include "mandelcrunchmulti.h"
+#include "fractalcrunchmulti.h"
 
-Mandelcrunchmulti::Mandelcrunchmulti(
+Fractalcrunchmulti::Fractalcrunchmulti(
     constants::fracbuff &buff, const std::shared_ptr<FractalParameters> &params)
-    : Mandelcruncher(buff, params)
+    : Fractalcruncher(buff, params)
 {
 }
 
-Mandelcrunchmulti::~Mandelcrunchmulti() {}
-void Mandelcrunchmulti::fill_buffer()
+Fractalcrunchmulti::~Fractalcrunchmulti() {}
+void Fractalcrunchmulti::fill_buffer()
 {
     // a vector filled with futures. We will wait for all of them to be finished.
     std::vector<std::future<void>> futures;
     ctpl::thread_pool tpl(this->params->cores);
 
-    // calculate the mandelbrot set line by line. Each line will be pushed to the
+    // calculate the set line by line. Each line will be pushed to the
     // thread pool as separate job. The id parameter of the lambda function
     // represents the thread id.
     double x = this->params->x;

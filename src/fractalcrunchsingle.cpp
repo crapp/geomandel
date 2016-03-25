@@ -16,16 +16,16 @@ You should have received a copy of the GNU General Public License
 along with this program.  If not, see <http://www.gnu.org/licenses/>.
 */
 
-#include "mandelcrunchsingle.h"
+#include "fractalcrunchsingle.h"
 
-Mandelcrunchsingle::Mandelcrunchsingle(
+Fractalcrunchsingle::Fractalcrunchsingle(
     constants::fracbuff &buff, const std::shared_ptr<FractalParameters> &params)
-    : Mandelcruncher(buff, params)
+    : Fractalcruncher(buff, params)
 {
 }
 
-Mandelcrunchsingle::~Mandelcrunchsingle() {}
-void Mandelcrunchsingle::fill_buffer()
+Fractalcrunchsingle::~Fractalcrunchsingle() {}
+void Fractalcrunchsingle::fill_buffer()
 {
     double x = this->params->x;
     double y = this->params->y;

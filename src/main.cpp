@@ -42,8 +42,8 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
 
 #include "fractalzoom.h"
 
-#include "mandelcrunchsingle.h"
-#include "mandelcrunchmulti.h"
+#include "fractalcrunchsingle.h"
+#include "fractalcrunchmulti.h"
 
 #include "ctpl_stl.h"
 #include "cxxopts.hpp"
@@ -129,16 +129,16 @@ int main(int argc, char *argv[])
         v.assign(params->xrange, constants::Iterations());
     }
 
-    std::unique_ptr<Mandelcruncher> crunchi;
+    std::unique_ptr<Fractalcruncher> crunchi;
 
     if (parser.count("m")) {
         prnt << "+ Multicore: " << params->cores << std::endl;
-        crunchi = std::unique_ptr<Mandelcrunchmulti>(
-            new Mandelcrunchmulti(mandelbuffer, params));
+        crunchi = std::unique_ptr<Fractalcrunchmulti>(
+            new Fractalcrunchmulti(mandelbuffer, params));
     } else {
         prnt << "+ Singlecore " << std::endl;
-        crunchi = std::unique_ptr<Mandelcrunchsingle>(
-            new Mandelcrunchsingle(mandelbuffer, params));
+        crunchi = std::unique_ptr<Fractalcrunchsingle>(
+            new Fractalcrunchsingle(mandelbuffer, params));
     }
 
     std::chrono::time_point<std::chrono::system_clock> tbegin;
@@ -151,7 +151,7 @@ int main(int argc, char *argv[])
     auto deltat =
         std::chrono::duration_cast<std::chrono::milliseconds>(tend - tbegin);
     prnt << "+" << std::endl;
-    prnt << "+ Mandelcruncher time " << deltat.count() << "ms \n+" << std::endl;
+    prnt << "+ Fractalcruncher time " << deltat.count() << "ms \n+" << std::endl;
 
     // TODO: More refactoring needed here. Would be nice to move this somewhere
     // else. Maybe we could put this into the Mandelparameters structure.

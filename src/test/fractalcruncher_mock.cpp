@@ -16,23 +16,23 @@ You should have received a copy of the GNU General Public License
 along with this program.  If not, see <http://www.gnu.org/licenses/>.
 */
 
-#include "mandelcruncher_mock.h"
+#include "fractalcruncher_mock.h"
 
-MandelcruncherMock::MandelcruncherMock(
+FractalcruncherMock::FractalcruncherMock(
     constants::fracbuff &buff, const std::shared_ptr<FractalParameters> &params)
-    : Mandelcruncher(buff, params)
+    : Fractalcruncher(buff, params)
 {
 }
 
-MandelcruncherMock::~MandelcruncherMock() {}
-void MandelcruncherMock::fill_buffer() {}
-std::tuple<unsigned int, double, double> MandelcruncherMock::test_cruncher(
+FractalcruncherMock::~FractalcruncherMock() {}
+void FractalcruncherMock::fill_buffer() {}
+std::tuple<unsigned int, double, double> FractalcruncherMock::test_cruncher(
     double real, double ima, unsigned int bailout) const
 {
     return this->crunch_mandel_complex(real, ima, bailout);
 }
 
-constants::Iterations MandelcruncherMock::test_iterfactory(unsigned int its,
+constants::Iterations FractalcruncherMock::test_iterfactory(unsigned int its,
                                                            double z_real,
                                                            double z_ima) const
 {

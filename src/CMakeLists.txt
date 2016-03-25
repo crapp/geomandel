@@ -43,9 +43,9 @@ set (MAIN_SOURCE
     ${CMAKE_CURRENT_SOURCE_DIR}/image_pnm_col.cpp
     ${CMAKE_CURRENT_SOURCE_DIR}/image_pnm_grey.cpp
     ${CMAKE_CURRENT_SOURCE_DIR}/main.cpp
-    ${CMAKE_CURRENT_SOURCE_DIR}/mandelcruncher.cpp
-    ${CMAKE_CURRENT_SOURCE_DIR}/mandelcrunchmulti.cpp
-    ${CMAKE_CURRENT_SOURCE_DIR}/mandelcrunchsingle.cpp
+    ${CMAKE_CURRENT_SOURCE_DIR}/fractalcruncher.cpp
+    ${CMAKE_CURRENT_SOURCE_DIR}/fractalcrunchmulti.cpp
+    ${CMAKE_CURRENT_SOURCE_DIR}/fractalcrunchsingle.cpp
     ${CMAKE_CURRENT_SOURCE_DIR}/fractalzoom.cpp
     ${CMAKE_CURRENT_SOURCE_DIR}/printer.cpp
 )
@@ -60,9 +60,9 @@ set (MAIN_HEADER
     ${CMAKE_CURRENT_SOURCE_DIR}/image_pnm_col.h
     ${CMAKE_CURRENT_SOURCE_DIR}/image_pnm_grey.h
     ${CMAKE_CURRENT_SOURCE_DIR}/main_helper.h
-    ${CMAKE_CURRENT_SOURCE_DIR}/mandelcruncher.h
-    ${CMAKE_CURRENT_SOURCE_DIR}/mandelcrunchmulti.h
-    ${CMAKE_CURRENT_SOURCE_DIR}/mandelcrunchsingle.h
+    ${CMAKE_CURRENT_SOURCE_DIR}/fractalcruncher.h
+    ${CMAKE_CURRENT_SOURCE_DIR}/fractalcrunchmulti.h
+    ${CMAKE_CURRENT_SOURCE_DIR}/fractalcrunchsingle.h
     ${CMAKE_CURRENT_SOURCE_DIR}/fractalparams.h
     ${CMAKE_CURRENT_SOURCE_DIR}/fractalzoom.h
     ${CMAKE_CURRENT_SOURCE_DIR}/printer.h

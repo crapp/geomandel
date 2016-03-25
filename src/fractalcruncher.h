@@ -16,8 +16,8 @@ You should have received a copy of the GNU General Public License
 along with this program.  If not, see <http://www.gnu.org/licenses/>.
 */
 
-#ifndef MANDELCRUNCHER_H
-#define MANDELCRUNCHER_H
+#ifndef FRACTALCRUNCHER_H
+#define FRACTALCRUNCHER_H
 
 #include <tuple>
 #include <cmath>
@@ -25,12 +25,12 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
 #include "global.h"
 #include "fractalparams.h"
 
-class Mandelcruncher
+class Fractalcruncher
 {
 public:
-    Mandelcruncher(constants::fracbuff &buff,
+    Fractalcruncher(constants::fracbuff &buff,
                    const std::shared_ptr<FractalParameters> &params);
-    virtual ~Mandelcruncher();
+    virtual ~Fractalcruncher();
 
     virtual void fill_buffer() = 0;
 
@@ -65,7 +65,7 @@ protected:
      * @param Zy Imaginary part of the complex number
      * @param col-algo Coloring algorithm
      *
-     * @return Mandelbrot Set Buffer tuple
+     * @return Fractal Buffer tuple
      */
     constants::Iterations iterations_factory(unsigned int its, double Zx,
                                              double Zy) const;
@@ -73,4 +73,4 @@ protected:
 private:
 };
 
-#endif /* ifndef MANDELCRUNCHER_H */
+#endif /* ifndef FRACTALCRUNCHER_H */

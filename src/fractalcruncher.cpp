@@ -16,15 +16,15 @@ You should have received a copy of the GNU General Public License
 along with this program.  If not, see <http://www.gnu.org/licenses/>.
 */
 
-#include "mandelcruncher.h"
+#include "fractalcruncher.h"
 
-Mandelcruncher::Mandelcruncher(constants::fracbuff &buff,
+Fractalcruncher::Fractalcruncher(constants::fracbuff &buff,
                                const std::shared_ptr<FractalParameters> &params)
     : buff(buff), params(params)
 {
 }
-Mandelcruncher::~Mandelcruncher() {}
-std::tuple<unsigned int, double, double> Mandelcruncher::crunch_mandel_complex(
+Fractalcruncher::~Fractalcruncher() {}
+std::tuple<unsigned int, double, double> Fractalcruncher::crunch_mandel_complex(
     double x, double y, unsigned int bailout) const
 {
     // The Mandelbrot Set algorithm derived from pseudo code
@@ -43,7 +43,7 @@ std::tuple<unsigned int, double, double> Mandelcruncher::crunch_mandel_complex(
     return std::make_tuple(iterations, x, y);
 }
 
-constants::Iterations Mandelcruncher::iterations_factory(unsigned int its,
+constants::Iterations Fractalcruncher::iterations_factory(unsigned int its,
                                                          double Zx,
                                                          double Zy) const
 {

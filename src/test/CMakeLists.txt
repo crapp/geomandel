@@ -1,6 +1,6 @@
 set(UNIT_HEADER
     ${CMAKE_CURRENT_SOURCE_DIR}/buffwriter_mock.h
-    ${CMAKE_CURRENT_SOURCE_DIR}/mandelcruncher_mock.h
+    ${CMAKE_CURRENT_SOURCE_DIR}/fractalcruncher_mock.h
 )
 
 set(UNIT_SOURCE
@@ -9,21 +9,21 @@ set(UNIT_SOURCE
     ${CMAKE_CURRENT_SOURCE_DIR}/test_computation.cpp
     ${CMAKE_CURRENT_SOURCE_DIR}/test_output.cpp
     ${CMAKE_CURRENT_SOURCE_DIR}/buffwriter_mock.cpp
-    ${CMAKE_CURRENT_SOURCE_DIR}/mandelcruncher_mock.cpp
+    ${CMAKE_CURRENT_SOURCE_DIR}/fractalcruncher_mock.cpp
 )
 
 set (MAIN_HEADER_TEST
     ${CMAKE_CURRENT_SOURCE_DIR}/../buffwriter.h
     ${CMAKE_CURRENT_SOURCE_DIR}/../global.h
     ${CMAKE_CURRENT_SOURCE_DIR}/../main_helper.h
-    ${CMAKE_CURRENT_SOURCE_DIR}/../mandelcruncher.cpp
+    ${CMAKE_CURRENT_SOURCE_DIR}/../fractalcruncher.cpp
     ${CMAKE_CURRENT_SOURCE_DIR}/../fractalparams.h
     ${CMAKE_CURRENT_SOURCE_DIR}/../fractalzoom.h
 )
 
 set (MAIN_SOURCE_TEST
     ${CMAKE_CURRENT_SOURCE_DIR}/../buffwriter.cpp
-    ${CMAKE_CURRENT_SOURCE_DIR}/../mandelcruncher.cpp
+    ${CMAKE_CURRENT_SOURCE_DIR}/../fractalcruncher.cpp
     ${CMAKE_CURRENT_SOURCE_DIR}/../fractalzoom.cpp
 )
 
