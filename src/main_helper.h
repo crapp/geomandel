@@ -92,13 +92,13 @@ inline void init_mandel_parameters(std::shared_ptr<MandelParameters> &params,
             cores = parser["m"].as<unsigned int>();
 
         constants::COL_ALGO col_algo = static_cast<constants::COL_ALGO>(
-            parser["colalgo"].as<unsigned int>());
+            parser["col-algo"].as<unsigned int>());
 
         // Stores informations used by the mandel cruncher and some data
         // writer classes
         params = std::make_shared<MandelParameters>(
             xrange, xl, xh, yrange, yl, yh, bailout, zoomlvl, xcoord, ycoord,
-            parser["image-file"].as<std::string>(), cores, col_algo);
+            parser["img-file"].as<std::string>(), cores, col_algo);
     } catch (const cxxopts::missing_argument_exception &ex) {
         std::cerr << "Missing argument \n  " << ex.what() << std::endl;
     } catch (const cxxopts::OptionParseException &ex) {
@@ -131,7 +131,7 @@ inline void configure_command_line_parser(cxxopts::Options &p)
          cxxopts::value<double>()->default_value("1.5"));
 
     p.add_options("Image")
-        ("image-file", "Image file name pattern. You can use different printf "
+        ("img-file", "Image file name pattern. You can use different printf "
         "like '%' items interspersed with normal text for the output "
         "file name. Have a look in the README for more instructions.",
          cxxopts::value<std::string>()->default_value("geomandel"))
@@ -146,16 +146,17 @@ inline void configure_command_line_parser(cxxopts::Options &p)
         ("img-jpg", "Write Buffer to JPG image")
         ("img-png", "Write Buffer to PNG image")
 #endif
-        ("colalgo", "Coloring algorithm 0->Escape Time, 1->Continuous Coloring",
-         cxxopts::value<unsigned int>()->default_value("0"))
+        ("col-algo", "Coloring algorithm 0->Escape Time, "
+         "1-> Escape Time 2, 2->Continuous Coloring",
+         cxxopts::value<unsigned int>()->default_value("1"))
         ("grey-base", "Base grey color between 0 - 255",
-         cxxopts::value<int>()->default_value("55"))
+         cxxopts::value<unsigned int>()->default_value("55"))
         ("grey-freq", "Frequency for grey shade computation",
-         cxxopts::value<int>()->default_value("10"))
+         cxxopts::value<double>()->default_value("0.1"))
         ("rgb-base", "Base RGB color as comma separated string",
-         cxxopts::value<std::string>()->default_value("255,0,0"))
+         cxxopts::value<std::string>()->default_value("127,127,127"))
         ("rgb-freq", "Frequency for RGB computation as comma separated string. You may use doubles but no negative values",
-         cxxopts::value<std::string>()->default_value("0,16,16"))
+         cxxopts::value<std::string>()->default_value("0.1,0.1,0.1"))
         ("rgb-phase", "Phase for RGB computation as comma separated string",
          cxxopts::value<std::string>()->default_value("0,2,4"))
         ("zoom", "Zoom level. Use together with xcoord, ycoord",

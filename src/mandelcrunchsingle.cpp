@@ -36,7 +36,8 @@ void Mandelcrunchsingle::fill_buffer()
             auto crunched_mandel =
                 this->crunch_mandel_complex(x, y, this->params->bailout);
             unsigned int its = std::get<0>(crunched_mandel);
-            if (this->params->col_algo == constants::COL_ALGO::ESCAPE_TIME) {
+            if (this->params->col_algo == constants::COL_ALGO::ESCAPE_TIME ||
+                this->params->col_algo == constants::COL_ALGO::ESCAPE_TIME_2) {
                 constants::Iterations it = this->iterations_factory(its, 0, 0);
                 buff[iy][ix].default_index = it.default_index;
             }

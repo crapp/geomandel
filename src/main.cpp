@@ -168,8 +168,9 @@ int main(int argc, char *argv[])
     }
     if (parser.count("img-pnm-grey")) {
         prnt << "+ Generating grey scale bitmap" << std::endl;
-        int grey_base = parser["grey-base"].as<int>();
-        int grey_freq = parser["grey-freq"].as<int>();
+        unsigned int grey_base = parser["grey-base"].as<unsigned int>();
+        // do we need to use std::fabs for the parsed double here?
+        double grey_freq = parser["grey-freq"].as<double>();
         img = std::unique_ptr<Imagegrey>(new Imagegrey(
             mandelbuffer, params, prnt, std::make_tuple(grey_base, 0, 0),
             std::make_tuple(grey_freq, 0, 0)));

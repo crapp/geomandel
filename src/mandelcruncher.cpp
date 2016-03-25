@@ -34,8 +34,8 @@ std::tuple<unsigned int, double, double> Mandelcruncher::crunch_mandel_complex(
     // std::cout << "zO(" << x << ", " << y << ")" << std::endl;
     while (x * x + y * y <= 4.0 && iterations < bailout) {
         double x_old = x;
-        x = x * x - y * y + x0;
-        y = 2 * x_old * y + y0;
+        x = x * x - y * y + -0.7;
+        y = 2 * x_old * y + 0.27015;
         iterations++;
     }
     // std::cout << "Iter: " << iterations << " zE(" << x << ", " << y << ")"
@@ -48,7 +48,8 @@ constants::Iterations Mandelcruncher::iterations_factory(unsigned int its,
                                                          double Zy) const
 {
     constants::Iterations it;
-    if (this->params->col_algo == constants::COL_ALGO::ESCAPE_TIME)
+    if (this->params->col_algo == constants::COL_ALGO::ESCAPE_TIME ||
+        this->params->col_algo == constants::COL_ALGO::ESCAPE_TIME_2)
         it.default_index = its;
     if (this->params->col_algo == constants::COL_ALGO::CONTINUOUS) {
         it.default_index = its;

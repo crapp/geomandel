@@ -63,7 +63,7 @@ protected:
      * @param its Number of iterations
      * @param Zx Real part of the complex number
      * @param Zy Imaginary part of the complex number
-     * @param colalgo Coloring algorithm
+     * @param col-algo Coloring algorithm
      *
      * @return Mandelbrot Set Buffer tuple
      */

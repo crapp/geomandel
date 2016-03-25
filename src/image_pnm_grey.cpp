@@ -23,10 +23,12 @@ Imagegrey::Imagegrey(const constants::mandelbuff &buff,
                      const std::shared_ptr<Printer> &prnt,
                      std::tuple<int, int, int> rgb_base,
                      std::tuple<double, double, double> rgb_freq)
+
     : ImagePNM(buff, params, prnt, constants::OUT_FORMAT::IMAGE_PNM_GREY),
       rgb_base(std::move(rgb_base)),
       rgb_freq(std::move(rgb_freq))
 {
+    this->rgb_phase = std::make_tuple(0, 0, 0);
 }
 
 Imagegrey::~Imagegrey() {}
@@ -34,28 +36,23 @@ void Imagegrey::out_format_write(std::stringstream &img_buf,
                                  const constants::Iterations &data)
 {
     unsigned int its = data.default_index;
+    if (its == this->params->bailout) {
+        img_buf << 0 << " ";
+        return;
+    }
+    std::tuple<int, int, int> rgb{0, 0, 0};
     if (this->params->col_algo == constants::COL_ALGO::ESCAPE_TIME) {
-        // Escape time algorithm coloring
-        // not very efficient to do some of the math over
-        // and over again. Hopefully the compiler will
-        // optimize this ;)
-        if (its == this->params->bailout) {
-            img_buf << 0 << " ";
-        } else {
-            std::tuple<int, int, int> rgb = this->rgb_linear(
-                its, this->rgb_base, this->rgb_freq);
-            img_buf << std::get<0>(rgb) << " ";
-        }
+        rgb = this->rgb_linear(its, this->rgb_base, this->rgb_freq);
+        img_buf << std::get<0>(rgb) << " ";
+    }
+    if (this->params->col_algo == constants::COL_ALGO::ESCAPE_TIME_2) {
+        rgb = this->rgb_continuous(static_cast<double>(its), this->rgb_base,
+                                   this->rgb_freq, this->rgb_phase);
+        img_buf << std::get<0>(rgb) << " ";
     }
     if (this->params->col_algo == constants::COL_ALGO::CONTINUOUS) {
-        if (its < this->params->bailout) {
-            double continuous_index = data.continous_index;
-            // TODO: Clang format is producing some weird code formatting here.
-            img_buf << static_cast<int>(std::floor(std::abs(
-                           std::sin(0.016 * continuous_index + 4) * 230 + 25)))
-                    << " ";
-        } else {
-            img_buf << 0 << " ";
-        }
+        double continuous_index = data.continous_index;
+        rgb = this->rgb_continuous(continuous_index, this->rgb_base,
+                                   this->rgb_freq, this->rgb_phase);
     }
 }

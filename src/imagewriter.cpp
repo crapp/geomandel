@@ -95,5 +95,7 @@ std::tuple<int, int, int> Imagewriter::rgb_continuous(
             std::fabs(std::sin(blue_freq * its + blue_phase) * blue_base +
                       (255 - blue_base)));
     }
+    // std::cout << std::get<0>(rgb) << "," << std::get<1>(rgb) << ","
+    //<< std::get<2>(rgb) << std::endl;
     return rgb;
 }

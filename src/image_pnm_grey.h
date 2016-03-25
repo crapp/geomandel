@@ -37,6 +37,7 @@ private:
 
     std::tuple<int, int, int> rgb_base;
     std::tuple<double, double, double> rgb_freq;
+    std::tuple<int, int, int> rgb_phase;
 
     void out_format_write(std::stringstream &img_buf,
                           const constants::Iterations &data);

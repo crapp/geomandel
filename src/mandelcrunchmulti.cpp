@@ -47,7 +47,8 @@ void Mandelcrunchmulti::fill_buffer()
                 auto crunched_mandel = this->crunch_mandel_complex(
                     xpass, ypass, this->params->bailout);
                 unsigned int its = std::get<0>(crunched_mandel);
-                if (this->params->col_algo == constants::COL_ALGO::ESCAPE_TIME)
+                if (this->params->col_algo == constants::COL_ALGO::ESCAPE_TIME ||
+                    this->params->col_algo == constants::COL_ALGO::ESCAPE_TIME_2)
                     int_vec[ix] = this->iterations_factory(its, 0, 0);
                 if (this->params->col_algo == constants::COL_ALGO::CONTINUOUS) {
                     double Zx = std::get<1>(crunched_mandel);

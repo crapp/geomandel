@@ -75,9 +75,9 @@ TEST_CASE("Command line arguments", "[commandline]")
         const char *test_argv_cima_max[] = {"Unittester", "--cima-max"};
         cxxopt_pointer = const_cast<char **>(test_argv_cima_max);
         REQUIRE_THROWS(parser.parse(test_argc, cxxopt_pointer));
-        // image-file
+        // img-file
         parser = generate_empty_parser();
-        const char *test_argv_img_file[] = {"Unittester", "--image-file"};
+        const char *test_argv_img_file[] = {"Unittester", "--img-file"};
         cxxopt_pointer = const_cast<char **>(test_argv_img_file);
         REQUIRE_THROWS(parser.parse(test_argc, cxxopt_pointer));
         // width
@@ -90,9 +90,9 @@ TEST_CASE("Command line arguments", "[commandline]")
         const char *test_argv_height[] = {"Unittester", "-h"};
         cxxopt_pointer = const_cast<char **>(test_argv_height);
         REQUIRE_THROWS(parser.parse(test_argc, cxxopt_pointer));
-        // colalgo
+        // col-algo
         parser = generate_empty_parser();
-        const char *test_argv_colalgo[] = {"Unittester", "--colalgo"};
+        const char *test_argv_colalgo[] = {"Unittester", "--col-algo"};
         cxxopt_pointer = const_cast<char **>(test_argv_colalgo);
         REQUIRE_THROWS(parser.parse(test_argc, cxxopt_pointer));
         // grey-base

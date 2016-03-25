@@ -243,8 +243,8 @@ How this images are generated can be influenced by command line parameters.
 ##### File name
 
 The default output file name is geomandel + appropriate image format file extension.
-Fortunately you are able to use the `--image-file` command line option which allows
-highly customizable file names.
+Fortunately the re is the possibility to use the `--img-file` command line option
+which provides highly customizable file names.
 
 You can use different printf like '%' items interspersed with normal text for the
 output file name. These items will be replaced by the application with the values
@@ -304,11 +304,11 @@ You have to install the library and recompile geomandel if you want this kind of
 This is just a brief introduction into color command line options. See **Color**
 for more information on this topic.
 
-The `colalgo` parameter determines which coloring algorithm to use. Continuous
+The `col-algo` parameter determines which coloring algorithm to use. Continuous
 coloring will produce images without visible color bands. Computation time might
 increase slightly though.
 ```
---colalgo arg     Coloring algorithm 0->Escape Time, 1->Continuous Coloring
+--col-algo arg     Coloring algorithm 0->Escape Time, 1->Continuous Coloring
 ```
 
 Grey scale fractals are a nice alternative to colored ones. These parameters
@@ -338,19 +338,20 @@ chosen coloring algorithm
 The algorithms are well known and easy to implement. The more challenging part is
 to draw beautiful fractals using different coloring algorithms. geomandel offers
 two different color strategies, escape time based and continuous coloring. You
-can use the `--colalgo` parameter too chose which one you want to apply.
+can use the `col-algo` parameter too chose which one you want to apply.
 
 ### Escape Time
 
 The Escape Time algorithm is the most common method to color fractals. This is
 because the method is fast, easy to understand and there are a lot of implementations
-out there one can build on.
+int he wild one can build on.
 
 The pseudo code example in [command line options](#Mandelbrot-Options) section
 shows how the escape time is calculated. geomandel takes this value and calculates
-a RGB tuple or a grey scale value with the following formula.
+a RGB tuple or a grey scale value using two different formula depending on which
+escape time algorithm you chose.
 
-!["Escape Time Coloring Formula"](https://crapp.github.io/geomandel/escape_time_coloring.png)
+!["Escape Time Coloring 1 Formula"](https://crapp.github.io/geomandel/escape_time_coloring.png)
 
 #### Grey Scale
 

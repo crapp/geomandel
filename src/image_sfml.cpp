@@ -40,6 +40,11 @@ void ImageSFML::write_buffer()
             if (this->params->col_algo == constants::COL_ALGO::ESCAPE_TIME) {
                 rgb = this->rgb_linear(its, this->rgb_base, this->rgb_freq);
             }
+            if (this->params->col_algo == constants::COL_ALGO::ESCAPE_TIME_2) {
+                rgb = this->rgb_continuous(static_cast<double>(its),
+                                           this->rgb_base, this->rgb_freq,
+                                           this->rgb_phase);
+            }
             if (this->params->col_algo == constants::COL_ALGO::CONTINUOUS) {
                 rgb = this->rgb_continuous(continous_index, this->rgb_base,
                                            this->rgb_freq, this->rgb_phase);
