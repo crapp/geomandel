@@ -49,11 +49,16 @@ TEST_CASE("Command line arguments", "[commandline]")
     SECTION("Test options that need an argument")
     {
         char **cxxopt_pointer = nullptr;
-        // bailout
+        // set type
         auto parser = generate_empty_parser();
+        const char *test_argv_settype[] = {"Unittester", "-s"};
+        cxxopt_pointer = const_cast<char **>(test_argv_settype);
+        int test_argc = 2;
+        REQUIRE_THROWS(parser.parse(test_argc, cxxopt_pointer));
+        // bailout
+        parser = generate_empty_parser();
         const char *test_argv_bail[] = {"Unittester", "-b"};
         cxxopt_pointer = const_cast<char **>(test_argv_bail);
-        int test_argc = 2;
         REQUIRE_THROWS(parser.parse(test_argc, cxxopt_pointer));
         // creal-min
         parser = generate_empty_parser();
@@ -160,7 +165,7 @@ TEST_CASE("Command line arguments", "[commandline]")
         init_mandel_parameters(params, parser);
         REQUIRE(params == nullptr);
 
-        // no parameters at all should give as a default Mandelparameters object
+        // no parameters at all should give as a default Fractalparameters object
         params = nullptr;
         parser = generate_empty_parser();
         const char *test_argv_empty[] = {"Unittester"};

@@ -24,6 +24,8 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
 #include "global.h"
 
 struct FractalParameters {
+    constants::FRACTAL set_type;
+
     unsigned int xrange;
     double xdelta;
     double x;
@@ -35,6 +37,9 @@ struct FractalParameters {
     double y;
     double yl;
     double yh;
+
+    double julia_real;
+    double julia_ima;
 
     unsigned int bailout;
 
@@ -49,17 +54,21 @@ struct FractalParameters {
     constants::COL_ALGO col_algo;
 
     FractalParameters() {}
-    FractalParameters(unsigned int xrange, double xl, double xh,
-                      unsigned int yrange, double yl, double yh,
+    FractalParameters(constants::FRACTAL set_type, unsigned int xrange,
+                      double xl, double xh, unsigned int yrange, double yl,
+                      double yh, double julia_real, double julia_ima,
                       unsigned int bailout, unsigned int zoom, double xcoord,
                       double ycoord, std::string image_base, unsigned int cores,
                       constants::COL_ALGO col_algo)
-        : xrange(xrange),
+        : set_type(set_type),
+          xrange(xrange),
           xl(xl),
           xh(xh),
           yrange(yrange),
           yl(yl),
           yh(yh),
+          julia_real(julia_real),
+          julia_ima(julia_ima),
           bailout(bailout),
           zoom(zoom),
           xcoord(xcoord),

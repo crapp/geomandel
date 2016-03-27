@@ -31,6 +31,9 @@ inline void init_mandel_parameters(std::shared_ptr<FractalParameters> &params,
     // TODO: This try catch block could be unnecessary as cxxopts does most of
     // the checking itself when parse is called
     try {
+        constants::FRACTAL set_type =
+            static_cast<constants::FRACTAL>(parser["s"].as<unsigned int>());
+
         unsigned int bailout = parser["b"].as<unsigned int>();
 
         // define complex plane variables
@@ -51,6 +54,9 @@ inline void init_mandel_parameters(std::shared_ptr<FractalParameters> &params,
             return;
         }
         unsigned int yrange = parser["h"].as<unsigned int>();
+
+        double julia_real = parser["julia-real"].as<double>();
+        double julia_ima = parser["julia-ima"].as<double>();
 
         unsigned int zoomlvl = 0;
         double xcoord = 0;
@@ -97,7 +103,8 @@ inline void init_mandel_parameters(std::shared_ptr<FractalParameters> &params,
         // Stores informations used by the mandel cruncher and some data
         // writer classes
         params = std::make_shared<FractalParameters>(
-            xrange, xl, xh, yrange, yl, yh, bailout, zoomlvl, xcoord, ycoord,
+            set_type, xrange, xl, xh, yrange, yl, yh, julia_real, julia_ima,
+            bailout, zoomlvl, xcoord, ycoord,
             parser["img-file"].as<std::string>(), cores, col_algo);
     } catch (const cxxopts::missing_argument_exception &ex) {
         std::cerr << "Missing argument \n  " << ex.what() << std::endl;

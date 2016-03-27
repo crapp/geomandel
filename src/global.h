@@ -41,7 +41,7 @@ enum OUT_FORMAT {
     GEOTIFF
 };
 
-enum FRACTAL { MANDELBROT, TRICORN };
+enum FRACTAL { MANDELBROT, TRICORN, JULIA };
 // TODO: Underscore 2 might not be the best name for this :/
 enum COL_ALGO { ESCAPE_TIME, ESCAPE_TIME_2, CONTINUOUS };
 

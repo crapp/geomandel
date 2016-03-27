@@ -44,7 +44,8 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
 void fill_test_buffer(std::vector<int> &tbuff, double z_real_min,
                       double z_real_max, double z_ima_min, double z_ima_max,
                       unsigned int bailout, unsigned int width,
-                      unsigned int height, const FractalcruncherMock &crunch_test)
+                      unsigned int height,
+                      const FractalcruncherMock &crunch_test)
 {
     double real_delta = (z_real_max - z_real_min) / width;
     double ima_delta = (z_ima_max - z_ima_min) / height;
@@ -147,7 +148,10 @@ TEST_CASE("Test computation of complex numbers and iteration count",
     // creating a mock like object to be able to test computation. No need for
     // a real buffer or FractalParameters object
     constants::fracbuff b;
-    std::shared_ptr<FractalParameters> params = nullptr;
+    std::shared_ptr<FractalParameters> params =
+        std::make_shared<FractalParameters>();
+    params->set_type = constants::FRACTAL::MANDELBROT;
+
     FractalcruncherMock crunch_test(b, params);
 
     SECTION(

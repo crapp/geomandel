@@ -18,8 +18,8 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
 
 #include "fractalcruncher.h"
 
-Fractalcruncher::Fractalcruncher(constants::fracbuff &buff,
-                               const std::shared_ptr<FractalParameters> &params)
+Fractalcruncher::Fractalcruncher(
+    constants::fracbuff &buff, const std::shared_ptr<FractalParameters> &params)
     : buff(buff), params(params)
 {
 }
@@ -34,8 +34,14 @@ std::tuple<unsigned int, double, double> Fractalcruncher::crunch_mandel_complex(
     // std::cout << "zO(" << x << ", " << y << ")" << std::endl;
     while (x * x + y * y <= 4.0 && iterations < bailout) {
         double x_old = x;
-        x = x * x - y * y + x0;
-        y = 2 * x_old * y + y0;
+        if (params->set_type == constants::FRACTAL::MANDELBROT) {
+            x = x * x - y * y + x0;
+            y = 2 * x_old * y + y0;
+        }
+        if (params->set_type == constants::FRACTAL::JULIA) {
+            x = x * x - y * y + params->julia_real;
+            y = 2 * x_old * y + params->julia_ima;
+        }
         iterations++;
     }
     // std::cout << "Iter: " << iterations << " zE(" << x << ", " << y << ")"
@@ -44,8 +50,8 @@ std::tuple<unsigned int, double, double> Fractalcruncher::crunch_mandel_complex(
 }
 
 constants::Iterations Fractalcruncher::iterations_factory(unsigned int its,
-                                                         double Zx,
-                                                         double Zy) const
+                                                          double Zx,
+                                                          double Zy) const
 {
     constants::Iterations it;
     if (this->params->col_algo == constants::COL_ALGO::ESCAPE_TIME ||
