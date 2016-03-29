@@ -129,9 +129,9 @@ inline void configure_command_line_parser(cxxopts::Options &p)
         ("s,set", "Choose which kind of set you want to compute and render",
          cxxopts::value<unsigned int>()->default_value("0"))
         ("j,julia-set", "Generate a julia set for the chosen fractal")
-        ("julia-real", "Julia set real part",
+        ("julia-real", "Julia set constant real part",
          cxxopts::value<double>()->default_value("-0.7"))
-        ("julia-ima", "Julia set imaginary part",
+        ("julia-ima", "Julia set constant imaginary part",
          cxxopts::value<double>()->default_value("0.27015"))
         ("b,bailout", "Bailout value for the mandelbrot set algorithm",
          cxxopts::value<unsigned int>()->default_value("1000"))
@@ -145,7 +145,7 @@ inline void configure_command_line_parser(cxxopts::Options &p)
          cxxopts::value<double>()->default_value("1.5"));
 
     p.add_options("Image")
-        ("img-file", "Image file name pattern. You can use different printf "
+        ("image-file", "Image file name pattern. You can use different printf "
         "like '%' items interspersed with normal text for the output "
         "file name. Have a look in the README for more instructions.",
          cxxopts::value<std::string>()->default_value("geomandel"))
@@ -153,12 +153,12 @@ inline void configure_command_line_parser(cxxopts::Options &p)
          cxxopts::value<unsigned int>()->default_value("1000"))
         ("h,height", "Image height",
          cxxopts::value<unsigned int>()->default_value("1000"))
-        ("img-pnm-bw", "Write Buffer to PBM Bitmap")
-        ("img-pnm-grey", "Write Buffer to grey scale PGM")
-        ("img-pnm-col", "Write Buffer to PPM Bitmap")
+        ("image-pnm-bw", "Write Buffer to PBM Bitmap")
+        ("image-pnm-grey", "Write Buffer to grey scale PGM")
+        ("image-pnm-col", "Write Buffer to PPM Bitmap")
 #ifdef HAVE_SFML
-        ("img-jpg", "Write Buffer to JPG image")
-        ("img-png", "Write Buffer to PNG image")
+        ("image-jpg", "Write Buffer to JPG image")
+        ("image-png", "Write Buffer to PNG image")
 #endif
         ("col-algo", "Coloring algorithm 0->Escape Time, "
          "1-> Escape Time 2, 2->Continuous Coloring",

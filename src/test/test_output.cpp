@@ -19,35 +19,7 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
 #include "catch.hpp"
 
 #include "buffwriter_mock.h"
-
-#include <type_traits>
-
-/**
- * @brief Primitives to string conversion
- *
- * @tparam T Type of primitive to convert
- * @param value
- *
- * @return String
- *
- * @details
- * Converts primitive data types to strings using std::to_string. Additionally
- * trailing '0' will be deleted.
- */
-template <typename T>
-std::string primitive_to_string(T value)
-{
-    std::string val_to_string = std::to_string(value);
-    if (std::is_same<double, T>::value || std::is_same<float, T>::value) {
-        val_to_string.erase(val_to_string.find_last_not_of('0') + 1,
-                            std::string::npos);
-        // check if last char is a point
-        if (val_to_string.back() == '.') {
-            val_to_string = val_to_string.substr(0, val_to_string.size() - 1);
-        }
-    }
-    return val_to_string;
-}
+#include "global.h"
 
 TEST_CASE("Filename Patterns", "[output]")
 {
@@ -74,9 +46,9 @@ TEST_CASE("Filename Patterns", "[output]")
             pattern, bailout, xrange, yrange, zoom, cores, xcoord, ycoord,
             z_real_min, z_real_max, z_ima_min, z_ima_max);
         REQUIRE(filename ==
-                "mandi_" + primitive_to_string(xrange) + "x" +
-                    primitive_to_string(yrange) + "_" +
-                    primitive_to_string(zoom) + ".png");
+                "mandi_" + utility::primitive_to_string(xrange) + "x" +
+                    utility::primitive_to_string(yrange) + "_" +
+                    utility::primitive_to_string(zoom) + ".png");
     }
 
     SECTION("Special case where .0 floats should be displayed as integers")
@@ -88,8 +60,8 @@ TEST_CASE("Filename Patterns", "[output]")
             std::move(pattern), bailout, xrange, yrange, zoom, cores, xcoord,
             ycoord, z_real_min, z_real_max, z_ima_min, z_ima_max);
         REQUIRE(filename ==
-                "mandeltest_[" + primitive_to_string(xcoord) + "-" +
-                    primitive_to_string(ycoord) + "]");
+                "mandeltest_[" + utility::primitive_to_string(xcoord) + "-" +
+                    utility::primitive_to_string(ycoord) + "]");
     }
     SECTION("Complex file name with all patterns")
     {
@@ -100,16 +72,16 @@ TEST_CASE("Filename Patterns", "[output]")
             std::move(pattern), bailout, xrange, yrange, zoom, cores, xcoord,
             ycoord, z_real_min, z_real_max, z_ima_min, z_ima_max);
         REQUIRE(filename ==
-                "mandeltest_%a_" + primitive_to_string(xrange) + "x" +
-                    primitive_to_string(yrange) + "_b" +
-                    primitive_to_string(bailout) + "_m" +
-                    primitive_to_string(cores) + "_[" +
-                    primitive_to_string(xcoord) + ", " +
-                    primitive_to_string(ycoord) + " --> " +
-                    primitive_to_string(zoom) + "]_(" +
-                    primitive_to_string(z_real_min) + ", " +
-                    primitive_to_string(z_ima_min) + ")->(" +
-                    primitive_to_string(z_real_max) + ", " +
-                    primitive_to_string(z_ima_max) + ")");
+                "mandeltest_%a_" + utility::primitive_to_string(xrange) + "x" +
+                    utility::primitive_to_string(yrange) + "_b" +
+                    utility::primitive_to_string(bailout) + "_m" +
+                    utility::primitive_to_string(cores) + "_[" +
+                    utility::primitive_to_string(xcoord) + ", " +
+                    utility::primitive_to_string(ycoord) + " --> " +
+                    utility::primitive_to_string(zoom) + "]_(" +
+                    utility::primitive_to_string(z_real_min) + ", " +
+                    utility::primitive_to_string(z_ima_min) + ")->(" +
+                    utility::primitive_to_string(z_real_max) + ", " +
+                    utility::primitive_to_string(z_ima_max) + ")");
     }
 }

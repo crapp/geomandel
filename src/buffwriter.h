@@ -54,15 +54,7 @@ struct Regexpattern : public RegexpatternIface {
     void parse_filename(std::string &filename)
     {
         std::regex re(this->regpattern);
-        std::string val_string = std::to_string(this->value);
-        if (std::is_same<double, T>::value) {
-            val_string.erase(val_string.find_last_not_of('0') + 1,
-                             std::string::npos);
-            // check if last char is a point
-            if (val_string.back() == '.') {
-                val_string = val_string.substr(0, val_string.size() - 1);
-            }
-        }
+        std::string val_string = utility::primitive_to_string(this->value);
         filename = std::regex_replace(filename, re, val_string);
     }
 

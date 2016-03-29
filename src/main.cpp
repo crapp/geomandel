@@ -110,22 +110,32 @@ int main(int argc, char *argv[])
         version += "." + std::string(GEOMANDEL_PATCH);
     }
 
+    std::string frac_type = "Mandelbrot";
+
+    if (params->set_type == constants::FRACTAL::TRICORN) {
+        frac_type = "Mandelbar";
+    }
+
     prnt << "+++++++++++++++++++++++++++++++++++++" << std::endl;
     prnt << "+       Welcome to geomandel " << version << std::endl;
     prnt << "+                                    " << std::endl;
+    prnt << "+ Fractal type " << frac_type << std::endl;
     prnt << "+ Bailout: " << std::to_string(params->bailout) << std::endl;
     prnt << "+ Complex plane:" << std::endl;
     prnt << "+   Im " << params->yl << " " << params->yh << std::endl;
     prnt << "+   Re " << params->xl << " " << params->xh << std::endl;
-    prnt << "+ Image " << std::to_string(params->xrange) << "x"
+    prnt << "+ Image: " << std::to_string(params->xrange) << "x"
          << std::to_string(params->yrange) << std::endl;
+    prnt << "+ Zoom: "
+         << "(" << params->xcoord << ", " << params->ycoord << ")" << std::endl;
+    prnt << "+   Level " << params->zoom << "x" << std::endl;
 
     // TODO: Using a two dimensional vector is unnecessary. Have a look at
     // test_computation.cpp for a better solution.
     // create the buffer that holds our data
-    constants::fracbuff mandelbuffer;
-    mandelbuffer.assign(params->yrange, std::vector<constants::Iterations>());
-    for (auto &v : mandelbuffer) {
+    constants::fracbuff fractalbuffer;
+    fractalbuffer.assign(params->yrange, std::vector<constants::Iterations>());
+    for (auto &v : fractalbuffer) {
         v.assign(params->xrange, constants::Iterations());
     }
 
@@ -134,13 +144,14 @@ int main(int argc, char *argv[])
     if (parser.count("m")) {
         prnt << "+ Multicore: " << params->cores << std::endl;
         crunchi = std::unique_ptr<Fractalcrunchmulti>(
-            new Fractalcrunchmulti(mandelbuffer, params));
+            new Fractalcrunchmulti(fractalbuffer, params));
     } else {
         prnt << "+ Singlecore " << std::endl;
         crunchi = std::unique_ptr<Fractalcrunchsingle>(
-            new Fractalcrunchsingle(mandelbuffer, params));
+            new Fractalcrunchsingle(fractalbuffer, params));
     }
 
+    // Do the work
     std::chrono::time_point<std::chrono::system_clock> tbegin;
     tbegin = std::chrono::system_clock::now();
     crunchi->fill_buffer();
@@ -157,13 +168,14 @@ int main(int argc, char *argv[])
     // else. Maybe we could put this into the Mandelparameters structure.
     // The way we make it right now is not testable by Catch.
     // TODO: Shouldn't we use unsigned int in rgb tuples
+
     // visualize/export the crunched numbers
     std::unique_ptr<Buffwriter> img;
     std::unique_ptr<Buffwriter> csv =
-        std::unique_ptr<CSVWriter>(new CSVWriter(mandelbuffer, params));
+        std::unique_ptr<CSVWriter>(new CSVWriter(fractalbuffer, params));
     if (parser.count("img-pnm-bw")) {
         prnt << "+ Generating B/W image" << std::endl;
-        img = std::unique_ptr<ImageBW>(new ImageBW(mandelbuffer, params, prnt));
+        img = std::unique_ptr<ImageBW>(new ImageBW(fractalbuffer, params, prnt));
         img->write_buffer();
     }
     if (parser.count("img-pnm-grey")) {
@@ -172,7 +184,7 @@ int main(int argc, char *argv[])
         // do we need to use std::fabs for the parsed double here?
         double grey_freq = parser["grey-freq"].as<double>();
         img = std::unique_ptr<Imagegrey>(new Imagegrey(
-            mandelbuffer, params, prnt, std::make_tuple(grey_base, 0, 0),
+            fractalbuffer, params, prnt, std::make_tuple(grey_base, 0, 0),
             std::make_tuple(grey_freq, 0, 0)));
         img->write_buffer();
     }
@@ -183,7 +195,7 @@ int main(int argc, char *argv[])
         std::tuple<int, int, int> rgb_phase;
         parse_rgb_command_options(parser, rgb_base, rgb_freq, rgb_phase);
         img = std::unique_ptr<Imagecol>(
-            new Imagecol(mandelbuffer, params, prnt, std::move(rgb_base),
+            new Imagecol(fractalbuffer, params, prnt, std::move(rgb_base),
                          std::move(rgb_freq), std::move(rgb_phase)));
         img->write_buffer();
     }
@@ -203,7 +215,7 @@ int main(int argc, char *argv[])
 // ImageSFML stub class
 #ifdef HAVE_SFML
         img = std::unique_ptr<ImageSFML>(
-            new ImageSFML(mandelbuffer, params, prnt, std::move(rgb_base),
+            new ImageSFML(fractalbuffer, params, prnt, std::move(rgb_base),
                           std::move(rgb_freq), std::move(rgb_phase), png_jpg));
         img->write_buffer();
 #endif
@@ -214,7 +226,7 @@ int main(int argc, char *argv[])
         csv->write_buffer();
     }
     if (parser.count("p"))
-        prnt_buff(mandelbuffer, params->bailout);  // print the buffer
+        prnt_buff(fractalbuffer, params->bailout);  // print the buffer
 
     prnt << "+\n+" << std::endl;
     prnt << "+++++++++++++++++++++++++++++++++++++" << std::endl << std::endl;

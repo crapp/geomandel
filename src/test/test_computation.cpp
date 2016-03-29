@@ -142,7 +142,7 @@ TEST_CASE("Computation of zoom values", "[computation]")
     }
 }
 
-TEST_CASE("Test computation of complex numbers and iteration count",
+TEST_CASE("Test computation of complex numbers and iteration count for Mandelbrot Set",
           "[computation]")
 {
     // creating a mock like object to be able to test computation. No need for
@@ -276,13 +276,14 @@ TEST_CASE("Test computation of complex numbers and iteration count",
     };
 }
 
-TEST_CASE("Test computation of continuous index", "[computation]")
+TEST_CASE("Test computation of continuous index for Mandelbrot set", "[computation]")
 {
     // creating a mock like object to be able to test computation. No need for
     // a real buffer or FractalParameters object
     constants::fracbuff b;
     std::shared_ptr<FractalParameters> params =
         std::make_shared<FractalParameters>();
+    params->set_type = constants::FRACTAL::MANDELBROT;
     FractalcruncherMock crunch_test(b, params);
 
     SECTION("Default index of its 2, -3.0672, 2.7696")

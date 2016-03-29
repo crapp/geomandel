@@ -24,6 +24,7 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
 #include <vector>
 #include <string>
 #include <sstream>
+#include <type_traits>
 
 #include "cxxopts.hpp"
 
@@ -91,6 +92,33 @@ inline void split(const std::string &s, char delim,
     while (std::getline(ss, item, delim)) {
         elems.push_back(item);
     }
+}
+
+/**
+ * @brief Primitives to string conversion
+ *
+ * @tparam T Type of primitive to convert
+ * @param value
+ *
+ * @return String
+ *
+ * @details
+ * Converts primitive data types to strings using std::to_string. Additionally
+ * trailing '0' will be deleted.
+ */
+template <typename T>
+inline std::string primitive_to_string(T value)
+{
+    std::string val_to_string = std::to_string(value);
+    if (std::is_same<double, T>::value || std::is_same<float, T>::value) {
+        val_to_string.erase(val_to_string.find_last_not_of('0') + 1,
+                            std::string::npos);
+        // check if last char is a point
+        if (val_to_string.back() == '.') {
+            val_to_string = val_to_string.substr(0, val_to_string.size() - 1);
+        }
+    }
+    return val_to_string;
 }
 }
 #endif /* ifndef GLOBAL_H */
