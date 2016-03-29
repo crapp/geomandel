@@ -115,19 +115,23 @@ int main(int argc, char *argv[])
     if (params->set_type == constants::FRACTAL::TRICORN) {
         frac_type = "Mandelbar";
     }
+    if (params->set_type == constants::FRACTAL::JULIA) {
+        frac_type = "Julia Set";
+    }
 
     prnt << "+++++++++++++++++++++++++++++++++++++" << std::endl;
     prnt << "+       Welcome to geomandel " << version << std::endl;
     prnt << "+                                    " << std::endl;
-    prnt << "+ Fractal type " << frac_type << std::endl;
+    prnt << "+ Fractal type '" << frac_type << "'" << std::endl;
     prnt << "+ Bailout: " << std::to_string(params->bailout) << std::endl;
     prnt << "+ Complex plane:" << std::endl;
     prnt << "+   Im " << params->yl << " " << params->yh << std::endl;
     prnt << "+   Re " << params->xl << " " << params->xh << std::endl;
     prnt << "+ Image: " << std::to_string(params->xrange) << "x"
          << std::to_string(params->yrange) << std::endl;
-    prnt << "+ Zoom: "
-         << "(" << params->xcoord << ", " << params->ycoord << ")" << std::endl;
+    prnt << "+ Zoom: " << std::endl;
+    prnt << "+   Coordinate " << params->xcoord << ", " << params->ycoord
+         << std::endl;
     prnt << "+   Level " << params->zoom << "x" << std::endl;
 
     // TODO: Using a two dimensional vector is unnecessary. Have a look at
@@ -173,12 +177,12 @@ int main(int argc, char *argv[])
     std::unique_ptr<Buffwriter> img;
     std::unique_ptr<Buffwriter> csv =
         std::unique_ptr<CSVWriter>(new CSVWriter(fractalbuffer, params));
-    if (parser.count("img-pnm-bw")) {
+    if (parser.count("image-pnm-bw")) {
         prnt << "+ Generating B/W image" << std::endl;
         img = std::unique_ptr<ImageBW>(new ImageBW(fractalbuffer, params, prnt));
         img->write_buffer();
     }
-    if (parser.count("img-pnm-grey")) {
+    if (parser.count("image-pnm-grey")) {
         prnt << "+ Generating grey scale bitmap" << std::endl;
         unsigned int grey_base = parser["grey-base"].as<unsigned int>();
         // do we need to use std::fabs for the parsed double here?
@@ -188,7 +192,7 @@ int main(int argc, char *argv[])
             std::make_tuple(grey_freq, 0, 0)));
         img->write_buffer();
     }
-    if (parser.count("img-pnm-col")) {
+    if (parser.count("image-pnm-col")) {
         prnt << "+ Generating RGB bitmap" << std::endl;
         std::tuple<int, int, int> rgb_base;
         std::tuple<double, double, double> rgb_freq;
@@ -200,10 +204,10 @@ int main(int argc, char *argv[])
         img->write_buffer();
     }
     uint8_t png_jpg = 0;
-    if (parser.count("img-png"))
+    if (parser.count("image-png"))
         png_jpg |= static_cast<uint8_t>(constants::OUT_FORMAT::IMAGE_PNG);
 
-    if (parser.count("img-jpg"))
+    if (parser.count("image-jpg"))
         png_jpg |= static_cast<uint8_t>(constants::OUT_FORMAT::IMAGE_JPG);
     if (png_jpg != 0) {
         prnt << "+ Generating jpg/png image" << std::endl;

@@ -31,16 +31,18 @@ std::tuple<unsigned int, double, double> Fractalcruncher::crunch_mandel_complex(
     unsigned int iterations = 0;
     double x0 = x;
     double y0 = y;
+    if (params->set_type == constants::FRACTAL::JULIA) {
+        x0 = params->julia_real;
+        y0 = params->julia_ima;
+    }
     // std::cout << "zO(" << x << ", " << y << ")" << std::endl;
     while (x * x + y * y <= 4.0 && iterations < bailout) {
         double x_old = x;
-        if (params->set_type == constants::FRACTAL::MANDELBROT) {
-            x = x * x - y * y + x0;
+        x = x * x - y * y + x0;
+        if (params->set_type == constants::FRACTAL::TRICORN) {
+            y = -2 * x_old * y + y0;
+        } else {
             y = 2 * x_old * y + y0;
-        }
-        if (params->set_type == constants::FRACTAL::JULIA) {
-            x = x * x - y * y + params->julia_real;
-            y = 2 * x_old * y + params->julia_ima;
         }
         iterations++;
     }

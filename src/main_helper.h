@@ -105,7 +105,7 @@ inline void init_mandel_parameters(std::shared_ptr<FractalParameters> &params,
         params = std::make_shared<FractalParameters>(
             set_type, xrange, xl, xh, yrange, yl, yh, julia_real, julia_ima,
             bailout, zoomlvl, xcoord, ycoord,
-            parser["img-file"].as<std::string>(), cores, col_algo);
+            parser["image-file"].as<std::string>(), cores, col_algo);
     } catch (const cxxopts::missing_argument_exception &ex) {
         std::cerr << "Missing argument \n  " << ex.what() << std::endl;
     } catch (const cxxopts::OptionParseException &ex) {
