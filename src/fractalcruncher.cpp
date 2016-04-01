@@ -27,7 +27,9 @@ Fractalcruncher::~Fractalcruncher() {}
 std::tuple<unsigned int, double, double> Fractalcruncher::crunch_mandel_complex(
     double x, double y, unsigned int bailout) const
 {
-    // The Mandelbrot Set algorithm derived from pseudo code
+    // The Fractal algorithm derived from pseudo code
+    // TODO: This code gets more and more ugly dependening on how much fractals
+    // I try to support.
     unsigned int iterations = 0;
     double x0 = x;
     double y0 = y;
@@ -39,10 +41,17 @@ std::tuple<unsigned int, double, double> Fractalcruncher::crunch_mandel_complex(
     while (x * x + y * y <= 4.0 && iterations < bailout) {
         double x_old = x;
         x = x * x - y * y + x0;
+        if (params->set_type == constants::FRACTAL::BURNING_SHIP) {
+            x = std::fabs(x);
+        }
         if (params->set_type == constants::FRACTAL::TRICORN) {
             y = -2 * x_old * y + y0;
         } else {
             y = 2 * x_old * y + y0;
+        }
+
+        if (params->set_type == constants::FRACTAL::BURNING_SHIP) {
+            y = std::fabs(y);
         }
         iterations++;
     }
