@@ -1,9 +1,11 @@
 (A) 2016-02-21 Add unit tests for output operations @test
-(A) 2016-03-25 Add a second coloring algorithm based on escape time and sine/cosine functions @color
+x 2016-04-01 2016-03-25 Add a second coloring algorithm based on escape time and sine/cosine functions @color
 (B) 2016-02-04 Write a proper README file @documentation
-(B) 2016-02-21 More sets can be calculated with this code, like the julia set @computation
+x 2016-04-01 2016-02-21 More sets can be calculated with this code, like the julia set @computation
 (C) 2016-02-04 Speed up mandelbrot serial cruncher code with openCL/Cuda for maximum parallelism. Have a look at Boost.Compute or Thrust @computation
 (C) 2016-02-05 Document code with doxygen and code comments @documentation
 (C) 2016-02-05 Maybe add a plugin api based on python for rgb color @color
 (C) 2016-02-14 Different algorithms for mandelbrot computation. Currently only serial is implemented @computation
 (C) 2016-02-24 Zoom Range and automatic zoom coordinate algorithm @computation
+(C) 2016-04-01 Newton Fractal
+(A) 2016-04-01 Find a new application name

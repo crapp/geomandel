@@ -52,10 +52,10 @@ void fill_test_buffer(std::vector<int> &tbuff, double z_real_min,
 
     for (unsigned int yi = 0; yi < height; yi++) {
         for (unsigned int xi = 0; xi < width; xi++) {
-            auto crunched_mandel =
+            auto crunched_fractal =
                 crunch_test.test_cruncher(z_real_min + (xi * real_delta),
                                           z_ima_min + (yi * ima_delta), bailout);
-            tbuff.push_back(std::get<0>(crunched_mandel));
+            tbuff.push_back(std::get<0>(crunched_fractal));
         }
     }
 }
@@ -142,8 +142,9 @@ TEST_CASE("Computation of zoom values", "[computation]")
     }
 }
 
-TEST_CASE("Test computation of complex numbers and iteration count for Mandelbrot Set",
-          "[computation]")
+TEST_CASE(
+    "Test computation of complex numbers and iteration count for Mandelbrot Set",
+    "[computation][mandelbrot_set]")
 {
     // creating a mock like object to be able to test computation. No need for
     // a real buffer or FractalParameters object
@@ -155,37 +156,38 @@ TEST_CASE("Test computation of complex numbers and iteration count for Mandelbro
     FractalcruncherMock crunch_test(b, params);
 
     SECTION(
-        "Test some single point computations, z1(-2.5, -1.5) - z2(1.0 - 1.5)")
+        "Test some single point computations with the Mandelbrot Set, z1(-2.5, "
+        "-1.5) - z2(1.0 - 1.5)")
     {
         double z_real_delta = (1.0 - (-2.5)) / 50;
         double z_ima_delta = (1.5 - (-1.5)) / 50;
 
         // testing point 10/15
-        auto crunched_mandel = crunch_test.test_cruncher(
+        auto crunched_fractal = crunch_test.test_cruncher(
             -2.5 + 10 * z_real_delta, -1.5 + 15 * z_ima_delta, 100);
-        REQUIRE(std::get<0>(crunched_mandel) == 2);
-        REQUIRE(std::get<1>(crunched_mandel) == Catch::Detail::Approx(-3.0672));
-        REQUIRE(std::get<2>(crunched_mandel) == Catch::Detail::Approx(2.7696));
+        REQUIRE(std::get<0>(crunched_fractal) == 2);
+        REQUIRE(std::get<1>(crunched_fractal) == Catch::Detail::Approx(-3.0672));
+        REQUIRE(std::get<2>(crunched_fractal) == Catch::Detail::Approx(2.7696));
 
         // testing point 33/25
-        crunched_mandel = crunch_test.test_cruncher(
+        crunched_fractal = crunch_test.test_cruncher(
             -2.5 + 33 * z_real_delta, -1.5 + 25 * z_ima_delta, 100);
-        REQUIRE(std::get<0>(crunched_mandel) == 100);
-        REQUIRE(std::get<1>(crunched_mandel) ==
+        REQUIRE(std::get<0>(crunched_fractal) == 100);
+        REQUIRE(std::get<1>(crunched_fractal) ==
                 Catch::Detail::Approx(-0.16332495807107994));
-        REQUIRE(std::get<2>(crunched_mandel) == Catch::Detail::Approx(0));
+        REQUIRE(std::get<2>(crunched_fractal) == Catch::Detail::Approx(0));
 
         // testing point 41/27
-        crunched_mandel = crunch_test.test_cruncher(
+        crunched_fractal = crunch_test.test_cruncher(
             -2.5 + 41 * z_real_delta, -1.5 + 27 * z_ima_delta, 100);
-        REQUIRE(std::get<0>(crunched_mandel) == 55);
-        REQUIRE(std::get<1>(crunched_mandel) ==
+        REQUIRE(std::get<0>(crunched_fractal) == 55);
+        REQUIRE(std::get<1>(crunched_fractal) ==
                 Catch::Detail::Approx(2.3637850846657784));
-        REQUIRE(std::get<2>(crunched_mandel) ==
+        REQUIRE(std::get<2>(crunched_fractal) ==
                 Catch::Detail::Approx(-2.264372597523388));
     }
 
-    SECTION("Testing Mandelbrot 10x10, Bailout 10, -2.5 - 1.0 -1.5 - 1.5")
+    SECTION("Testing Mandelbrot Set 10x10, Bailout 10, -2.5 - 1.0 -1.5 - 1.5")
     {
         std::vector<int> result = {
             0,  0,  0,  0,  1,  1,  1,  1,  1,  1,  0,  0,  0,  1,  2,  2,  2,
@@ -209,7 +211,7 @@ TEST_CASE("Test computation of complex numbers and iteration count for Mandelbro
         REQUIRE(first_mismatch.second == escape.end());
     };
 
-    SECTION("Testing Mandelbrot 20x40, Bailout 88, -2.5 - 1.0 -1.5 - 1.5")
+    SECTION("Testing Mandelbrot Set 20x40, Bailout 88, -2.5 - 1.0 -1.5 - 1.5")
     {
         std::vector<int> result = {
             0,  0,  0,  0,  0,  0,  0,  1,  1,  1,  1,  1,  1,  1,  1,  1,  1,
@@ -276,7 +278,80 @@ TEST_CASE("Test computation of complex numbers and iteration count for Mandelbro
     };
 }
 
-TEST_CASE("Test computation of continuous index for Mandelbrot set", "[computation]")
+TEST_CASE(
+    "Test computation of complex numbers and iteration count for Julia Set",
+    "[computation][julia_set]")
+{
+    // creating a mock like object to be able to test computation. No need for
+    // a real buffer or FractalParameters object
+    constants::fracbuff b;
+    std::shared_ptr<FractalParameters> params =
+        std::make_shared<FractalParameters>();
+    params->set_type = constants::FRACTAL::JULIA;
+    params->julia_real = -0.8;
+    params->julia_ima = 0.156;
+
+    FractalcruncherMock crunch_test(b, params);
+
+    SECTION(
+        "Test some single point computations with the Julia Set, z1(-2.5-1.5j) "
+        "- z2(1.0+1.5j)")
+    {
+        double z_real_delta = (1.0 - (-2.5)) / 50;
+        double z_ima_delta = (1.5 - (-1.5)) / 50;
+
+        // testing point 10/15
+        auto crunched_fractal = crunch_test.test_cruncher(
+            -2.5 + 10 * z_real_delta, -1.5 + 15 * z_ima_delta, 100);
+        REQUIRE(std::get<0>(crunched_fractal) == 1);
+        REQUIRE(std::get<1>(crunched_fractal) == Catch::Detail::Approx(2.08));
+        REQUIRE(std::get<2>(crunched_fractal) == Catch::Detail::Approx(2.316));
+
+        // testing point 33/25
+        crunched_fractal = crunch_test.test_cruncher(
+            -2.5 + 33 * z_real_delta, -1.5 + 25 * z_ima_delta, 100);
+        REQUIRE(std::get<0>(crunched_fractal) == 22);
+        REQUIRE(std::get<1>(crunched_fractal) ==
+                Catch::Detail::Approx(1.6532446989801592));
+        REQUIRE(std::get<2>(crunched_fractal) ==
+                Catch::Detail::Approx(-1.939422755899791));
+
+        // testing point 41/27
+        crunched_fractal = crunch_test.test_cruncher(
+            -2.5 + 41 * z_real_delta, -1.5 + 27 * z_ima_delta, 100);
+        REQUIRE(std::get<0>(crunched_fractal) == 12);
+        REQUIRE(std::get<1>(crunched_fractal) ==
+                Catch::Detail::Approx(-2.825685311882377));
+        REQUIRE(std::get<2>(crunched_fractal) ==
+                Catch::Detail::Approx(-2.588375399038022));
+    }
+
+    SECTION("Testing Julia Set 10x10, Bailout 10, -2.5 - 1.0 -1.5 - 1.5")
+    {
+        std::vector<int> result = {
+            0,  0, 0, 0,  1,  1,  1,  1,  1,  1,  0, 0, 0, 1,  1,  1,  1,
+            1,  1, 1, 0,  0,  0,  1,  1,  2,  2,  3, 3, 2, 0,  0,  1,  1,
+            2,  3, 3, 10, 7,  4,  0,  0,  1,  2,  4, 7, 7, 10, 10, 9,  0,
+            0,  1, 4, 10, 10, 10, 10, 10, 10, 0,  0, 1, 3, 10, 10, 10, 10,
+            10, 8, 0, 0,  1,  2,  2,  3,  6,  10, 4, 3, 0, 0,  0,  1,  2,
+            2,  2, 3, 2,  2,  0,  0,  0,  1,  1,  1, 1, 1, 1,  1};
+
+        std::vector<int> escape;
+
+        fill_test_buffer(escape, -2.5, 1.0, -1.5, 1.5, 10, 10, 10, crunch_test);
+
+        std::pair<std::vector<int>::iterator, std::vector<int>::iterator>
+            first_mismatch;
+        // search for first mismatch
+        first_mismatch =
+            std::mismatch(result.begin(), result.end(), escape.begin());
+        // okay if no mismatch
+        REQUIRE(first_mismatch.first == result.end());
+        REQUIRE(first_mismatch.second == escape.end());
+    };
+}
+
+TEST_CASE("Test computation of continuous index", "[computation]")
 {
     // creating a mock like object to be able to test computation. No need for
     // a real buffer or FractalParameters object
