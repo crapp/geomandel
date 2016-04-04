@@ -351,6 +351,78 @@ TEST_CASE(
     };
 }
 
+TEST_CASE(
+    "Test computation of complex numbers and iteration count for Burning Ship "
+    "Set",
+    "[computation][burning_ship_set]")
+{
+    // creating a mock like object to be able to test computation. No need for
+    // a real buffer or FractalParameters object
+    constants::fracbuff b;
+    std::shared_ptr<FractalParameters> params =
+        std::make_shared<FractalParameters>();
+    params->set_type = constants::FRACTAL::BURNING_SHIP;
+
+    FractalcruncherMock crunch_test_bship(b, params);
+
+    SECTION(
+        "Test some single point computations with the Burning Ship Set, "
+        "z1(-2.5-1.5j) - z2(1.0+1.5j)")
+    {
+        double z_real_delta = (1.0 - (-2.5)) / 50;
+        double z_ima_delta = (1.5 - (-1.5)) / 50;
+
+        // testing point 10/15
+        auto crunched_fractal = crunch_test_bship.test_cruncher(
+            -2.5 + 10 * z_real_delta, -1.5 + 15 * z_ima_delta, 100);
+        REQUIRE(std::get<0>(crunched_fractal) == 2);
+        REQUIRE(std::get<1>(crunched_fractal) == Catch::Detail::Approx(-3.0672));
+        REQUIRE(std::get<2>(crunched_fractal) == Catch::Detail::Approx(2.7696));
+
+        // testing point 33/25
+        crunched_fractal = crunch_test_bship.test_cruncher(
+            -2.5 + 33 * z_real_delta, -1.5 + 25 * z_ima_delta, 100);
+        REQUIRE(std::get<0>(crunched_fractal) == 100);
+        REQUIRE(std::get<1>(crunched_fractal) ==
+                Catch::Detail::Approx(-0.163324958071));
+        REQUIRE(std::get<2>(crunched_fractal) == Catch::Detail::Approx(0));
+
+        // testing point 41/27
+        crunched_fractal = crunch_test_bship.test_cruncher(
+            -2.5 + 41 * z_real_delta, -1.5 + 27 * z_ima_delta, 100);
+        REQUIRE(std::get<0>(crunched_fractal) == 100);
+        REQUIRE(std::get<1>(crunched_fractal) ==
+                Catch::Detail::Approx(0.469227595221));
+        REQUIRE(std::get<2>(crunched_fractal) ==
+                Catch::Detail::Approx(0.549612279558));
+    }
+
+    SECTION("Testing Burning Ship Set 10x10, Bailout 10, -2.5 - 1.0 -1.5 - 1.5")
+    {
+        std::vector<int> result = {
+            0,  0,  0,  0,  1,  1,  1,  1,  2,  3,  0,  0,  0,  1,  2,  8, 2,
+            2,  4,  10, 0,  0,  0,  2,  3,  10, 10, 10, 10, 8,  0,  0,  2, 2,
+            10, 10, 10, 10, 10, 4,  0,  0,  3,  6,  10, 10, 10, 10, 10, 3, 0,
+            0,  10, 10, 10, 10, 10, 10, 10, 3,  0,  0,  2,  2,  2,  3,  5, 10,
+            10, 2,  0,  0,  1,  1,  2,  2,  2,  4,  4,  2,  0,  0,  0,  1, 1,
+            1,  2,  2,  2,  1,  0,  0,  0,  1,  1,  1,  1,  2,  1,  1};
+
+        std::vector<int> escape;
+
+        fill_test_buffer(escape, -2.5, 1.0, -1.5, 1.5, 10, 10, 10,
+                         crunch_test_bship);
+
+        std::pair<std::vector<int>::iterator, std::vector<int>::iterator>
+            first_mismatch;
+        // search for first mismatch
+        first_mismatch =
+            std::mismatch(result.begin(), result.end(), escape.begin());
+        // okay if no mismatch
+        REQUIRE(first_mismatch.first == result.end());
+        REQUIRE(first_mismatch.second == escape.end());
+    };
+}
+
 TEST_CASE("Test computation of continuous index", "[computation]")
 {
     // creating a mock like object to be able to test computation. No need for

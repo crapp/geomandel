@@ -39,24 +39,22 @@ std::tuple<unsigned int, double, double> Fractalcruncher::crunch_mandel_complex(
     }
     // std::cout << "zO(" << x << ", " << y << ")" << std::endl;
     while (x * x + y * y <= 4.0 && iterations < bailout) {
-        double x_old = x;
-        x = x * x - y * y + x0;
         if (params->set_type == constants::FRACTAL::BURNING_SHIP) {
             x = std::fabs(x);
+            y = std::fabs(y);
         }
+        double x_old = x;
+        x = x * x - y * y + x0;
         if (params->set_type == constants::FRACTAL::TRICORN) {
             y = -2 * x_old * y + y0;
         } else {
             y = 2 * x_old * y + y0;
         }
 
-        if (params->set_type == constants::FRACTAL::BURNING_SHIP) {
-            y = std::fabs(y);
-        }
         iterations++;
     }
     // std::cout << "Iter: " << iterations << " zE(" << x << ", " << y << ")"
-    //           << std::endl;
+    //<< std::endl;
     return std::make_tuple(iterations, x, y);
 }
 
