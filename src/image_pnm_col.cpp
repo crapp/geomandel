@@ -24,12 +24,14 @@ Imagecol::Imagecol(const constants::fracbuff &buff,
                    std::tuple<int, int, int> rgb_base,
                    std::tuple<int, int, int> rgb_set_base,
                    std::tuple<double, double, double> rgb_freq,
-                   std::tuple<int, int, int> rgb_phase)
+                   std::tuple<int, int, int> rgb_phase,
+                   std::tuple<double, double, double> rgb_amp)
     : ImagePNM(buff, params, prnt, constants::OUT_FORMAT::IMAGE_PNM_COL),
       rgb_base(std::move(rgb_base)),
       rgb_set_base(std::move(rgb_set_base)),
       rgb_freq(std::move(rgb_freq)),
-      rgb_phase(std::move(rgb_phase))
+      rgb_phase(std::move(rgb_phase)),
+      rgb_amp(std::move(rgb_amp))
 {
 }
 
@@ -52,15 +54,23 @@ void Imagecol::out_format_write(std::stringstream &img_buf,
                 << std::get<2>(rgb) << "\t";
     }
     if (this->params->col_algo == constants::COL_ALGO::ESCAPE_TIME_2) {
-        auto rgb = this->rgb_continuous(static_cast<double>(its), this->rgb_base,
-                                        this->rgb_freq, this->rgb_phase);
+        auto rgb =
+            this->rgb_continuous_sine(static_cast<double>(its), this->rgb_base,
+                                      this->rgb_freq, this->rgb_phase);
 
         img_buf << std::get<0>(rgb) << " " << std::get<1>(rgb) << " "
                 << std::get<2>(rgb) << "\t";
     }
-    if (this->params->col_algo == constants::COL_ALGO::CONTINUOUS) {
-        auto rgb = this->rgb_continuous(continous_index, this->rgb_base,
-                                        this->rgb_freq, this->rgb_phase);
+    if (this->params->col_algo == constants::COL_ALGO::CONTINUOUS_SINE) {
+        auto rgb = this->rgb_continuous_sine(continous_index, this->rgb_base,
+                                             this->rgb_freq, this->rgb_phase);
+
+        img_buf << std::get<0>(rgb) << " " << std::get<1>(rgb) << " "
+                << std::get<2>(rgb) << "\t";
+    }
+    if (this->params->col_algo == constants::COL_ALGO::CONTINUOUS_BERN) {
+        auto rgb = this->rgb_continuous_bernstein(its, this->params->bailout,
+                                                  this->rgb_base, this->rgb_amp);
 
         img_buf << std::get<0>(rgb) << " " << std::get<1>(rgb) << " "
                 << std::get<2>(rgb) << "\t";

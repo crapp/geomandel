@@ -201,11 +201,13 @@ int main(int argc, char *argv[])
         std::tuple<int, int, int> rgb_set_base;
         std::tuple<double, double, double> rgb_freq;
         std::tuple<int, int, int> rgb_phase;
+        std::tuple<double, double, double> rgb_amp;
         parse_rgb_command_options(parser, rgb_base, rgb_set_base, rgb_freq,
-                                  rgb_phase);
-        img = std::unique_ptr<Imagecol>(new Imagecol(
-            fractalbuffer, params, prnt, std::move(rgb_base),
-            std::move(rgb_set_base), std::move(rgb_freq), std::move(rgb_phase)));
+                                  rgb_phase, rgb_amp);
+        img = std::unique_ptr<Imagecol>(
+            new Imagecol(fractalbuffer, params, prnt, std::move(rgb_base),
+                         std::move(rgb_set_base), std::move(rgb_freq),
+                         std::move(rgb_phase), std::move(rgb_amp)));
         img->write_buffer();
     }
     uint8_t png_jpg = 0;
@@ -220,15 +222,16 @@ int main(int argc, char *argv[])
         std::tuple<int, int, int> rgb_set_base;
         std::tuple<double, double, double> rgb_freq;
         std::tuple<int, int, int> rgb_phase;
+        std::tuple<double, double, double> rgb_amp;
         parse_rgb_command_options(parser, rgb_base, rgb_set_base, rgb_freq,
-                                  rgb_phase);
+                                  rgb_phase, rgb_amp);
 // TODO: Don't like ifdefs in code. Maybe better off with an "empty"
 // ImageSFML stub class
 #ifdef HAVE_SFML
         img = std::unique_ptr<ImageSFML>(
             new ImageSFML(fractalbuffer, params, prnt, std::move(rgb_base),
                           std::move(rgb_set_base), std::move(rgb_freq),
-                          std::move(rgb_phase), png_jpg));
+                          std::move(rgb_phase), std::move(rgb_amp), png_jpg));
         img->write_buffer();
 #endif
     }

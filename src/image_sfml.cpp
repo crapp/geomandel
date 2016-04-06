@@ -1,4 +1,20 @@
+/*
+This file is part of geomandel. An artful fractal generator
+Copyright © 2015, 2016 Christian Rapp
 
+This program is free software: you can redistribute it and/or modify
+it under the terms of the GNU General Public License as published by
+the Free Software Foundation, either version 3 of the License, or
+(at your option) any later version.
+
+This program is distributed in the hope that it will be useful,
+but WITHOUT ANY WARRANTY; without even the implied warranty of
+MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+GNU General Public License for more details.
+
+You should have received a copy of the GNU General Public License
+along with this program.  If not, see <http://www.gnu.org/licenses/>.
+*/
 
 #include "image_sfml.h"
 
@@ -8,12 +24,14 @@ ImageSFML::ImageSFML(const constants::fracbuff &buff,
                      std::tuple<int, int, int> rgb_base,
                      std::tuple<int, int, int> rgb_set_base,
                      std::tuple<double, double, double> rgb_freq,
-                     std::tuple<int, int, int> rgb_phase, uint8_t outfmt)
+                     std::tuple<int, int, int> rgb_phase,
+                     std::tuple<double, double, double> rgb_amp, uint8_t outfmt)
     : Imagewriter(buff, params, prnt),
       rgb_base(std::move(rgb_base)),
       rgb_set_base(std::move(rgb_set_base)),
       rgb_freq(std::move(rgb_freq)),
       rgb_phase(std::move(rgb_phase)),
+      rgb_amp(std::move(rgb_amp)),
       outfmt(std::move(outfmt))
 {
 }
@@ -43,13 +61,17 @@ void ImageSFML::write_buffer()
                 rgb = this->rgb_linear(its, this->rgb_base, this->rgb_freq);
             }
             if (this->params->col_algo == constants::COL_ALGO::ESCAPE_TIME_2) {
-                rgb = this->rgb_continuous(static_cast<double>(its),
-                                           this->rgb_base, this->rgb_freq,
-                                           this->rgb_phase);
+                rgb = this->rgb_continuous_sine(static_cast<double>(its),
+                                                this->rgb_base, this->rgb_freq,
+                                                this->rgb_phase);
             }
-            if (this->params->col_algo == constants::COL_ALGO::CONTINUOUS) {
-                rgb = this->rgb_continuous(continous_index, this->rgb_base,
-                                           this->rgb_freq, this->rgb_phase);
+            if (this->params->col_algo == constants::COL_ALGO::CONTINUOUS_SINE) {
+                rgb = this->rgb_continuous_sine(continous_index, this->rgb_base,
+                                                this->rgb_freq, this->rgb_phase);
+            }
+            if (this->params->col_algo == constants::COL_ALGO::CONTINUOUS_BERN) {
+                rgb = this->rgb_continuous_bernstein(
+                    its, this->params->bailout, this->rgb_base, this->rgb_amp);
             }
             sfml_img_buf.push_back(static_cast<uint8_t>(std::get<0>(rgb)));
             sfml_img_buf.push_back(static_cast<uint8_t>(std::get<1>(rgb)));

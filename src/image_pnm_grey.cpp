@@ -46,13 +46,13 @@ void Imagegrey::out_format_write(std::stringstream &img_buf,
         img_buf << std::get<0>(rgb) << " ";
     }
     if (this->params->col_algo == constants::COL_ALGO::ESCAPE_TIME_2) {
-        rgb = this->rgb_continuous(static_cast<double>(its), this->rgb_base,
-                                   this->rgb_freq, this->rgb_phase);
+        rgb = this->rgb_continuous_sine(static_cast<double>(its), this->rgb_base,
+                                        this->rgb_freq, this->rgb_phase);
         img_buf << std::get<0>(rgb) << " ";
     }
-    if (this->params->col_algo == constants::COL_ALGO::CONTINUOUS) {
+    if (this->params->col_algo == constants::COL_ALGO::CONTINUOUS_SINE) {
         double continuous_index = data.continous_index;
-        rgb = this->rgb_continuous(continuous_index, this->rgb_base,
-                                   this->rgb_freq, this->rgb_phase);
+        rgb = this->rgb_continuous_sine(continuous_index, this->rgb_base,
+                                        this->rgb_freq, this->rgb_phase);
     }
 }

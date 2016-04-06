@@ -44,7 +44,7 @@ enum OUT_FORMAT {
 
 enum FRACTAL { MANDELBROT, TRICORN, JULIA, BURNING_SHIP };
 // TODO: Underscore 2 might not be the best name for this :/
-enum COL_ALGO { ESCAPE_TIME, ESCAPE_TIME_2, CONTINUOUS };
+enum COL_ALGO { ESCAPE_TIME, ESCAPE_TIME_2, CONTINUOUS_SINE, CONTINUOUS_BERN };
 
 const std::map<OUT_FORMAT, std::vector<std::string>> BITMAP_DEFS{
     {OUT_FORMAT::IMAGE_PNM_BW, {"pbm", "P1"}},

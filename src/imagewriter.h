@@ -73,12 +73,29 @@ protected:
      *
      * @details
      *
-     * Based on the concepts of [Jim Bumgardner](http://krazydad.com/tutorials/makecolors.php)
+     * RGB color creation with sine function derived from [Jim Bumgardner](http://krazydad.com/tutorials/makecolors.php)
      */
-    std::tuple<int, int, int> rgb_continuous(
+    std::tuple<int, int, int> rgb_continuous_sine(
         double its, const std::tuple<int, int, int> &rgb_base,
         const std::tuple<double, double, double> &rgb_freq,
         const std::tuple<int, int, int> &rgb_phase);
+
+    /**
+     * @brief Map escape time on rgb colors using Bernstein polynomials
+     *
+     * @param its Escape time
+     * @param bailout Bailout value for fractal algorithm
+     * @param rgb_base The RGB base color
+     * @param rgb_amp RGB peak to peak amplitude.
+     *
+     * @return RGB tuple
+     *
+     * Based on the ideas of [solarianprogrammer.com](https://solarianprogrammer.com/2013/02/28/mandelbrot-set-cpp-11/)
+     */
+    std::tuple<int, int, int> rgb_continuous_bernstein(
+        unsigned int its, unsigned int bailout,
+        const std::tuple<int, int, int> &rgb_base,
+        const std::tuple<double, double, double> &rgb_amp);
 
 private:
     /* data */

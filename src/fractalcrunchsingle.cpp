@@ -35,17 +35,12 @@ void Fractalcrunchsingle::fill_buffer()
         for (unsigned int ix = 0; ix < this->params->xrange; ix++) {
             auto crunched_mandel =
                 this->crunch_mandel_complex(x, y, this->params->bailout);
+
             unsigned int its = std::get<0>(crunched_mandel);
-            if (this->params->col_algo == constants::COL_ALGO::ESCAPE_TIME ||
-                this->params->col_algo == constants::COL_ALGO::ESCAPE_TIME_2) {
-                constants::Iterations it = this->iterations_factory(its, 0, 0);
-                buff[iy][ix].default_index = it.default_index;
-            }
-            if (this->params->col_algo == constants::COL_ALGO::CONTINUOUS) {
-                double Zx = std::get<1>(crunched_mandel);
-                double Zy = std::get<2>(crunched_mandel);
-                buff[iy][ix] = this->iterations_factory(its, Zx, Zy);
-            }
+            double Zx = std::get<1>(crunched_mandel);
+            double Zy = std::get<2>(crunched_mandel);
+            buff[iy][ix] = this->iterations_factory(its, Zx, Zy);
+
             x += this->params->xdelta;
         }
         y += this->params->ydelta;

@@ -160,18 +160,21 @@ inline void configure_command_line_parser(cxxopts::Options &p)
         ("image-png", "Write Buffer to PNG image")
 #endif
         ("col-algo", "Coloring algorithm 0->Escape Time, "
-         "1-> Escape Time 2, 2->Continuous Coloring",
+         "1-> Escape Time 2, 2->Continuous Coloring Sine, "
+         "3->Continuous Coloring Bernstein" ,
          cxxopts::value<unsigned int>()->default_value("2"))
         ("grey-base", "Base grey color between 0 - 255",
          cxxopts::value<unsigned int>()->default_value("55"))
         ("grey-freq", "Frequency for grey shade computation",
          cxxopts::value<double>()->default_value("0.01"))
         ("rgb-base", "Base RGB color as comma separated string",
-         cxxopts::value<std::string>()->default_value("127,127,127"))
+         cxxopts::value<std::string>()->default_value("128,128,128"))
         ("rgb-freq", "Frequency for RGB computation as comma separated string. You may use doubles but no negative values",
          cxxopts::value<std::string>()->default_value("0.01,0.01,0.01"))
         ("rgb-phase", "Phase for RGB computation as comma separated string",
          cxxopts::value<std::string>()->default_value("0,2,4"))
+        ("rgb-amp", "Amplitude for Bernstein RGB computation as comma separated string",
+         cxxopts::value<std::string>()->default_value("9,15,8.5"))
         ("set-color", "Color for pixels inside the set",
          cxxopts::value<std::string>()->default_value("0,0,0"))
         ("zoom", "Zoom level. Use together with xcoord, ycoord",
@@ -191,7 +194,8 @@ void parse_rgb_command_options(const cxxopts::Options &parser,
                                std::tuple<int, int, int> &rgb_base,
                                std::tuple<int, int, int> &rgb_set_base,
                                std::tuple<double, double, double> &rgb_freq,
-                               std::tuple<int, int, int> &rgb_phase)
+                               std::tuple<int, int, int> &rgb_phase,
+                               std::tuple<double, double, double> &rgb_amp)
 {
     // read command line parameters and create rgb tuples
     std::vector<std::string> rgb_base_vec;
@@ -214,4 +218,9 @@ void parse_rgb_command_options(const cxxopts::Options &parser,
     rgb_phase = std::make_tuple(std::stoi(rgb_phase_vec.at(0)),
                                 std::stoi(rgb_phase_vec.at(1)),
                                 std::stoi(rgb_phase_vec.at(2)));
+    std::vector<std::string> rgb_amp_vec;
+    utility::split(parser["rgb-amp"].as<std::string>(), ',', rgb_amp_vec);
+    rgb_amp = std::make_tuple(std::fabs(std::stod(rgb_amp_vec.at(0))),
+                              std::fabs(std::stod(rgb_amp_vec.at(1))),
+                              std::fabs(std::stod(rgb_amp_vec.at(2))));
 }

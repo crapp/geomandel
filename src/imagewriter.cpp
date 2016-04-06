@@ -61,7 +61,7 @@ std::tuple<int, int, int> Imagewriter::rgb_linear(
     return rgb;
 }
 
-std::tuple<int, int, int> Imagewriter::rgb_continuous(
+std::tuple<int, int, int> Imagewriter::rgb_continuous_sine(
     double its, const std::tuple<int, int, int> &rgb_base,
     const std::tuple<double, double, double> &rgb_freq,
     const std::tuple<int, int, int> &rgb_phase)
@@ -95,6 +95,53 @@ std::tuple<int, int, int> Imagewriter::rgb_continuous(
             std::sin(blue_freq * its + blue_phase) * (255 - blue_base) +
             blue_base));
     }
+    // std::cout << std::get<0>(rgb) << "," << std::get<1>(rgb) << ","
+    //<< std::get<2>(rgb) << std::endl;
+    return rgb;
+}
+
+std::tuple<int, int, int> Imagewriter::rgb_continuous_bernstein(
+    unsigned int its, unsigned int bailout,
+    const std::tuple<int, int, int> &rgb_base,
+    const std::tuple<double, double, double> &rgb_amp)
+{
+    // std::cout << "its: " << its << " bailout: " << bailout << std::endl;
+    int red_base = std::get<0>(rgb_base);
+    int green_base = std::get<1>(rgb_base);
+    int blue_base = std::get<2>(rgb_base);
+
+    std::tuple<int, int, int> rgb =
+        std::make_tuple(red_base, green_base, blue_base);
+
+    double red_amp = std::get<0>(rgb_amp);
+    double green_amp = std::get<1>(rgb_amp);
+    double blue_amp = std::get<2>(rgb_amp);
+
+    // std::cout << "RGB amp " << red_amp << ", " << green_amp << ", " <<
+    // blue_amp
+    //<< std::endl;
+
+    // mapped index on 0...1
+    double mi = static_cast<double>(its) / static_cast<double>(bailout);
+
+    // std::cout << "mi: " << mi << std::endl;
+
+    if (red_amp > 0) {
+        std::get<0>(rgb) = static_cast<int>(std::fabs(
+            red_amp * (1 - mi) * std::pow(mi, 3) * (255 - red_base) + red_base));
+    }
+    if (green_amp > 0) {
+        std::get<1>(rgb) =
+            static_cast<int>(std::fabs(green_amp * std::pow((1 - mi), 2) *
+                                           std::pow(mi, 2) * (255 - green_base) +
+                                       green_base));
+    }
+    if (blue_amp > 0) {
+        std::get<2>(rgb) = static_cast<int>(
+            std::fabs(blue_amp * std::pow((1 - mi), 3) * mi * (255 - blue_base) +
+                      blue_base));
+    }
+
     // std::cout << std::get<0>(rgb) << "," << std::get<1>(rgb) << ","
     //<< std::get<2>(rgb) << std::endl;
     return rgb;

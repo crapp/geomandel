@@ -32,7 +32,8 @@ public:
               std::tuple<int, int, int> rgb_base,
               std::tuple<int, int, int> rgb_set_base,
               std::tuple<double, double, double> rgb_freq,
-              std::tuple<int, int, int> rgb_phase, uint8_t outfmt);
+              std::tuple<int, int, int> rgb_phase,
+              std::tuple<double, double, double> rgb_amp, uint8_t outfmt);
     virtual ~ImageSFML();
 
     void write_buffer();
@@ -43,6 +44,7 @@ private:
     std::tuple<int, int, int> rgb_set_base;
     std::tuple<double, double, double> rgb_freq;
     std::tuple<int, int, int> rgb_phase;
+    std::tuple<double, double, double> rgb_amp;
     uint8_t outfmt;
 };
 

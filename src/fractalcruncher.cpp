@@ -63,11 +63,8 @@ constants::Iterations Fractalcruncher::iterations_factory(unsigned int its,
                                                           double Zy) const
 {
     constants::Iterations it;
-    if (this->params->col_algo == constants::COL_ALGO::ESCAPE_TIME ||
-        this->params->col_algo == constants::COL_ALGO::ESCAPE_TIME_2)
-        it.default_index = its;
-    if (this->params->col_algo == constants::COL_ALGO::CONTINUOUS) {
-        it.default_index = its;
+    it.default_index = its;
+    if (this->params->col_algo == constants::COL_ALGO::CONTINUOUS_SINE) {
         double cont_index =
             its + 1 -
             (std::log(2) / std::sqrt(Zx * Zx + Zy * Zy)) / std::log(2.0);
