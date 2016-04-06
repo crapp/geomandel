@@ -128,11 +128,6 @@ inline void configure_command_line_parser(cxxopts::Options &p)
     p.add_options("Fractal")
         ("s,set", "Choose which kind of set you want to compute and render",
          cxxopts::value<unsigned int>()->default_value("0"))
-        ("j,julia-set", "Generate a julia set for the chosen fractal")
-        ("julia-real", "Julia set constant real part",
-         cxxopts::value<double>()->default_value("-0.7"))
-        ("julia-ima", "Julia set constant imaginary part",
-         cxxopts::value<double>()->default_value("0.27015"))
         ("b,bailout", "Bailout value for the mandelbrot set algorithm",
          cxxopts::value<unsigned int>()->default_value("1000"))
         ("creal-min", "Real part minimum",
@@ -142,7 +137,11 @@ inline void configure_command_line_parser(cxxopts::Options &p)
         ("cima-min", "Imaginary part minimum",
          cxxopts::value<double>()->default_value("-1.5"))
         ("cima-max", "Imaginary part maximum",
-         cxxopts::value<double>()->default_value("1.5"));
+         cxxopts::value<double>()->default_value("1.5"))
+        ("julia-real", "Julia set constant real part",
+         cxxopts::value<double>()->default_value("-0.8"))
+        ("julia-ima", "Julia set constant imaginary part",
+         cxxopts::value<double>()->default_value("0.156"));
 
     p.add_options("Image")
         ("image-file", "Image file name pattern. You can use different printf "
@@ -162,15 +161,15 @@ inline void configure_command_line_parser(cxxopts::Options &p)
 #endif
         ("col-algo", "Coloring algorithm 0->Escape Time, "
          "1-> Escape Time 2, 2->Continuous Coloring",
-         cxxopts::value<unsigned int>()->default_value("1"))
+         cxxopts::value<unsigned int>()->default_value("2"))
         ("grey-base", "Base grey color between 0 - 255",
          cxxopts::value<unsigned int>()->default_value("55"))
         ("grey-freq", "Frequency for grey shade computation",
-         cxxopts::value<double>()->default_value("0.1"))
+         cxxopts::value<double>()->default_value("0.01"))
         ("rgb-base", "Base RGB color as comma separated string",
          cxxopts::value<std::string>()->default_value("127,127,127"))
         ("rgb-freq", "Frequency for RGB computation as comma separated string. You may use doubles but no negative values",
-         cxxopts::value<std::string>()->default_value("0.1,0.1,0.1"))
+         cxxopts::value<std::string>()->default_value("0.01,0.01,0.01"))
         ("rgb-phase", "Phase for RGB computation as comma separated string",
          cxxopts::value<std::string>()->default_value("0,2,4"))
         ("set-color", "Color for pixels inside the set",
@@ -190,6 +189,7 @@ inline void configure_command_line_parser(cxxopts::Options &p)
 
 void parse_rgb_command_options(const cxxopts::Options &parser,
                                std::tuple<int, int, int> &rgb_base,
+                               std::tuple<int, int, int> &rgb_set_base,
                                std::tuple<double, double, double> &rgb_freq,
                                std::tuple<int, int, int> &rgb_phase)
 {
@@ -199,6 +199,11 @@ void parse_rgb_command_options(const cxxopts::Options &parser,
     rgb_base = std::make_tuple(std::stoi(rgb_base_vec.at(0)),
                                std::stoi(rgb_base_vec.at(1)),
                                std::stoi(rgb_base_vec.at(2)));
+    std::vector<std::string> rgb_set_base_vec;
+    utility::split(parser["set-color"].as<std::string>(), ',', rgb_set_base_vec);
+    rgb_set_base = std::make_tuple(std::stoi(rgb_set_base_vec.at(0)),
+                                   std::stoi(rgb_set_base_vec.at(1)),
+                                   std::stoi(rgb_set_base_vec.at(2)));
     std::vector<std::string> rgb_freq_vec;
     utility::split(parser["rgb-freq"].as<std::string>(), ',', rgb_freq_vec);
     rgb_freq = std::make_tuple(std::fabs(std::stod(rgb_freq_vec.at(0))),

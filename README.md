@@ -21,14 +21,14 @@
 
 ## Introduction
 
-geomandel is a command line application that allows you to calculate mandelbrot
-fractals and visualize them using different image formats or export the
-calculated data as csv.
+geomandel is a command line application that allows you to calculate and render
+fractals using different image formats, or export the calculated data as csv.
 
-The [Mandelbrot set](https://en.wikipedia.org/wiki/Mandelbrot_set), named after
-Benoit Mandelbrot, is a [fractal](https://en.wikipedia.org/wiki/Fractal).
-A fractal is for example a natural phenomenon or mathematical set that display
-self-similarity at various scales.
+A [fractal](https://en.wikipedia.org/wiki/Fractal) is a natural phenomenon or
+mathematical set that display self-similarity at various scales. It is also known
+as expanding symmetry or evolving symmetry. Benoit Mandelbrot, the person who
+discovered the [Mandelbrot Set](https://en.wikipedia.org/wiki/Mandelbrot_set)
+characterized Fractals as "beautiful, damn hard, increasingly useful. That's fractals.".
 
 One can define the Mandelbrot Set as the set of complex numbers (complex plane)
 for whom the progression
@@ -36,7 +36,7 @@ for whom the progression
 ![Mandelbrot set mathematical definition](https://crapp.github.io/geomandel/mandelbrot_set_equation.png "Mandelbrot set mathematical definition")
 
 converges to. This is a rather complicated subset of the complex plane. If you
-try to plot this set you will find areas that are similar to the main area. You
+try to plot this set, you will find areas that are similar to the main area. You
 can zoom into this figure as much as you want. You will discover new formations as
 well as parts with self similarity.
 
@@ -44,12 +44,10 @@ Here is a video showing a zoom into the seahorse valley.
 
 LINK TO VIDEO
 
-The coloring algorithm used in the video frames is called the Escape Time algorithm.
-The application can generate images with a continuous coloring algorithm as well.
-
-You may ask yourself how I came up with the name for this application. Well my initial
-idea was to play with fractals and GeoTIFF to see what kind of effects I could achieve.
-This is not yet implemented but still on my agenda :)
+Besides the Mandelbrot Fractal BLAAAAAAAAAAAAAA supports the following other fractals:
+* [Julia Set](https://en.wikipedia.org/wiki/Julia_set)
+* [Tricorn](https://en.wikipedia.org/wiki/Tricorn_%28mathematics%29)
+* [Burning Ship](https://en.wikipedia.org/wiki/Burning_Ship_fractal)
 
 I also want to make you aware of the
 [Mandelbrot project](https://github.com/willi-kappler/mandel-rust) a friend of
@@ -100,7 +98,7 @@ make install
 
 #### Windows
 
-You can use the the cmake Visual Studio Solution generator to compile the
+You can use the cmake Visual Studio Solution generator to compile the
 application.
 
 ```shell
@@ -135,8 +133,8 @@ Precompiled Linux packages are available for
 The command line application has sane default values for all options and you only
 have to specify what kind of output you want to have. When the application is
 started it will calculate the iteration count for all complex numbers in the complex
-plane you defined. The iteration count can then be used to visualize the mandelbrot
-set or the values can be exported to csv files. This is useful if you want to
+plane you defined. The iteration count can then be used to visualize the fractal
+or the values can be exported to csv files. This is useful if you want to
 test your own visualization algorithms.
 
 ### Command line options
@@ -147,21 +145,27 @@ The following command line options are available
 
 ```shell
 $ geomandel --help
+
 Usage:
   geomandel [OPTION...] - command line options
 
       --help              Show this help
   -m, --multi [=arg(=2)]  Use multiple cores
-  -q, --quit              Don't write to stdout (This does not influence stderr)
+  -q, --quiet             Don't write to stdout (This does not influence
+                          stderr)
 
- Mandelbrot options:
+ Fractal options:
 
+  -s, --set arg         Choose which kind of set you want to compute and
+                        render (default:0)
   -b, --bailout arg     Bailout value for the mandelbrot set algorithm
                         (default:1000)
       --creal-min arg   Real part minimum (default:-2.5)
       --creal-max arg   Real part maximum (default:1.0)
       --cima-min arg    Imaginary part minimum (default:-1.5)
       --cima-max arg    Imaginary part maximum (default:1.5)
+      --julia-real arg  Julia set constant real part (default:-0.8)
+      --julia-ima arg   Julia set constant imaginary part (default:0.156)
 
  Image options:
 
@@ -171,22 +175,23 @@ Usage:
                         instructions. (default:geomandel)
   -w, --width arg       Image width (default:1000)
   -h, --height arg      Image height (default:1000)
-      --img-pnm-bw      Write Buffer to PBM Bitmap
-      --img-pnm-grey    Write Buffer to grey scale PGM
-      --img-pnm-col     Write Buffer to PPM Bitmap
-      --img-jpg         Write Buffer to JPG image
-      --img-png         Write Buffer to PNG image
-      --colalgo arg     Coloring algorithm 0->Escape Time, 1->Continuous
-                        Coloring (default:0)
+      --image-pnm-bw    Write Buffer to PBM Bitmap
+      --image-pnm-grey  Write Buffer to grey scale PGM
+      --image-pnm-col   Write Buffer to PPM Bitmap
+      --image-jpg       Write Buffer to JPG image
+      --image-png       Write Buffer to PNG image
+      --col-algo arg    Coloring algorithm 0->Escape Time, 1-> Escape Time 2,
+                        2->Continuous Coloring (default:2)
       --grey-base arg   Base grey color between 0 - 255 (default:55)
-      --grey-freq arg   Frequency for grey shade computation (default:5)
+      --grey-freq arg   Frequency for grey shade computation (default:0.01)
       --rgb-base arg    Base RGB color as comma separated string
-                        (default:255,0,0)
+                        (default:127,127,127)
       --rgb-freq arg    Frequency for RGB computation as comma separated
                         string. You may use doubles but no negative values
-                        (default:0,16,16)
+                        (default:0.01,0.01,0.01)
       --rgb-phase arg   Phase for RGB computation as comma separated string
                         (default:0,2,4)
+      --set-color arg   Color for pixels inside the set (default:0,0,0)
       --zoom arg        Zoom level. Use together with xcoord, ycoord
       --xcoord arg      Image X coordinate where you want to zoom into the
                         fractal
@@ -195,25 +200,38 @@ Usage:
 
  Export options:
 
-  -p, --print           Print Buffer to terminal
-      --csv             Export data to csv files
-
+  -p, --print  Print Buffer to terminal
+      --csv    Export data to csv files
 ```
 
-#### Mandelbrot Options
+#### Fractal Options
 
-The complex plane is defined with the following options.
+In order to choose the fractal that will be computed the `--set` parameter exists.
+The parameter has the following options:
 
 ```
---creal-min   arg
---creal-max   arg
---cima-min    arg
---cima-max    arg
+--set=0   Mandelbrot Set (Default)
+--set=1   Julia Set
+--set=2   Tricorn
+--set=3   Burning Ship
 ```
-These are the default values ```z(-2.5, -1.5) z(1.0, 1.5)```
+
+The complex plane is defined with these options:
+
+```
+--creal-min   arg (-2.5)
+--creal-max   arg ( 1.0)
+--cima-min    arg (-1.5)
+--cima-max    arg ( 1.5)
+```
+You might need to adjust these values if you want to generate tricorn or julia
+fractals.
+
+In order to calculate the Julia Set a fixed constant is needed which you may provide
+with `--julia-real` and `--julia-ima` (Default (-0.8+0.156j)).
 
 The bailout value `--bailout` defines the maximum amount of iterations used to
-check whether a complex number is inside the Mandelbrot Set. The higher you set
+check whether a complex number is inside the Fractal. The higher you set
 this value the more precise the predictions of this algorithm will be. But
 computation time will also be significantly higher. The escape criterion, shown in
 the pseudo code example below, is not yet definable by a command line parameter
@@ -292,7 +310,7 @@ low writing speed. You may also these images with a text editor of your choice
 to what values geomandel actually wrote into the image file.
 
 You can choose between `--img-pnm-bw` a simple black and white image, `--img-pnm-grey`
-using grey scale to render the mandelbrot fractal and `--img-pnm-col` that generates
+using grey scale to render the fractal and `--img-pnm-col` that generates
 a RGB color image.
 
 Additionally [SFML](http://www.sfml-dev.org/) can be used to generate jpg/png images.
@@ -332,6 +350,10 @@ chosen coloring algorithm
                   string. You may use doubles but no negative values
 --rgb-phase arg   Phase for RGB computation as comma separated string
 ```
+
+### Examples
+
+
 
 ## Color
 
@@ -400,7 +422,7 @@ algorithm.
 
 ### Continuous Coloring
 
-Computing RGB values from the escape time in the mandelbrot algorithm is easy but
+Computing RGB values from the escape time in the fractal algorithms is easy but
 has the disadvantage to produce visible color bands. This is because integer based
 escape time consists of discrete values and this will result in a discrete color
 scale. If the escape time is increased by 1 step we omit all values in between and
@@ -419,7 +441,7 @@ of the complex plane.
 ![Continuous Index Formula](https://crapp.github.io/geomandel/continuous_index.png)
 
 Next step involves finding a good color map that which colors blend smoothly and
-of course endlessly as we can zoom a mandelbrot fractal indefinitely. Mathematical
+of course endlessly as we can zoom a fractal indefinitely. Mathematical
 functions used to model periodic and repeating phenomenas are the sine and
 cosine functions. So a formula that uses out of phase sine functions to generate
 real-time color blending could look like this:
@@ -456,12 +478,7 @@ Interested in pastel colors? The last example shows exactly this using a higher
 base color, different frequencies for the color channels and they are out of phase.
 
 Choosing the right frequencies is highly dependent on the bailout value you used
-for the mandelbrot set algorithm.
-
-### Comparison between escape time and continuous coloring
-
-geomandel allows you to render mandelbrot fractals using two different coloring
-algorithms. Here are some images for comparison.
+for the fractal algorithm.
 
 ## Performance and Memory usage
 
@@ -486,16 +503,16 @@ outperformed by gcc by a factor of 2:1.
 
 ### Performance breakdown
 
-Calculating the mandelbrot set seems to be costly. But how much time is really
-spend on computation? In order to answer this question it is necessary to
-look at an application with a performance analyzing tool. Luckily we have
-[perf](https://en.wikipedia.org/wiki/Perf_%28Linux%29) on Linux.
+Calculating the mathematical set of a fractal seems to be costly.
+But how much time is really spend on computation? In order to answer this question
+it is necessary to look at an application with a performance analyzing tool.
+Luckily we have [perf](https://en.wikipedia.org/wiki/Perf_%28Linux%29) on Linux.
 
 ![Perf analyze graph](https://crapp.github.io/geomandel/perf_analyze.png "Perf analyze graph")
 
 *Graph generated from perf data with gprof2dot*
 
-Well as you can see ~97% of the applications cpu cycles were used to calculate the
+Well as you can see ~97% of the applications cpu cycles were used to calculate a
 mandelbrot set. So if you want to speed up this application this is the place to
 start. I will try to maximize parallel computation with the use of GPUs in the
 future.
@@ -503,7 +520,7 @@ future.
 ### Memory Footprint
 
 The amount of memory used by geomandel is mostly dependant from image size and
-image format. The internal buffer that stores the results of the mandelbrot set
+image format. The internal buffer that stores the results of the fractal
 number cruncher is preallocated at the beginning of the application. Therefor it
 is simple to calculate the minimum amount of free memory you need to run geomandel.
 The internal Buffer stores the modulus of the complex numbers (double) and the
@@ -517,8 +534,8 @@ As you can see in this equation you need around 12.6 MB for an image of the size
 that is inserted by compilers to meet platform alignment requirements. In this
 case 16 Bytes will be used meaning the application needs around 16 MB of free memory.
 
-Lets see if valgrinds memory profiler massif is showing us the same values that
-I just calculated
+Lets see if valgrinds memory profiler [massif](http://valgrind.org/docs/manual/ms-manual.html)
+is showing us the same values that I just calculated
 
 ![Memory Footprint massif visualization](https://crapp.github.io/geomandel/geomandel_massif_memory_pngout.png "Memory profile")
 *Memory profile derived from valgrinds massif tool*
@@ -540,7 +557,7 @@ several different branches.
 
 * master      : Main development branch. Everything in here is guaranteed to
 compile and is tested. This is the place for new features and bugfixes. Pull requests welcome.
-* dev         : Test branch. May not compile.
+* dev         : Test branch and wild west area. May not compile.
 * release-x.x : Branch for a release. Only bugfixes are allowed here. Pull requests welcome.
 * gh-pages    : Special branch for static HTML content hosted by github.io.
 

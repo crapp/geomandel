@@ -83,17 +83,17 @@ std::tuple<int, int, int> Imagewriter::rgb_continuous(
 
     if (red_freq > 0) {
         std::get<0>(rgb) = static_cast<int>(std::fabs(
-            std::sin(red_freq * its + red_phase) * red_base + (255 - red_base)));
+            std::sin(red_freq * its + red_phase) * (255 - red_base) + red_base));
     }
     if (green_freq > 0) {
-        std::get<1>(rgb) = static_cast<int>(
-            std::fabs(std::sin(green_freq * its + green_phase) * green_base +
-                      (255 - green_base)));
+        std::get<1>(rgb) = static_cast<int>(std::fabs(
+            std::sin(green_freq * its + green_phase) * (255 - green_base) +
+            green_base));
     }
     if (blue_freq > 0) {
-        std::get<2>(rgb) = static_cast<int>(
-            std::fabs(std::sin(blue_freq * its + blue_phase) * blue_base +
-                      (255 - blue_base)));
+        std::get<2>(rgb) = static_cast<int>(std::fabs(
+            std::sin(blue_freq * its + blue_phase) * (255 - blue_base) +
+            blue_base));
     }
     // std::cout << std::get<0>(rgb) << "," << std::get<1>(rgb) << ","
     //<< std::get<2>(rgb) << std::endl;

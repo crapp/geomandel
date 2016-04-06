@@ -6,13 +6,15 @@ ImageSFML::ImageSFML(const constants::fracbuff &buff,
                      const std::shared_ptr<FractalParameters> &params,
                      const std::shared_ptr<Printer> &prnt,
                      std::tuple<int, int, int> rgb_base,
+                     std::tuple<int, int, int> rgb_set_base,
                      std::tuple<double, double, double> rgb_freq,
                      std::tuple<int, int, int> rgb_phase, uint8_t outfmt)
     : Imagewriter(buff, params, prnt),
-      rgb_base(rgb_base),
-      rgb_freq(rgb_freq),
-      rgb_phase(rgb_phase),
-      outfmt(outfmt)
+      rgb_base(std::move(rgb_base)),
+      rgb_set_base(std::move(rgb_set_base)),
+      rgb_freq(std::move(rgb_freq)),
+      rgb_phase(std::move(rgb_phase)),
+      outfmt(std::move(outfmt))
 {
 }
 
@@ -29,9 +31,9 @@ void ImageSFML::write_buffer()
             unsigned int its = it.default_index;
             double continous_index = it.continous_index;
             if (its == this->params->bailout) {
-                sfml_img_buf.push_back(0);
-                sfml_img_buf.push_back(0);
-                sfml_img_buf.push_back(0);
+                sfml_img_buf.push_back(std::get<0>(this->rgb_set_base));
+                sfml_img_buf.push_back(std::get<1>(this->rgb_set_base));
+                sfml_img_buf.push_back(std::get<2>(this->rgb_set_base));
                 sfml_img_buf.push_back(255);
                 continue;
             }

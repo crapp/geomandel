@@ -22,10 +22,12 @@ Imagecol::Imagecol(const constants::fracbuff &buff,
                    const std::shared_ptr<FractalParameters> &params,
                    const std::shared_ptr<Printer> &prnt,
                    std::tuple<int, int, int> rgb_base,
+                   std::tuple<int, int, int> rgb_set_base,
                    std::tuple<double, double, double> rgb_freq,
                    std::tuple<int, int, int> rgb_phase)
     : ImagePNM(buff, params, prnt, constants::OUT_FORMAT::IMAGE_PNM_COL),
       rgb_base(std::move(rgb_base)),
+      rgb_set_base(std::move(rgb_set_base)),
       rgb_freq(std::move(rgb_freq)),
       rgb_phase(std::move(rgb_phase))
 {
@@ -38,8 +40,9 @@ void Imagecol::out_format_write(std::stringstream &img_buf,
     unsigned int its = data.default_index;
     double continous_index = data.continous_index;
     if (its == this->params->bailout) {
-        img_buf << "0 0 0"
-                << "\t";
+        img_buf << std::get<0>(this->rgb_set_base) << " "
+                << std::get<1>(this->rgb_set_base) << " "
+                << std::get<2>(this->rgb_set_base) << "\t";
         return;
     }
     if (this->params->col_algo == constants::COL_ALGO::ESCAPE_TIME) {

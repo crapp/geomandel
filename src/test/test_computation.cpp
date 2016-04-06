@@ -153,7 +153,7 @@ TEST_CASE(
         std::make_shared<FractalParameters>();
     params->set_type = constants::FRACTAL::MANDELBROT;
 
-    FractalcruncherMock crunch_test(b, params);
+    FractalcruncherMock crunch_test_mandel(b, params);
 
     SECTION(
         "Test some single point computations with the Mandelbrot Set, z1(-2.5, "
@@ -163,14 +163,14 @@ TEST_CASE(
         double z_ima_delta = (1.5 - (-1.5)) / 50;
 
         // testing point 10/15
-        auto crunched_fractal = crunch_test.test_cruncher(
+        auto crunched_fractal = crunch_test_mandel.test_cruncher(
             -2.5 + 10 * z_real_delta, -1.5 + 15 * z_ima_delta, 100);
         REQUIRE(std::get<0>(crunched_fractal) == 2);
         REQUIRE(std::get<1>(crunched_fractal) == Catch::Detail::Approx(-3.0672));
         REQUIRE(std::get<2>(crunched_fractal) == Catch::Detail::Approx(2.7696));
 
         // testing point 33/25
-        crunched_fractal = crunch_test.test_cruncher(
+        crunched_fractal = crunch_test_mandel.test_cruncher(
             -2.5 + 33 * z_real_delta, -1.5 + 25 * z_ima_delta, 100);
         REQUIRE(std::get<0>(crunched_fractal) == 100);
         REQUIRE(std::get<1>(crunched_fractal) ==
@@ -178,7 +178,7 @@ TEST_CASE(
         REQUIRE(std::get<2>(crunched_fractal) == Catch::Detail::Approx(0));
 
         // testing point 41/27
-        crunched_fractal = crunch_test.test_cruncher(
+        crunched_fractal = crunch_test_mandel.test_cruncher(
             -2.5 + 41 * z_real_delta, -1.5 + 27 * z_ima_delta, 100);
         REQUIRE(std::get<0>(crunched_fractal) == 55);
         REQUIRE(std::get<1>(crunched_fractal) ==
@@ -199,7 +199,8 @@ TEST_CASE(
 
         std::vector<int> escape;
 
-        fill_test_buffer(escape, -2.5, 1.0, -1.5, 1.5, 10, 10, 10, crunch_test);
+        fill_test_buffer(escape, -2.5, 1.0, -1.5, 1.5, 10, 10, 10,
+                         crunch_test_mandel);
 
         std::pair<std::vector<int>::iterator, std::vector<int>::iterator>
             first_mismatch;
@@ -265,7 +266,8 @@ TEST_CASE(
 
         std::vector<int> escape;
 
-        fill_test_buffer(escape, -2.5, 1.0, -1.5, 1.5, 88, 20, 40, crunch_test);
+        fill_test_buffer(escape, -2.5, 1.0, -1.5, 1.5, 88, 20, 40,
+                         crunch_test_mandel);
 
         std::pair<std::vector<int>::iterator, std::vector<int>::iterator>
             first_mismatch;
@@ -291,7 +293,7 @@ TEST_CASE(
     params->julia_real = -0.8;
     params->julia_ima = 0.156;
 
-    FractalcruncherMock crunch_test(b, params);
+    FractalcruncherMock crunch_test_julia(b, params);
 
     SECTION(
         "Test some single point computations with the Julia Set, z1(-2.5-1.5j) "
@@ -301,14 +303,14 @@ TEST_CASE(
         double z_ima_delta = (1.5 - (-1.5)) / 50;
 
         // testing point 10/15
-        auto crunched_fractal = crunch_test.test_cruncher(
+        auto crunched_fractal = crunch_test_julia.test_cruncher(
             -2.5 + 10 * z_real_delta, -1.5 + 15 * z_ima_delta, 100);
         REQUIRE(std::get<0>(crunched_fractal) == 1);
         REQUIRE(std::get<1>(crunched_fractal) == Catch::Detail::Approx(2.08));
         REQUIRE(std::get<2>(crunched_fractal) == Catch::Detail::Approx(2.316));
 
         // testing point 33/25
-        crunched_fractal = crunch_test.test_cruncher(
+        crunched_fractal = crunch_test_julia.test_cruncher(
             -2.5 + 33 * z_real_delta, -1.5 + 25 * z_ima_delta, 100);
         REQUIRE(std::get<0>(crunched_fractal) == 22);
         REQUIRE(std::get<1>(crunched_fractal) ==
@@ -317,7 +319,7 @@ TEST_CASE(
                 Catch::Detail::Approx(-1.939422755899791));
 
         // testing point 41/27
-        crunched_fractal = crunch_test.test_cruncher(
+        crunched_fractal = crunch_test_julia.test_cruncher(
             -2.5 + 41 * z_real_delta, -1.5 + 27 * z_ima_delta, 100);
         REQUIRE(std::get<0>(crunched_fractal) == 12);
         REQUIRE(std::get<1>(crunched_fractal) ==
@@ -338,7 +340,8 @@ TEST_CASE(
 
         std::vector<int> escape;
 
-        fill_test_buffer(escape, -2.5, 1.0, -1.5, 1.5, 10, 10, 10, crunch_test);
+        fill_test_buffer(escape, -2.5, 1.0, -1.5, 1.5, 10, 10, 10,
+                         crunch_test_julia);
 
         std::pair<std::vector<int>::iterator, std::vector<int>::iterator>
             first_mismatch;
@@ -431,12 +434,12 @@ TEST_CASE("Test computation of continuous index", "[computation]")
     std::shared_ptr<FractalParameters> params =
         std::make_shared<FractalParameters>();
     params->set_type = constants::FRACTAL::MANDELBROT;
-    FractalcruncherMock crunch_test(b, params);
+    FractalcruncherMock crunch_test_cindex(b, params);
 
     SECTION("Default index of its 2, -3.0672, 2.7696")
     {
         params->col_algo = constants::COL_ALGO::ESCAPE_TIME;
-        auto it_object = crunch_test.test_iterfactory(2, -3.0672, 2.7696);
+        auto it_object = crunch_test_cindex.test_iterfactory(2, -3.0672, 2.7696);
         REQUIRE(it_object.default_index == 2);
         REQUIRE(it_object.continous_index == 0);
     }
@@ -444,7 +447,7 @@ TEST_CASE("Test computation of continuous index", "[computation]")
     SECTION("Default index of its 2, -3.0672, 2.7696 using ESCAPE_TIME_2")
     {
         params->col_algo = constants::COL_ALGO::ESCAPE_TIME_2;
-        auto it_object = crunch_test.test_iterfactory(2, -3.0672, 2.7696);
+        auto it_object = crunch_test_cindex.test_iterfactory(2, -3.0672, 2.7696);
         REQUIRE(it_object.default_index == 2);
         REQUIRE(it_object.continous_index == 0);
     }
@@ -452,7 +455,7 @@ TEST_CASE("Test computation of continuous index", "[computation]")
     SECTION("Continuous index of its 2, -3.0672, 2.7696")
     {
         params->col_algo = constants::COL_ALGO::CONTINUOUS;
-        auto it_object = crunch_test.test_iterfactory(2, -3.0672, 2.7696);
+        auto it_object = crunch_test_cindex.test_iterfactory(2, -3.0672, 2.7696);
         REQUIRE(it_object.default_index == 2);
         REQUIRE(it_object.continous_index ==
                 Catch::Detail::Approx(2.758021706608733));
@@ -461,8 +464,8 @@ TEST_CASE("Test computation of continuous index", "[computation]")
     SECTION("Default index of its 55, 2.3637850846657784, -2.264372597523388")
     {
         params->col_algo = constants::COL_ALGO::ESCAPE_TIME;
-        auto it_object = crunch_test.test_iterfactory(55, 2.3637850846657784,
-                                                      -2.264372597523388);
+        auto it_object = crunch_test_cindex.test_iterfactory(
+            55, 2.3637850846657784, -2.264372597523388);
         REQUIRE(it_object.default_index == 55);
         REQUIRE(it_object.continous_index == 0);
     }
@@ -472,8 +475,8 @@ TEST_CASE("Test computation of continuous index", "[computation]")
         "ESCAPE_TIME_2")
     {
         params->col_algo = constants::COL_ALGO::ESCAPE_TIME_2;
-        auto it_object = crunch_test.test_iterfactory(55, 2.3637850846657784,
-                                                      -2.264372597523388);
+        auto it_object = crunch_test_cindex.test_iterfactory(
+            55, 2.3637850846657784, -2.264372597523388);
         REQUIRE(it_object.default_index == 55);
         REQUIRE(it_object.continous_index == 0);
     }
@@ -481,8 +484,8 @@ TEST_CASE("Test computation of continuous index", "[computation]")
     SECTION("Continuous index of its 55, 2.3637850846657784, -2.264372597523388")
     {
         params->col_algo = constants::COL_ALGO::CONTINUOUS;
-        auto it_object = crunch_test.test_iterfactory(55, 2.3637850846657784,
-                                                      -2.264372597523388);
+        auto it_object = crunch_test_cindex.test_iterfactory(
+            55, 2.3637850846657784, -2.264372597523388);
         REQUIRE(it_object.default_index == 55);
         REQUIRE(it_object.continous_index ==
                 Catch::Detail::Approx(55.69450318630743));

@@ -113,10 +113,13 @@ int main(int argc, char *argv[])
     std::string frac_type = "Mandelbrot";
 
     if (params->set_type == constants::FRACTAL::TRICORN) {
-        frac_type = "Mandelbar";
+        frac_type = "Tricorn";
     }
     if (params->set_type == constants::FRACTAL::JULIA) {
         frac_type = "Julia Set";
+    }
+    if (params->set_type == constants::FRACTAL::BURNING_SHIP) {
+        frac_type = "Burning Ship";
     }
 
     prnt << "+++++++++++++++++++++++++++++++++++++" << std::endl;
@@ -195,12 +198,14 @@ int main(int argc, char *argv[])
     if (parser.count("image-pnm-col")) {
         prnt << "+ Generating RGB bitmap" << std::endl;
         std::tuple<int, int, int> rgb_base;
+        std::tuple<int, int, int> rgb_set_base;
         std::tuple<double, double, double> rgb_freq;
         std::tuple<int, int, int> rgb_phase;
-        parse_rgb_command_options(parser, rgb_base, rgb_freq, rgb_phase);
-        img = std::unique_ptr<Imagecol>(
-            new Imagecol(fractalbuffer, params, prnt, std::move(rgb_base),
-                         std::move(rgb_freq), std::move(rgb_phase)));
+        parse_rgb_command_options(parser, rgb_base, rgb_set_base, rgb_freq,
+                                  rgb_phase);
+        img = std::unique_ptr<Imagecol>(new Imagecol(
+            fractalbuffer, params, prnt, std::move(rgb_base),
+            std::move(rgb_set_base), std::move(rgb_freq), std::move(rgb_phase)));
         img->write_buffer();
     }
     uint8_t png_jpg = 0;
@@ -212,15 +217,18 @@ int main(int argc, char *argv[])
     if (png_jpg != 0) {
         prnt << "+ Generating jpg/png image" << std::endl;
         std::tuple<int, int, int> rgb_base;
+        std::tuple<int, int, int> rgb_set_base;
         std::tuple<double, double, double> rgb_freq;
         std::tuple<int, int, int> rgb_phase;
-        parse_rgb_command_options(parser, rgb_base, rgb_freq, rgb_phase);
+        parse_rgb_command_options(parser, rgb_base, rgb_set_base, rgb_freq,
+                                  rgb_phase);
 // TODO: Don't like ifdefs in code. Maybe better off with an "empty"
 // ImageSFML stub class
 #ifdef HAVE_SFML
         img = std::unique_ptr<ImageSFML>(
             new ImageSFML(fractalbuffer, params, prnt, std::move(rgb_base),
-                          std::move(rgb_freq), std::move(rgb_phase), png_jpg));
+                          std::move(rgb_set_base), std::move(rgb_freq),
+                          std::move(rgb_phase), png_jpg));
         img->write_buffer();
 #endif
     }
