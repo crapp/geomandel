@@ -49,5 +49,6 @@ void Imagegrey::out_format_write(std::stringstream &img_buf,
         double continuous_index = data.continous_index;
         rgb = this->rgb_continuous_sine(continuous_index, this->rgb_base,
                                         this->rgb_freq, this->rgb_phase);
+        img_buf << std::get<0>(rgb) << " ";
     }
 }

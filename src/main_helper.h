@@ -31,17 +31,27 @@ inline void init_mandel_parameters(std::shared_ptr<FractalParameters> &params,
     // TODO: This try catch block could be unnecessary as cxxopts does most of
     // the checking itself when parse is called
     try {
-        constants::FRACTAL set_type =
-            static_cast<constants::FRACTAL>(parser["s"].as<unsigned int>());
+        unsigned int stype = parser["s"].as<unsigned int>();
+        constants::FRACTAL set_type;
         std::string fractal_type = "mandelbrot";
-        if (set_type == constants::FRACTAL::TRICORN) {
+        switch (stype) {
+        case 0:
+            set_type = constants::FRACTAL::MANDELBROT;
+            break;
+        case 1:
+            set_type = constants::FRACTAL::TRICORN;
             fractal_type = "tricorn";
-        }
-        if (set_type == constants::FRACTAL::JULIA) {
+            break;
+        case 2:
+            set_type = constants::FRACTAL::JULIA;
             fractal_type = "julia";
-        }
-        if (set_type == constants::FRACTAL::BURNING_SHIP) {
+            break;
+        case 3:
+            set_type = constants::FRACTAL::BURNING_SHIP;
             fractal_type = "burning_ship";
+            break;
+        default:
+            throw std::out_of_range("Fractal argument out of range");
         }
 
         unsigned int bailout = parser["b"].as<unsigned int>();
@@ -107,8 +117,21 @@ inline void init_mandel_parameters(std::shared_ptr<FractalParameters> &params,
         if (parser.count("m"))
             cores = parser["m"].as<unsigned int>();
 
-        constants::COL_ALGO col_algo = static_cast<constants::COL_ALGO>(
-            parser["col-algo"].as<unsigned int>());
+        constants::COL_ALGO col_algo;
+        unsigned int calgo = parser["col-algo"].as<unsigned int>();
+        switch (calgo) {
+        case 0:
+            col_algo = constants::COL_ALGO::ESCAPE_TIME;
+            break;
+        case 1:
+            col_algo = constants::COL_ALGO::CONTINUOUS_SINE;
+            break;
+        case 2:
+            col_algo = constants::COL_ALGO::CONTINUOUS_BERN;
+            break;
+        default:
+            throw std::out_of_range("Color algorithm argument out of range");
+        }
 
         // Stores informations used by the mandel cruncher and some data
         // writer classes
