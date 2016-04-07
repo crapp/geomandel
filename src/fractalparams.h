@@ -48,6 +48,7 @@ struct FractalParameters {
     double ycoord;
 
     std::string image_base;
+    std::string fractal_type;
 
     unsigned int cores;
 
@@ -58,7 +59,8 @@ struct FractalParameters {
                       double xl, double xh, unsigned int yrange, double yl,
                       double yh, double julia_real, double julia_ima,
                       unsigned int bailout, unsigned int zoom, double xcoord,
-                      double ycoord, std::string image_base, unsigned int cores,
+                      double ycoord, std::string image_base,
+                      std::string fractal_type, unsigned int cores,
                       constants::COL_ALGO col_algo)
         : set_type(set_type),
           xrange(xrange),
@@ -74,6 +76,7 @@ struct FractalParameters {
           xcoord(xcoord),
           ycoord(ycoord),
           image_base(image_base),
+          fractal_type(fractal_type),
           cores(cores),
           col_algo(col_algo)
     {

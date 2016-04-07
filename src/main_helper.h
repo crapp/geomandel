@@ -33,6 +33,16 @@ inline void init_mandel_parameters(std::shared_ptr<FractalParameters> &params,
     try {
         constants::FRACTAL set_type =
             static_cast<constants::FRACTAL>(parser["s"].as<unsigned int>());
+        std::string fractal_type = "mandelbrot";
+        if (set_type == constants::FRACTAL::TRICORN) {
+            fractal_type = "tricorn";
+        }
+        if (set_type == constants::FRACTAL::JULIA) {
+            fractal_type = "julia";
+        }
+        if (set_type == constants::FRACTAL::BURNING_SHIP) {
+            fractal_type = "burning_ship";
+        }
 
         unsigned int bailout = parser["b"].as<unsigned int>();
 
@@ -105,7 +115,8 @@ inline void init_mandel_parameters(std::shared_ptr<FractalParameters> &params,
         params = std::make_shared<FractalParameters>(
             set_type, xrange, xl, xh, yrange, yl, yh, julia_real, julia_ima,
             bailout, zoomlvl, xcoord, ycoord,
-            parser["image-file"].as<std::string>(), cores, col_algo);
+            parser["image-file"].as<std::string>(), fractal_type, cores,
+            col_algo);
     } catch (const cxxopts::missing_argument_exception &ex) {
         std::cerr << "Missing argument \n  " << ex.what() << std::endl;
     } catch (const cxxopts::OptionParseException &ex) {
@@ -159,11 +170,11 @@ inline void configure_command_line_parser(cxxopts::Options &p)
         ("image-jpg", "Write Buffer to JPG image")
         ("image-png", "Write Buffer to PNG image")
 #endif
-        ("col-algo", "Coloring algorithm 0->Escape Time, "
-         "1-> Escape Time 2, 2->Continuous Coloring Sine, "
-         "3->Continuous Coloring Bernstein" ,
-         cxxopts::value<unsigned int>()->default_value("2"))
-        ("grey-base", "Base grey color between 0 - 255",
+        ("col-algo", "Coloring algorithm 0->Escape Time Linear, "
+         "1->Continuous Coloring Sine, "
+         "2->Continuous Coloring Bernstein" ,
+         cxxopts::value<unsigned int>()->default_value("1"))
+        ("grey-base", "Base grey shade between 0 - 255",
          cxxopts::value<unsigned int>()->default_value("55"))
         ("grey-freq", "Frequency for grey shade computation",
          cxxopts::value<double>()->default_value("0.01"))
@@ -171,7 +182,7 @@ inline void configure_command_line_parser(cxxopts::Options &p)
          cxxopts::value<std::string>()->default_value("128,128,128"))
         ("rgb-freq", "Frequency for RGB computation as comma separated string. You may use doubles but no negative values",
          cxxopts::value<std::string>()->default_value("0.01,0.01,0.01"))
-        ("rgb-phase", "Phase for RGB computation as comma separated string",
+        ("rgb-phase", "Phase for Sine Wave RGB computation as comma separated string",
          cxxopts::value<std::string>()->default_value("0,2,4"))
         ("rgb-amp", "Amplitude for Bernstein RGB computation as comma separated string",
          cxxopts::value<std::string>()->default_value("9,15,8.5"))

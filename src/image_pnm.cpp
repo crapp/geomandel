@@ -33,12 +33,12 @@ void ImagePNM::write_buffer()
     // FIXME: Add zoom value to filename only when greater 0
     // File name: FILENAME_BAILOUT_WIDTHxHEIGHT_ZOOMx.FILE_TYPE
     std::string filename =
-        this->out_file_name(this->params->image_base, this->params->bailout,
-                            this->params->xrange, this->params->yrange,
-                            this->params->zoom, this->params->cores,
-                            this->params->xcoord, this->params->ycoord,
-                            this->params->xl, this->params->xh, this->params->yl,
-                            this->params->yh) +
+        this->out_file_name(
+            this->params->image_base, this->params->fractal_type,
+            this->params->bailout, this->params->xrange, this->params->yrange,
+            this->params->zoom, this->params->cores, this->params->xcoord,
+            this->params->ycoord, this->params->xl, this->params->xh,
+            this->params->yl, this->params->yh) +
         "." + constants::BITMAP_DEFS.at(this->format).at(0);
     std::cout << "+ \u2937 " + filename << std::endl;
 

@@ -24,17 +24,18 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
 TEST_CASE("Filename Patterns", "[output]")
 {
     // some sane values for supported filename patterns
-    unsigned int bailout = 2048;  // %b
-    unsigned int xrange = 1024;   // %w
-    unsigned int yrange = 768;    // %h
-    unsigned int zoom = 0;        // %z
-    unsigned int cores = 4;       // %c
-    double xcoord = 323;          // %x
-    double ycoord = 233;          // %y
-    double z_real_min = -2.5;     // %Zr
-    double z_real_max = 1.0;      // %ZR
-    double z_ima_min = -1.5;      // %Zi
-    double z_ima_max = 1.5;       // %ZI
+    std::string fractal_type = "unit_test_fractal";  // %f
+    unsigned int bailout = 2048;                     // %b
+    unsigned int xrange = 1024;                      // %w
+    unsigned int yrange = 768;                       // %h
+    unsigned int zoom = 0;                           // %z
+    unsigned int cores = 4;                          // %c
+    double xcoord = 323;                             // %x
+    double ycoord = 233;                             // %y
+    double z_real_min = -2.5;                        // %Zr
+    double z_real_max = 1.0;                         // %ZR
+    double z_ima_min = -1.5;                         // %Zi
+    double z_ima_max = 1.5;                          // %ZI
 
     constants::fracbuff b;
     BuffwriterMock bmock(b);
@@ -43,8 +44,8 @@ TEST_CASE("Filename Patterns", "[output]")
     {
         std::string pattern = "mandi_%wx%h_%z.png";
         std::string filename = bmock.test_filename_patterns(
-            pattern, bailout, xrange, yrange, zoom, cores, xcoord, ycoord,
-            z_real_min, z_real_max, z_ima_min, z_ima_max);
+            pattern, fractal_type, bailout, xrange, yrange, zoom, cores, xcoord,
+            ycoord, z_real_min, z_real_max, z_ima_min, z_ima_max);
         REQUIRE(filename ==
                 "mandi_" + utility::primitive_to_string(xrange) + "x" +
                     utility::primitive_to_string(yrange) + "_" +
@@ -57,8 +58,8 @@ TEST_CASE("Filename Patterns", "[output]")
         xcoord = 280.0;
         ycoord = 178.0;
         std::string filename = bmock.test_filename_patterns(
-            std::move(pattern), bailout, xrange, yrange, zoom, cores, xcoord,
-            ycoord, z_real_min, z_real_max, z_ima_min, z_ima_max);
+            std::move(pattern), fractal_type, bailout, xrange, yrange, zoom,
+            cores, xcoord, ycoord, z_real_min, z_real_max, z_ima_min, z_ima_max);
         REQUIRE(filename ==
                 "mandeltest_[" + utility::primitive_to_string(xcoord) + "-" +
                     utility::primitive_to_string(ycoord) + "]");
@@ -67,12 +68,14 @@ TEST_CASE("Filename Patterns", "[output]")
     {
         // %a is a fake pattern
         std::string pattern =
-            "mandeltest_%a_%wx%h_b%b_m%c_[%x, %y --> %z]_(%Zr, %Zi)->(%ZR, %ZI)";
+            "mandeltest_%f_%a_%wx%h_b%b_m%c_[%x, %y --> %z]_(%Zr, %Zi)->(%ZR, "
+            "%ZI)";
         std::string filename = bmock.test_filename_patterns(
-            std::move(pattern), bailout, xrange, yrange, zoom, cores, xcoord,
-            ycoord, z_real_min, z_real_max, z_ima_min, z_ima_max);
+            std::move(pattern), fractal_type, bailout, xrange, yrange, zoom,
+            cores, xcoord, ycoord, z_real_min, z_real_max, z_ima_min, z_ima_max);
         REQUIRE(filename ==
-                "mandeltest_%a_" + utility::primitive_to_string(xrange) + "x" +
+                "mandeltest_" + fractal_type + "_%a_" +
+                    utility::primitive_to_string(xrange) + "x" +
                     utility::primitive_to_string(yrange) + "_b" +
                     utility::primitive_to_string(bailout) + "_m" +
                     utility::primitive_to_string(cores) + "_[" +

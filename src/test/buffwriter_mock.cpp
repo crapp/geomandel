@@ -26,12 +26,12 @@ BuffwriterMock::~BuffwriterMock() {}
 void BuffwriterMock::write_buffer(){};
 
 std::string BuffwriterMock::test_filename_patterns(
-    std::string filename_pattern, unsigned int bailout, unsigned int xrange,
-    unsigned int yrange, unsigned int zoom, unsigned int cores, double xcoord,
-    double ycoord, double z_real_min, double z_real_max, double z_ima_min,
-    double z_ima_max)
+    std::string filename_pattern, std::string fractal_type, unsigned int bailout,
+    unsigned int xrange, unsigned int yrange, unsigned int zoom,
+    unsigned int cores, double xcoord, double ycoord, double z_real_min,
+    double z_real_max, double z_ima_min, double z_ima_max)
 {
-    return this->out_file_name(filename_pattern, bailout, xrange, yrange, zoom,
-                               cores, xcoord, ycoord, z_real_min, z_real_max,
-                               z_ima_min, z_ima_max);
+    return this->out_file_name(filename_pattern, fractal_type, bailout, xrange,
+                               yrange, zoom, cores, xcoord, ycoord, z_real_min,
+                               z_real_max, z_ima_min, z_ima_max);
 }

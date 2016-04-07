@@ -39,6 +39,11 @@ struct RegexpatternIface {
     virtual void parse_filename(std::string &filename) = 0;
 };
 
+/**
+ * @brief Regexpattern implementing interface for vector support
+ *
+ * @tparam T
+ */
 template <typename T>
 struct Regexpattern : public RegexpatternIface {
     Regexpattern(T value, std::string pattern)
@@ -64,6 +69,32 @@ private:
 };
 
 /**
+ * @brief Specialized form of the Regexpattern struct for strings
+ */
+template <>
+struct Regexpattern<std::string> : public RegexpatternIface {
+    Regexpattern(std::string value, std::string pattern)
+        : RegexpatternIface(), value(value), regpattern(std::move(pattern)){};
+    virtual ~Regexpattern(){};
+
+    /**
+     * @brief Parse the filename string and replace every occurence of regpattern
+     * with value
+     *
+     * @param filename
+     */
+    void parse_filename(std::string &filename)
+    {
+        std::regex re(this->regpattern);
+        filename = std::regex_replace(filename, re, this->value);
+    }
+
+private:
+    std::string value;
+    std::string regpattern;
+};
+
+/**
  * @brief Base class of all classes that write the mandelbrot buffer to a
  * file/stream
  */
@@ -79,6 +110,7 @@ protected:
     const constants::fracbuff &buff;
 
     std::string out_file_name(const std::string &string_pattern,
+                              const std::string &fractal_type,
                               unsigned int bailout, unsigned int xrange,
                               unsigned int yrange, unsigned int zoom,
                               unsigned int cores, double xcoord, double ycoord,

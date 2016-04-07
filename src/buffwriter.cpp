@@ -20,17 +20,17 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
 
 Buffwriter::Buffwriter(const constants::fracbuff &buff) : buff(buff) {}
 Buffwriter::~Buffwriter() {}
-std::string Buffwriter::out_file_name(const std::string &string_pattern,
-                                      unsigned int bailout, unsigned int xrange,
-                                      unsigned int yrange, unsigned int zoom,
-                                      unsigned int cores, double xcoord,
-                                      double ycoord, double z_real_min,
-                                      double z_real_max, double z_ima_min,
-                                      double z_ima_max)
+std::string Buffwriter::out_file_name(
+    const std::string &string_pattern, const std::string &fractal_type,
+    unsigned int bailout, unsigned int xrange, unsigned int yrange,
+    unsigned int zoom, unsigned int cores, double xcoord, double ycoord,
+    double z_real_min, double z_real_max, double z_ima_min, double z_ima_max)
 {
     // this might represent the classic example of overengineering
 
     std::vector<std::unique_ptr<RegexpatternIface>> regex_patterns;
+    regex_patterns.emplace_back(
+        new Regexpattern<std::string>(fractal_type, "%f"));
     regex_patterns.emplace_back(new Regexpattern<unsigned int>(bailout, "%b"));
     regex_patterns.emplace_back(new Regexpattern<unsigned int>(xrange, "%w"));
     regex_patterns.emplace_back(new Regexpattern<unsigned int>(yrange, "%h"));

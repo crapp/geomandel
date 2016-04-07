@@ -40,14 +40,19 @@ try to plot this set, you will find areas that are similar to the main area. You
 can zoom into this figure as much as you want. You will discover new formations as
 well as parts with self similarity.
 
-Here is a video showing a zoom into the seahorse valley.
+Here is a video showing a zoom into the Mandelbrot seahorse valley.
 
 LINK TO VIDEO
 
-Besides the Mandelbrot Fractal BLAAAAAAAAAAAAAA supports the following other fractals:
+Besides the Mandelbrot Fractal geomandel supports the following other fractals:
 * [Julia Set](https://en.wikipedia.org/wiki/Julia_set)
 * [Tricorn](https://en.wikipedia.org/wiki/Tricorn_%28mathematics%29)
 * [Burning Ship](https://en.wikipedia.org/wiki/Burning_Ship_fractal)
+
+You may ask yourself how I came up with the name geomandel for this fractal
+generator. Well my original plan was to play with fractals and GeoTIFFs to see
+what kind of effects I could achieve with spatial geographic data. This is still
+on my list of todos...
 
 I also want to make you aware of the
 [Mandelbrot project](https://github.com/willi-kappler/mandel-rust) a friend of
@@ -76,6 +81,11 @@ In order to compile the source code on your machine the following requirements h
     * MinGW >= 4.9
 * [Simple and Fast Multimedia Library](http://www.sfml-dev.org/) for png/jpg support (optional)
 
+The following external libraries are used by geomandel and are part of the
+applications source code:
+* [cxxopts](https://github.com/jarro2783/cxxopts) - Lightweight C++ command line option parser
+* [CTPL](https://github.com/vit-vit/CTPL) - Modern and efficient C++ Thread Pool Library
+* [Catch](https://github.com/philsquared/Catch) -  A modern, C++-native, header-only, framework for unit-tests, TDD and BDD
 
 #### Linux / OS X
 
@@ -144,8 +154,6 @@ geomandel uses the header only c++ command line parser [cxxopts](https://github.
 The following command line options are available
 
 ```shell
-$ geomandel --help
-
 Usage:
   geomandel [OPTION...] - command line options
 
@@ -180,17 +188,21 @@ Usage:
       --image-pnm-col   Write Buffer to PPM Bitmap
       --image-jpg       Write Buffer to JPG image
       --image-png       Write Buffer to PNG image
-      --col-algo arg    Coloring algorithm 0->Escape Time, 1-> Escape Time 2,
-                        2->Continuous Coloring (default:2)
+      --col-algo arg    Coloring algorithm 0->Escape Time Linear,
+                        1->Continuous Coloring Sine, 2->Continuous Coloring
+                        Bernstein (default:1)
       --grey-base arg   Base grey color between 0 - 255 (default:55)
       --grey-freq arg   Frequency for grey shade computation (default:0.01)
       --rgb-base arg    Base RGB color as comma separated string
-                        (default:127,127,127)
+                        (default:128,128,128)
       --rgb-freq arg    Frequency for RGB computation as comma separated
                         string. You may use doubles but no negative values
                         (default:0.01,0.01,0.01)
-      --rgb-phase arg   Phase for RGB computation as comma separated string
+      --rgb-phase arg   Phase for Sine Wave RGB computation as comma separated
+                        string
                         (default:0,2,4)
+      --rgb-amp arg     Amplitude for Bernstein RGB computation as comma
+                        separated string (default:9,15,8.5)
       --set-color arg   Color for pixels inside the set (default:0,0,0)
       --zoom arg        Zoom level. Use together with xcoord, ycoord
       --xcoord arg      Image X coordinate where you want to zoom into the
@@ -202,6 +214,7 @@ Usage:
 
   -p, --print  Print Buffer to terminal
       --csv    Export data to csv files
+
 ```
 
 #### Fractal Options
@@ -306,8 +319,7 @@ These parameters have a large impact on memory footprint and computation time
 The application can generate images in the [portable anymap format (PNM)](https://en.wikipedia.org/wiki/Netpbm_format).
 The big advantage of this format it is easy to implement and doesn't need any external
 libraries. The downside is large files, as geomandel does not use a binary format, and
-low writing speed. You may also these images with a text editor of your choice
-to what values geomandel actually wrote into the image file.
+low writing speed.
 
 You can choose between `--img-pnm-bw` a simple black and white image, `--img-pnm-grey`
 using grey scale to render the fractal and `--img-pnm-col` that generates
@@ -319,36 +331,39 @@ You have to install the library and recompile geomandel if you want this kind of
 
 ##### Color Options
 
-This is just a brief introduction into color command line options. See **Color**
-for more information on this topic.
+This is just a brief introduction into color command line options. See the **Color**
+section for more information on this topic.
 
 The `col-algo` parameter determines which coloring algorithm to use. Continuous
-coloring will produce images without visible color bands. Computation time might
+coloring can produce images without visible color bands. Computation time might
 increase slightly though.
+
 ```
---col-algo arg     Coloring algorithm 0->Escape Time, 1->Continuous Coloring
+--col-algo arg    Coloring algorithm 0->Escape Time Linear,
+                  1->Continuous Coloring Sine, 2->Continuous Coloring Bernstein
 ```
 
 Grey scale fractals are a nice alternative to colored ones. These parameters
-control how the pgm images look like. Continuous coloring is not available for
-grey scale images.
+control how the pgm images look like.
+
 ```
---grey-base arg   Base grey color between 0 - 255
+--grey-base arg   Base grey shade between 0 - 255
 --grey-freq arg   Frequency for grey shade computation
 
 ```
 
-The RGB options apply to PPM as well as PNG and JPG images. The base color
+The RGB options apply to PPM as well as to PNG and JPG images. The base color
 (background color) is set with `--rgb-base`. The distribution of the colors in
 the color spectrum for the escape time or continuous index can be defined with
-`--rgb-freq` and `--rgb-base`. These options do different things depending on the
-chosen coloring algorithm
+`--rgb-freq`, `--rgb-phase` and `--rgb-amp`. These options do different things
+depending on the chosen coloring algorithm.
 
 ```
---rgb-base arg    Base RGB color as comma separated string
---rgb-freq arg    Frequency for RGB computation as comma separated
-                  string. You may use doubles but no negative values
---rgb-phase arg   Phase for RGB computation as comma separated string
+--rgb-base  arg    Base RGB color as comma separated string
+--rgb-freq  arg    Frequency for RGB computation as comma separated
+                   string. You may use doubles but no negative values
+--rgb-phase arg    Phase for Sine Wave RGB computation as comma separated string
+--rgb-amp   arg    Amplitude for Bernstein RGB computation as comma separated string
 ```
 
 ### Examples
@@ -357,21 +372,20 @@ chosen coloring algorithm
 
 ## Color
 
-The algorithms are well known and easy to implement. The more challenging part is
-to draw beautiful fractals using different coloring algorithms. geomandel offers
-two different color strategies, escape time based and continuous coloring. You
+The fractal algorithms are well known and easy to implement. The more challenging
+part is to draw beautiful fractals using different coloring algorithms. geomandel
+offers different color strategies, escape time based and continuous coloring. You
 can use the `col-algo` parameter too chose which one you want to apply.
 
-### Escape Time
+### Escape Time Linear
 
 The Escape Time algorithm is the most common method to color fractals. This is
 because the method is fast, easy to understand and there are a lot of implementations
-int he wild one can build on.
+in the wild one can build on.
 
 The pseudo code example in [command line options](#Mandelbrot-Options) section
 shows how the escape time is calculated. geomandel takes this value and calculates
-a RGB tuple or a grey scale value using two different formula depending on which
-escape time algorithm you chose.
+a RGB tuple or a grey scale value using the following formula
 
 !["Escape Time Coloring 1 Formula"](https://crapp.github.io/geomandel/escape_time_coloring.png)
 
@@ -388,15 +402,14 @@ The following Images and Plots were generated with `--grey-base=55`
 !["Escape Time Fractals"](https://crapp.github.io/geomandel/color_escapetime_append_greymandel_2.jpg)
 
 As you can see increasing the frequency will add better visual effects but also
-worsen the problem of color banding. Grey scale PGM images can not be generated
-with the continuous coloring algorithm.
+worsens the problem of color banding.
 
 #### RGB Images
 
 Generating RGB images with the Escape Time algorithm works similar to grey scale
 images. You now have to use `--rgb-base=R,G,B` to provide a base color and
 `--rgb-freq=FREQ_R,FREQ_G,FREQ_B` to determine the frequencies. Setting a
-frequency to **0** will leave the respective color component untouched.
+frequency to **0** will leave the respective color channel untouched.
 
 The first three colorbars were created with a base color of `255,0,0` and a
 RGB frequency of `0,2,0;0,8,0;0,16,0`. So only the green color component will
@@ -415,7 +428,7 @@ Here is what these values will look like as mandelbrot fractals.
 ![Escape time fractals](https://crapp.github.io/geomandel/escape_time_fractals_all_border.png)
 
 
-Feel free to experiment with this values to get the result you want. There is a
+Feel free to experiment with these values to get the result you want. There is a
 jupyter notebook `EscapeTimeRGB` in the resources folder that makes it easy to
 visualize different values for RGB fractals generated with the escape time
 algorithm.
@@ -462,7 +475,7 @@ Here are some examples that show what you can achieve using this type of colorin
 
 ![Continuous Coloring rainbow](https://crapp.github.io/geomandel/continuous_rainbow.png)
 
-The first graph and colorbar show how you can get rainbow colors by using out of 
+The first graph and colorbar show how you can get rainbow colors by using out of
 phase color channel waves. If you would use the same phase and the same frequency
 this would produce grey shades.
 

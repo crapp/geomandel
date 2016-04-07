@@ -60,11 +60,6 @@ void ImageSFML::write_buffer()
             if (this->params->col_algo == constants::COL_ALGO::ESCAPE_TIME) {
                 rgb = this->rgb_linear(its, this->rgb_base, this->rgb_freq);
             }
-            if (this->params->col_algo == constants::COL_ALGO::ESCAPE_TIME_2) {
-                rgb = this->rgb_continuous_sine(static_cast<double>(its),
-                                                this->rgb_base, this->rgb_freq,
-                                                this->rgb_phase);
-            }
             if (this->params->col_algo == constants::COL_ALGO::CONTINUOUS_SINE) {
                 rgb = this->rgb_continuous_sine(continous_index, this->rgb_base,
                                                 this->rgb_freq, this->rgb_phase);
@@ -81,10 +76,11 @@ void ImageSFML::write_buffer()
     }
 
     std::string filename = this->out_file_name(
-        this->params->image_base, this->params->bailout, this->params->xrange,
-        this->params->yrange, this->params->zoom, this->params->cores,
-        this->params->xcoord, this->params->ycoord, this->params->xl,
-        this->params->xh, this->params->yl, this->params->yh);
+        this->params->image_base, this->params->fractal_type,
+        this->params->bailout, this->params->xrange, this->params->yrange,
+        this->params->zoom, this->params->cores, this->params->xcoord,
+        this->params->ycoord, this->params->xl, this->params->xh,
+        this->params->yl, this->params->yh);
 
     sf::Image img;
     img.create(this->params->xrange, this->params->yrange, sfml_img_buf.data());

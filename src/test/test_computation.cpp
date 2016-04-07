@@ -444,14 +444,6 @@ TEST_CASE("Test computation of continuous index", "[computation]")
         REQUIRE(it_object.continous_index == 0);
     }
 
-    SECTION("Default index of its 2, -3.0672, 2.7696 using ESCAPE_TIME_2")
-    {
-        params->col_algo = constants::COL_ALGO::ESCAPE_TIME_2;
-        auto it_object = crunch_test_cindex.test_iterfactory(2, -3.0672, 2.7696);
-        REQUIRE(it_object.default_index == 2);
-        REQUIRE(it_object.continous_index == 0);
-    }
-
     SECTION("Default index of its 2, -3.0672, 2.7696 using CONTINUOUS_BERN")
     {
         params->col_algo = constants::COL_ALGO::CONTINUOUS_BERN;
@@ -472,17 +464,6 @@ TEST_CASE("Test computation of continuous index", "[computation]")
     SECTION("Default index of its 55, 2.3637850846657784, -2.264372597523388")
     {
         params->col_algo = constants::COL_ALGO::ESCAPE_TIME;
-        auto it_object = crunch_test_cindex.test_iterfactory(
-            55, 2.3637850846657784, -2.264372597523388);
-        REQUIRE(it_object.default_index == 55);
-        REQUIRE(it_object.continous_index == 0);
-    }
-
-    SECTION(
-        "Default index of its 55, 2.3637850846657784, -2.264372597523388 using "
-        "ESCAPE_TIME_2")
-    {
-        params->col_algo = constants::COL_ALGO::ESCAPE_TIME_2;
         auto it_object = crunch_test_cindex.test_iterfactory(
             55, 2.3637850846657784, -2.264372597523388);
         REQUIRE(it_object.default_index == 55);
