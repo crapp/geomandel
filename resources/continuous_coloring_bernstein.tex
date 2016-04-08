@@ -1,0 +1,16 @@
+\documentclass[preview, border=10pt]{standalone}
+\usepackage{mathtools}
+% \usepackage{empheq}
+
+\newcommand*\widefbox[1]{\fbox{\hspace{2em}#1\hspace{2em}}}
+
+\begin{document}
+% http://tex.stackexchange.com/a/39687
+\abovedisplayskip=-3pt
+% \begin{emphq}[box=\widefbox]{align*} for a border around all equations
+\begin{align*}
+\text{red\_channel} &= \text{red\_amp} \times (1 - \text{continuous\_index}) \times (\text{continuous\_index})^3 \times (255 - \text{base\_color}) + \text{base\_color} \\
+\text{green\_channel} &= \text{green\_amp} \times (1 - \text{continuous\_index})^2 \times (\text{continuous\_index})^2 \times (255 - \text{base\_color}) + \text{base\_color} \\
+\text{blue\_channel} &= \text{blue\_amp} \times (1 - \text{continuous\_index})^3 \times \text{continuous\_index} \times (255 - \text{base\_color}) + \text{base\_color}
+\end{align*}
+\end{document}

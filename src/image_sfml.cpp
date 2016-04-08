@@ -56,7 +56,8 @@ void ImageSFML::write_buffer()
                 continue;
             }
 
-            std::tuple<int, int, int> rgb;
+            auto rgb = std::make_tuple(0, 0, 0);
+
             if (this->params->col_algo == constants::COL_ALGO::ESCAPE_TIME) {
                 rgb = this->rgb_linear(its, this->rgb_base, this->rgb_freq);
             }
@@ -68,6 +69,7 @@ void ImageSFML::write_buffer()
                 rgb = this->rgb_continuous_bernstein(
                     its, this->params->bailout, this->rgb_base, this->rgb_amp);
             }
+
             sfml_img_buf.push_back(static_cast<uint8_t>(std::get<0>(rgb)));
             sfml_img_buf.push_back(static_cast<uint8_t>(std::get<1>(rgb)));
             sfml_img_buf.push_back(static_cast<uint8_t>(std::get<2>(rgb)));

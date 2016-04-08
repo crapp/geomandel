@@ -439,33 +439,40 @@ Computing RGB values from the escape time in the fractal algorithms is easy but
 has the disadvantage to produce visible color bands. This is because integer based
 escape time consists of discrete values and this will result in a discrete color
 scale. If the escape time is increased by 1 step we omit all values in between and
-thus loosing the precision to color the fractal in a continuous way.
+thus loosing the precision to color the fractal in a continuous way. Getting around
+this is a bit more tricky and needs some additional computation steps.
 
-Getting around this is a bit more tricky and needs some additional computation steps.
-A well known method is mapping the escape time on a logarithmic scale which will
-give us a continuous gradient. Using a natural logarithm allows us to transform
-the magnitude of every escaped pixel into a value between 0 and 1.
 
 #### Mathematical Bases
 
+A well known method is mapping the escape time on a logarithmic scale which will
+give us a continuous gradient. Using a natural logarithm allows us to transform
+the magnitude of every escaped pixel into a value between 0 and 1.
 Here is the formula I use to calculate a continuous index for every complex number
 of the complex plane.
 
 ![Continuous Index Formula](https://crapp.github.io/geomandel/continuous_index.png)
 
-Next step involves finding a good color map that which colors blend smoothly and
+Next step involves finding a good color map which colors blend smoothly and
 of course endlessly as we can zoom a fractal indefinitely. Mathematical
 functions used to model periodic and repeating phenomenas are the sine and
 cosine functions. So a formula that uses out of phase sine functions to generate
 real-time color blending could look like this:
 
-![Continuous Coloring Formula](https://crapp.github.io/geomandel/continuous_coloring.png)
+![Continuous Coloring Sine Formula](https://crapp.github.io/geomandel/continuous_coloring.png)
 
-#### Influence of base color, frequency and phase
+Another method is to use a smooth polynomial that is defined on the unit interval
+and has appropriate values. Slightly modified versions of the
+[Bernstein polynomials](http://mathworld.wolfram.com/BernsteinPolynomial.html)
+can be used as they are continuous, smooth and have values in the [0, 1] interval.
+
+![Continuous Coloring Bernstein Formula](https://crapp.github.io/geomandel/continuous_coloring_bernstein.png)
+
+##### Sine wave based coloring
 
 If you are interested in how this exactly works I highly recommend to read the article
 about generating color sequences using sine and cosine by [Jim Bumgardner](http://krazydad.com/tutorials/makecolors.php). Reading this will help you understand how to use the options
-`rgb-base`, `rgb-freq` and `rgb-phase` with the continuous coloring algorithm
+`rgb-base`, `rgb-freq` and `rgb-phase` with the continuous sine coloring algorithm
 to get the result you want.
 
 As with escape time coloring using a frequency of 0 for a color component will
@@ -491,7 +498,11 @@ Interested in pastel colors? The last example shows exactly this using a higher
 base color, different frequencies for the color channels and they are out of phase.
 
 Choosing the right frequencies is highly dependent on the bailout value you used
-for the fractal algorithm.
+for the fractal algorithm. If the frequencies are to high you will get color bands.
+
+##### Bernstein polynomial based coloring
+
+
 
 ## Performance and Memory usage
 

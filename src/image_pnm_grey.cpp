@@ -40,15 +40,16 @@ void Imagegrey::out_format_write(std::stringstream &img_buf,
         img_buf << 0 << " ";
         return;
     }
+
     std::tuple<int, int, int> rgb{0, 0, 0};
     if (this->params->col_algo == constants::COL_ALGO::ESCAPE_TIME) {
         rgb = this->rgb_linear(its, this->rgb_base, this->rgb_freq);
-        img_buf << std::get<0>(rgb) << " ";
     }
     if (this->params->col_algo == constants::COL_ALGO::CONTINUOUS_SINE) {
         double continuous_index = data.continous_index;
         rgb = this->rgb_continuous_sine(continuous_index, this->rgb_base,
                                         this->rgb_freq, this->rgb_phase);
-        img_buf << std::get<0>(rgb) << " ";
     }
+
+    img_buf << std::get<0>(rgb) << " ";
 }

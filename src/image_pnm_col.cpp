@@ -47,24 +47,21 @@ void Imagecol::out_format_write(std::stringstream &img_buf,
                 << std::get<2>(this->rgb_set_base) << "\t";
         return;
     }
-    if (this->params->col_algo == constants::COL_ALGO::ESCAPE_TIME) {
-        auto rgb = this->rgb_linear(its, this->rgb_base, this->rgb_freq);
 
-        img_buf << std::get<0>(rgb) << " " << std::get<1>(rgb) << " "
-                << std::get<2>(rgb) << "\t";
+    auto rgb = std::make_tuple(0, 0, 0);
+
+    if (this->params->col_algo == constants::COL_ALGO::ESCAPE_TIME) {
+        rgb = this->rgb_linear(its, this->rgb_base, this->rgb_freq);
     }
     if (this->params->col_algo == constants::COL_ALGO::CONTINUOUS_SINE) {
-        auto rgb = this->rgb_continuous_sine(continous_index, this->rgb_base,
-                                             this->rgb_freq, this->rgb_phase);
-
-        img_buf << std::get<0>(rgb) << " " << std::get<1>(rgb) << " "
-                << std::get<2>(rgb) << "\t";
+        rgb = this->rgb_continuous_sine(continous_index, this->rgb_base,
+                                        this->rgb_freq, this->rgb_phase);
     }
     if (this->params->col_algo == constants::COL_ALGO::CONTINUOUS_BERN) {
-        auto rgb = this->rgb_continuous_bernstein(its, this->params->bailout,
-                                                  this->rgb_base, this->rgb_amp);
-
-        img_buf << std::get<0>(rgb) << " " << std::get<1>(rgb) << " "
-                << std::get<2>(rgb) << "\t";
+        rgb = this->rgb_continuous_bernstein(its, this->params->bailout,
+                                             this->rgb_base, this->rgb_amp);
     }
+
+    img_buf << std::get<0>(rgb) << " " << std::get<1>(rgb) << " "
+            << std::get<2>(rgb) << "\t";
 }
