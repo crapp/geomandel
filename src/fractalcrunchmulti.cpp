@@ -44,8 +44,8 @@ void Fractalcrunchmulti::fill_buffer()
             if (iy != 0)
                 ypass += this->params->ydelta * iy;
             for (unsigned int ix = 0; ix < this->params->xrange; ix++) {
-                auto crunched_mandel = this->crunch_mandel_complex(
-                    xpass, ypass, this->params->bailout);
+                auto crunched_mandel =
+                    this->crunch_complex(xpass, ypass, this->params->bailout);
 
                 unsigned int its = std::get<0>(crunched_mandel);
                 double Zx = std::get<1>(crunched_mandel);

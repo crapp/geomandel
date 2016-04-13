@@ -49,9 +49,9 @@ TEST_CASE("Command line arguments", "[commandline]")
     SECTION("Test options that need an argument")
     {
         char **cxxopt_pointer = nullptr;
-        // set type
+        // fractal type
         auto parser = generate_empty_parser();
-        const char *test_argv_settype[] = {"Unittester", "-s"};
+        const char *test_argv_settype[] = {"Unittester", "-f"};
         cxxopt_pointer = const_cast<char **>(test_argv_settype);
         int test_argc = 2;
         REQUIRE_THROWS(parser.parse(test_argc, cxxopt_pointer));

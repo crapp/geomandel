@@ -31,7 +31,7 @@ public:
     std::string test_filename_patterns(std::string filename_pattern,
                                        std::string fractal_type,
                                        unsigned int bailout, unsigned int xrange,
-                                       unsigned int yrange, unsigned int zoom,
+                                       unsigned int yrange, double zoom,
                                        unsigned int cores, double xcoord,
                                        double ycoord, double z_real_min,
                                        double z_real_max, double z_ima_min,

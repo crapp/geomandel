@@ -29,12 +29,12 @@ void FractalcruncherMock::fill_buffer() {}
 std::tuple<unsigned int, double, double> FractalcruncherMock::test_cruncher(
     double real, double ima, unsigned int bailout) const
 {
-    return this->crunch_mandel_complex(real, ima, bailout);
+    return this->crunch_complex(real, ima, bailout);
 }
 
 constants::Iterations FractalcruncherMock::test_iterfactory(unsigned int its,
-                                                           double z_real,
-                                                           double z_ima) const
+                                                            double z_real,
+                                                            double z_ima) const
 {
     return this->iterations_factory(its, z_real, z_ima);
 }

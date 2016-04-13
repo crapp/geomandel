@@ -24,7 +24,7 @@ Fractalcruncher::Fractalcruncher(
 {
 }
 Fractalcruncher::~Fractalcruncher() {}
-std::tuple<unsigned int, double, double> Fractalcruncher::crunch_mandel_complex(
+std::tuple<unsigned int, double, double> Fractalcruncher::crunch_complex(
     double x, double y, unsigned int bailout) const
 {
     // The Fractal algorithm derived from pseudo code

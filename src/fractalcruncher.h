@@ -29,7 +29,7 @@ class Fractalcruncher
 {
 public:
     Fractalcruncher(constants::fracbuff &buff,
-                   const std::shared_ptr<FractalParameters> &params);
+                    const std::shared_ptr<FractalParameters> &params);
     virtual ~Fractalcruncher();
 
     virtual void fill_buffer() = 0;
@@ -55,7 +55,7 @@ protected:
      * @return Return number of iterations as well as Real and Imaginary Part of
      * the Complex Number.
      */
-    std::tuple<unsigned int, double, double> crunch_mandel_complex(
+    std::tuple<unsigned int, double, double> crunch_complex(
         double x, double y, unsigned int bailout) const;
     /**
      * @brief Returns an Iterations object based on the coloring algorithm

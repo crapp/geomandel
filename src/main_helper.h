@@ -31,7 +31,7 @@ inline void init_mandel_parameters(std::shared_ptr<FractalParameters> &params,
     // TODO: This try catch block could be unnecessary as cxxopts does most of
     // the checking itself when parse is called
     try {
-        unsigned int stype = parser["s"].as<unsigned int>();
+        unsigned int stype = parser["f"].as<unsigned int>();
         constants::FRACTAL set_type;
         std::string fractal_type = "mandelbrot";
         switch (stype) {
@@ -78,7 +78,7 @@ inline void init_mandel_parameters(std::shared_ptr<FractalParameters> &params,
         double julia_real = parser["julia-real"].as<double>();
         double julia_ima = parser["julia-ima"].as<double>();
 
-        unsigned int zoomlvl = 0;
+        double zoomlvl = 0;
         double xcoord = 0;
         double ycoord = 0;
 
@@ -90,9 +90,9 @@ inline void init_mandel_parameters(std::shared_ptr<FractalParameters> &params,
                 return;
             }
             // get zoom parameters and coordinate
-            parser["zoom"].as<unsigned int>() == 0
+            parser["zoom"].as<double>() == 0
                 ? zoomlvl = 1
-                : zoomlvl = parser["zoom"].as<unsigned int>();
+                : zoomlvl = parser["zoom"].as<double>();
             xcoord = parser["xcoord"].as<double>();
             ycoord = parser["ycoord"].as<double>();
 
@@ -160,9 +160,9 @@ inline void configure_command_line_parser(cxxopts::Options &p)
         ("q,quiet", "Don't write to stdout (This does not influence stderr)");
 
     p.add_options("Fractal")
-        ("s,set", "Choose which kind of set you want to compute and render",
+        ("f,fractal", "Choose which kind of fractal you want to compute and render",
          cxxopts::value<unsigned int>()->default_value("0"))
-        ("b,bailout", "Bailout value for the mandelbrot set algorithm",
+        ("b,bailout", "Bailout value for the fractal algorithm",
          cxxopts::value<unsigned int>()->default_value("1000"))
         ("creal-min", "Real part minimum",
          cxxopts::value<double>()->default_value("-2.5"))
@@ -203,7 +203,7 @@ inline void configure_command_line_parser(cxxopts::Options &p)
          cxxopts::value<double>()->default_value("0.01"))
         ("rgb-base", "Base RGB color as comma separated string",
          cxxopts::value<std::string>()->default_value("128,128,128"))
-        ("rgb-freq", "Frequency for RGB computation as comma separated string. You may use doubles but no negative values",
+        ("rgb-freq", "Frequency for RGB computation as comma separated string. You may use decimals but no negative values",
          cxxopts::value<std::string>()->default_value("0.01,0.01,0.01"))
         ("rgb-phase", "Phase for Sine Wave RGB computation as comma separated string",
          cxxopts::value<std::string>()->default_value("0,2,4"))
@@ -212,7 +212,7 @@ inline void configure_command_line_parser(cxxopts::Options &p)
         ("set-color", "Color for pixels inside the set",
          cxxopts::value<std::string>()->default_value("0,0,0"))
         ("zoom", "Zoom level. Use together with xcoord, ycoord",
-         cxxopts::value<unsigned int>())
+         cxxopts::value<double>())
         ("xcoord", "Image X coordinate where you want to zoom into the fractal",
          cxxopts::value<double>())
         ("ycoord", "Image Y coordinate where you want to zoom into the fractal",

@@ -23,7 +23,7 @@ Buffwriter::~Buffwriter() {}
 std::string Buffwriter::out_file_name(
     const std::string &string_pattern, const std::string &fractal_type,
     unsigned int bailout, unsigned int xrange, unsigned int yrange,
-    unsigned int zoom, unsigned int cores, double xcoord, double ycoord,
+    double zoom, unsigned int cores, double xcoord, double ycoord,
     double z_real_min, double z_real_max, double z_ima_min, double z_ima_max)
 {
     // this might represent the classic example of overengineering
@@ -34,7 +34,7 @@ std::string Buffwriter::out_file_name(
     regex_patterns.emplace_back(new Regexpattern<unsigned int>(bailout, "%b"));
     regex_patterns.emplace_back(new Regexpattern<unsigned int>(xrange, "%w"));
     regex_patterns.emplace_back(new Regexpattern<unsigned int>(yrange, "%h"));
-    regex_patterns.emplace_back(new Regexpattern<unsigned int>(zoom, "%z"));
+    regex_patterns.emplace_back(new Regexpattern<double>(zoom, "%z"));
     regex_patterns.emplace_back(new Regexpattern<unsigned int>(cores, "%c"));
     regex_patterns.emplace_back(new Regexpattern<double>(xcoord, "%x"));
     regex_patterns.emplace_back(new Regexpattern<double>(ycoord, "%y"));

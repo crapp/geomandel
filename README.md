@@ -164,9 +164,9 @@ Usage:
 
  Fractal options:
 
-  -s, --set arg         Choose which kind of set you want to compute and
+  -f, --fractal arg     Choose which kind of fractal you want to compute and
                         render (default:0)
-  -b, --bailout arg     Bailout value for the mandelbrot set algorithm
+  -b, --bailout arg     Bailout value for the fractal algorithm
                         (default:1000)
       --creal-min arg   Real part minimum (default:-2.5)
       --creal-max arg   Real part maximum (default:1.0)
@@ -223,10 +223,10 @@ In order to choose the fractal that will be computed the `--set` parameter exist
 The parameter has the following options:
 
 ```
---set=0   Mandelbrot Set (Default)
---set=1   Julia Set
---set=2   Tricorn
---set=3   Burning Ship
+--fractal=0   Mandelbrot Set (Default)
+--fractal=1   Julia Set
+--fractal=2   Tricorn
+--fractal=3   Burning Ship
 ```
 
 The complex plane is defined with these options:
@@ -241,13 +241,14 @@ You might need to adjust these values if you want to generate tricorn or julia
 fractals.
 
 In order to calculate the Julia Set a fixed constant is needed which you may provide
-with `--julia-real` and `--julia-ima` (Default (-0.8+0.156j)).
+with `julia-real` and `julia-ima` (Default (-0.8+0.156j)).
 
-The bailout value `--bailout` defines the maximum amount of iterations used to
+The bailout value `bailout` defines the maximum amount of iterations used to
 check whether a complex number is inside the Fractal. The higher you set
-this value the more precise the predictions of this algorithm will be. But
+this value the more precise the predictions of the algorithm will be. But
 computation time will also be significantly higher. The escape criterion, shown in
-the pseudo code example below, is not yet definable by a command line parameter
+the pseudo code example below for the mandelbrot set, is not yet definable by a
+command line parameter
 (defaults to 2.0)
 
 ```c++
@@ -261,27 +262,41 @@ while ( x*x + y*y <= ESCAPE  AND  iteration < BAILOUT  )
 }
 ```
 
-Computation speed can be reduced by using the ```--multi``` option. This will
-distribute the workload on different threads. See the *performance* section for
+Computation speed can be reduced by using the ```multi``` option. This will
+distribute the workload on different threads. See the *Performance* section for
 more details.
+
+One of the best features of Fractals is the possibility to zoom in indefinitely.
+geomandel has specific convenient options to achieve this.
+
+```
+--zoom   arg      Zoom level. Use together with xcoord, ycoord
+--xcoord arg      Image X coordinate where you want to zoom into the fractal
+--ycoord arg      Image Y coordinate where you want to zoom into the fractal
+```
+The coordinates are image coordinates and describe the point where you want to zoom
+into the fractal. Based on the coordinates and the zoom level a new complex plane
+will be calculated. You can achieve the same effect if you use the complex plane
+options directly but I think it is much easier to get the coordinates from an
+image viewer and let geomandel do the math. All values can be decimals.
 
 #### Image Options
 
 geomandel is able to generate different image formats from the image algorithms.
 How this images are generated can be influenced by command line parameters.
 
-
 ##### File name
 
 The default output file name is geomandel + appropriate image format file extension.
-Fortunately the re is the possibility to use the `--img-file` command line option
-which provides highly customizable file names.
+You can use the `img-file` command line option which provides highly customizable
+file names.
 
 You can use different printf like '%' items interspersed with normal text for the
 output file name. These items will be replaced by the application with the values
 you chose.
 
 ```
+%f     Fractal name
 %b     Bailout value
 %Zr    Complex number real minimum
 %ZR    Complex number real maximum
@@ -295,13 +310,13 @@ you chose.
 ```
 
 If you have set a bailout value of 2048 and are using the default values for the
-complex plane you could a file name pattern like this
+complex plane you could use a file name pattern like this
 
 ```
 my_fractals_%bb_z(%Zr, %Zi)_z(%ZR, %ZI) -> my_fractals_2048b_z(-2.5, -1.5)_z(1.0, 1.5).[pgm|pbm|ppm|png|jpg]
 ```
 Please note the naming scheme used for image files also applies for csv files
-that will be generated when you use the ```--csv``` command line option.
+that will be generated when you use the ```csv``` command line option.
 
 ##### Image size
 
@@ -321,8 +336,8 @@ The big advantage of this format it is easy to implement and doesn't need any ex
 libraries. The downside is large files, as geomandel does not use a binary format, and
 low writing speed.
 
-You can choose between `--img-pnm-bw` a simple black and white image, `--img-pnm-grey`
-using grey scale to render the fractal and `--img-pnm-col` that generates
+You can choose between `img-pnm-bw` a simple black and white image, `img-pnm-grey`
+using grey scale to render the fractal and `img-pnm-col` that generates
 a RGB color image.
 
 Additionally [SFML](http://www.sfml-dev.org/) can be used to generate jpg/png images.
@@ -344,7 +359,8 @@ increase slightly though.
 ```
 
 Grey scale fractals are a nice alternative to colored ones. These parameters
-control how the pgm images look like.
+control how the pgm images look like. The default value for grey scale frequency
+is meant to be used with the linear escape time coloring algorithm.
 
 ```
 --grey-base arg   Base grey shade between 0 - 255
@@ -361,25 +377,63 @@ depending on the chosen coloring algorithm.
 ```
 --rgb-base  arg    Base RGB color as comma separated string
 --rgb-freq  arg    Frequency for RGB computation as comma separated
-                   string. You may use doubles but no negative values
+                   string. You may use decimals but no negative values
 --rgb-phase arg    Phase for Sine Wave RGB computation as comma separated string
 --rgb-amp   arg    Amplitude for Bernstein RGB computation as comma separated string
 ```
 
+The color of the pixels inside the fractal can be set with `set-color` command
+line option.
+
 ### Examples
 
+This section shows some examples of generated fractals and the command line
+parameters necessary. Default values are used if not mentioned otherwise.
 
+#### Mandelbrot fractal using linear escape time coloring
+
+```shell
+geomandel --col-algo=0 --rgb-freq=0,16,0 --rgb-base=255,0,0
+```
+
+![Mandelbrot red to yellow](https://crapp.github.io/geomandel/example_mandelbrot_red_to_yellow_border.png)
+
+
+#### Mandelbrot fractal sine wave continuous coloring zoomed (200x)
+
+```shell
+geomandel --rgb-freq=0,0.01,0 --rgb-base=255,0,0 \
+--xcoord=146 --ycoord=250 --zoom=200
+```
+![Mandelbrot red to yellow zoomed continuous](https://crapp.github.io/geomandel/example_mandelbrot_red_to_yellow_146x250-200x_colalgo_default_border.png)
+
+#### Burning Ship fractal sine wave
+
+```shell
+geomandel --fractal=3 --col-algo=1 \
+--rgb-base=200,100,5 --rgb-freq=0,0.03,0 --rgb-phase=4,2,0 \
+--xcoord=105.5 --ycoord=245 --zoom=30
+```
+
+#### Zoomed Julia Fractal using continuous coloring based on Bernstein Polynomials
+
+```shell
+geomandel --fractal=2 --col-algo=2 --rgb-base=0,0,0 \
+--creal-min=-1.5 --creal-max=1.8 \
+--xcoord=253.5 --ycoord=289.7 --zoom=300
+```
+![Julia Fractal zoomed Bernstein](https://crapp.github.io/geomandel/example_julia_253.5x289.7-300x_border.png)
 
 ## Color
 
 The fractal algorithms are well known and easy to implement. The more challenging
 part is to draw beautiful fractals using different coloring algorithms. geomandel
-offers different color strategies, escape time based and continuous coloring. You
-can use the `col-algo` parameter too chose which one you want to apply.
+offers different color strategies, escape time based linear and continuous coloring.
+You can use the `col-algo` parameter too chose which one you want to apply.
 
 ### Escape Time Linear
 
-The Escape Time algorithm is the most common method to color fractals. This is
+The Escape Time linear algorithm is the most common method to color fractals. This is
 because the method is fast, easy to understand and there are a lot of implementations
 in the wild one can build on.
 
@@ -387,19 +441,19 @@ The pseudo code example in [command line options](#Mandelbrot-Options) section
 shows how the escape time is calculated. geomandel takes this value and calculates
 a RGB tuple or a grey scale value using the following formula
 
-!["Escape Time Coloring 1 Formula"](https://crapp.github.io/geomandel/escape_time_coloring.png)
+![Escape Time Coloring 1 Formula](https://crapp.github.io/geomandel/escape_time_coloring.png)
 
 #### Grey Scale
 
 Lets have a look at grey scale PGM images first. You can provide a base grey
-shade with `--grey-base` and a frequency value `--grey-frequency` which determines
+shade with `grey-base` and a frequency value `grey-freq` which determines
 how often sequences of grey shades repeat and their grading. This is best explained
 with some images and plots.
 
-The following Images and Plots were generated with `--grey-base=55`
+The following Images and Plots were generated with `grey-base=55`
 
 !["Escape Time - Grey Scale Plots"](https://crapp.github.io/geomandel/color_escapetime_grey_plot.jpg)
-!["Escape Time Fractals"](https://crapp.github.io/geomandel/color_escapetime_append_greymandel_2.jpg)
+!["Escape Time Fractals"](https://crapp.github.io/geomandel/grey_mandelbrot_escape_linear_frequency_test.png)
 
 As you can see increasing the frequency will add better visual effects but also
 worsens the problem of color banding.
@@ -407,8 +461,8 @@ worsens the problem of color banding.
 #### RGB Images
 
 Generating RGB images with the Escape Time algorithm works similar to grey scale
-images. You now have to use `--rgb-base=R,G,B` to provide a base color and
-`--rgb-freq=FREQ_R,FREQ_G,FREQ_B` to determine the frequencies. Setting a
+images. You now have to use `rgb-base=R,G,B` to provide a base color and
+`rgb-freq=FREQ_R,FREQ_G,FREQ_B` to determine the frequencies. Setting a
 frequency to **0** will leave the respective color channel untouched.
 
 The first three colorbars were created with a base color of `255,0,0` and a
@@ -427,7 +481,6 @@ Here is what these values will look like as mandelbrot fractals.
 
 ![Escape time fractals](https://crapp.github.io/geomandel/escape_time_fractals_all_border.png)
 
-
 Feel free to experiment with these values to get the result you want. There is a
 jupyter notebook `EscapeTimeRGB` in the resources folder that makes it easy to
 visualize different values for RGB fractals generated with the escape time
@@ -441,7 +494,6 @@ escape time consists of discrete values and this will result in a discrete color
 scale. If the escape time is increased by 1 step we omit all values in between and
 thus loosing the precision to color the fractal in a continuous way. Getting around
 this is a bit more tricky and needs some additional computation steps.
-
 
 #### Mathematical Bases
 
@@ -502,7 +554,23 @@ for the fractal algorithm. If the frequencies are to high you will get color ban
 
 ##### Bernstein polynomial based coloring
 
+As I already mentioned Bernstein polynomials are continuous, smooth and have values
+in the interval we need. Making them a good match to create RGB colors that blend
+smoothly. You can use the parameters `rgb-base` and `rgb-amp`to influence this
+coloring algorithm.
 
+The base color is the background and starting color for this algorithm.
+
+If you set the amplitude for a color channel to `0` the base color will not be
+changed.
+
+![Continuous Coloring Bernstein](https://crapp.github.io/geomandel/continuous_coloring_bernstein_black_black_graph.png)
+
+This graph shows you what colors you will get with a base color of `0, 0, 0`
+and an amplitude of `9, 15, 8.5`
+
+There is a jupyther notebook `BernsteinContinuousColoring` covering this coloring
+algorithm in the resources folder.
 
 ## Performance and Memory usage
 
@@ -522,7 +590,7 @@ be pretty small as doubling the number of threads nearly halves the time needed
 for the computation.
 
 While the Apple clang compiler generated binary performed as good as the gcc
-binary on OS X (and even slightly better) the clang compiler on linux is
+binary on OS X (and even slightly better) the clang compiler on Linux is
 outperformed by gcc by a factor of 2:1.
 
 ### Performance breakdown
@@ -532,14 +600,16 @@ But how much time is really spend on computation? In order to answer this questi
 it is necessary to look at an application with a performance analyzing tool.
 Luckily we have [perf](https://en.wikipedia.org/wiki/Perf_%28Linux%29) on Linux.
 
-![Perf analyze graph](https://crapp.github.io/geomandel/perf_analyze.png "Perf analyze graph")
+![Perf analyze graph](https://crapp.github.io/geomandel/gprof2dot_perf_run-down_border.png "Perf analyze graph")
 
 *Graph generated from perf data with gprof2dot*
 
-Well as you can see ~97% of the applications cpu cycles were used to calculate a
-mandelbrot set. So if you want to speed up this application this is the place to
+As you can see ~97% of the applications CPU cycles were used to calculate a
+mandelbrot set. Only one CPU core was used in this example.
+So if you want to speed up this application this is the place to
 start. I will try to maximize parallel computation with the use of GPUs in the
-future.
+future for now you can use the `multi` option if your CPU offers multiple cores or
+threads.
 
 ### Memory Footprint
 
@@ -616,18 +686,19 @@ will be expanded on coloring algorithms in the future.
 
 To build the unit tests application use the cmake option ```-DUNIT_TEST=ON```
 
-The unit tester can be run with geomandel_test. This will run all test cases and
+The unit tester can be run with `geomandel_test`. This will run all test cases and
 output the result. See the Catch framework documentation for command line options
-you can use to run only specific test cases or change the test results are displayed.
+you can use to run only specific test cases, or change the application output.
 
 ### Continuous Integration
 
 [![Build Status](https://travis-ci.org/crapp/geomandel.svg?branch=master)](https://travis-ci.org/crapp/geomandel)
 
 
-[Travis CI](https://travis-ci.org/) is used as continous integration service.
-The geomandel github repository is linked to Travis CI. You can see the build
-history for the master branch and all release branches on the [travis project page](https://travis-ci.org/crapp/geomandel).
+[Travis CI](https://travis-ci.org/) is used as continuous integration service.
+The [geomandel github](https://github.com/crapp/geomandel) repository is linked
+to Travis CI. You can see the build history for the master branch and all release
+branches on the [travis project page](https://travis-ci.org/crapp/geomandel).
 
 Besides testing compilation on different systems and compilers I also run the
 unit tests after the application was compiled successfully.

@@ -20,7 +20,7 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
 
 Fractalzoom::Fractalzoom() {}
 void Fractalzoom::calcalute_zoom_cpane(double &xh, double &xl, double &yh,
-                                      double &yl, unsigned int zoom,
+                                      double &yl, double zoom,
                                       double xcoord, double ycoord,
                                       unsigned int width, unsigned int height)
 {

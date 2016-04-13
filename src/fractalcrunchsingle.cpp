@@ -34,7 +34,7 @@ void Fractalcrunchsingle::fill_buffer()
     for (unsigned int iy = 0; iy < this->params->yrange; iy++) {
         for (unsigned int ix = 0; ix < this->params->xrange; ix++) {
             auto crunched_mandel =
-                this->crunch_mandel_complex(x, y, this->params->bailout);
+                this->crunch_complex(x, y, this->params->bailout);
 
             unsigned int its = std::get<0>(crunched_mandel);
             double Zx = std::get<1>(crunched_mandel);
