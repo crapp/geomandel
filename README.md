@@ -146,7 +146,7 @@ nmake
 
 Precompiled Linux packages are available for
 
-* Archlinux (AUR)
+* Archlinux [![Archlinux AUR Version](https://img.shields.io/aur/version/geomandel.svg)](https://aur.archlinux.org/packages/geomandel)
 
 ## Usage
 
@@ -159,7 +159,7 @@ test your own visualization algorithms.
 
 ### Command line options
 
-geomandel uses the header only c++ command line parser [cxxopts](https://github.com/jarro2783)
+geomandel uses the header only C++ command line parser [cxxopts](https://github.com/jarro2783)
 
 The following command line options are available
 

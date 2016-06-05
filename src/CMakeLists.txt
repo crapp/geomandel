@@ -113,3 +113,5 @@ endif()
 if (${UNIT_TEST})
     add_subdirectory(test)
 endif()
+
+install(TARGETS geomandel DESTINATION bin)
