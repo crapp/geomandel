@@ -104,6 +104,7 @@ ENV/
 build
 gh-pages
 media
+package
 
 # tools
 .ycm_extra_conf.py*
