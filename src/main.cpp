@@ -92,7 +92,7 @@ int main(int argc, char *argv[])
     }
 
     std::shared_ptr<Printer> prnt =
-        std::make_shared<Printer>(parser.count("quiet"));
+        std::make_shared<Printer>(static_cast<bool>(parser.count("quiet")));
 
     std::shared_ptr<FractalParameters> params = nullptr;
     init_mandel_parameters(params, parser);
