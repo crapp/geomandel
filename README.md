@@ -3,17 +3,19 @@
 
 [![Build Status](https://travis-ci.org/crapp/geomandel.svg?branch=master)](https://travis-ci.org/crapp/geomandel)
 [![geomandel License](https://img.shields.io/badge/license-GPL3-blue.svg)](#license)
+[![Latest release](https://img.shields.io/github/release/crapp/geomandel.svg)](https://github.com/crapp/geomandel/releases/latest)
 <!-- START doctoc generated TOC please keep comment here to allow auto update -->
 <!-- DON'T EDIT THIS SECTION, INSTEAD RE-RUN doctoc TO UPDATE -->
 
 
 - [Introduction](#introduction)
+- [Features](#features)
 - [Setting up geomandel](#setting-up-geomandel)
 - [Usage](#usage)
 - [Color](#color)
 - [Performance and Memory usage](#performance-and-memory-usage)
 - [Development](#development)
-- [Repositories](#repositories)
+- [Bugs, feature requests, ideas](#bugs-feature-requests-ideas)
 - [ToDo](#todo)
 - [License](#license)
 
@@ -59,6 +61,14 @@ I also want to make you aware of the
 mine started. He uses Rust for his project and it motivated me to see how a C++11
 solution would perform in comparison to his solution. I will provide some comparison
 charts in the future.
+
+## Features
+
+* Generate Julia Sets, Tricorn, Burning Ship or Mandelbrot Fractals
+* Set complex plane, bailout, and zoom coordinates / level
+* Output calculated data as images (PNM / JPEG / PNG) or export as csv
+* Different coloring algorithms
+* Fast platform independent code written in C++11 using the cmake build system
 
 ## Setting up geomandel
 
@@ -212,8 +222,8 @@ Usage:
 
  Export options:
 
-  -p, --print  Print Buffer to terminal
-      --csv    Export data to csv files
+  -p, --print           Print Buffer to terminal
+      --csv             Export data to csv files
 
 ```
 
@@ -241,7 +251,7 @@ You might need to adjust these values if you want to generate tricorn or julia
 fractals.
 
 In order to calculate the Julia Set a fixed constant is needed which you may provide
-with `julia-real` and `julia-ima` (Default (-0.8+0.156j)).
+with `julia-real` and `julia-ima` (Default (-0.8+0.156i)).
 
 The bailout value `bailout` defines the maximum amount of iterations used to
 check whether a complex number is inside the Fractal. The higher you set
@@ -411,9 +421,10 @@ geomandel --rgb-freq=0,0.01,0 --rgb-base=255,0,0 \
 
 ```shell
 geomandel --fractal=3 --col-algo=1 \
---rgb-base=200,100,5 --rgb-freq=0,0.03,0 --rgb-phase=4,2,0 \
---xcoord=105.5 --ycoord=245 --zoom=30
+--rgb-amp=0,7,0 --rgb-base=200,100,5 --rgb-freq=0,0.03,0 --rgb-phase=4,2,0 \
+ --xcoord=105.5 --ycoord=245 --zoom=30
 ```
+![Burning Ship Fractal](https://crapp.github.io/geomandel/example_burning_ship_105.5x245-30x.png)
 
 #### Zoomed Julia Fractal using continuous coloring based on Bernstein Polynomials
 
