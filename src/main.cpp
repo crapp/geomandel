@@ -122,6 +122,9 @@ int main(int argc, char *argv[])
         frac_type = "Burning Ship";
     }
 
+    // FIXME: real and Imaginary part only seem to have a precision of 5 digits
+    // whereas the Zoom level is printed in scientific notation correctly. 
+
     prnt << "+++++++++++++++++++++++++++++++++++++" << std::endl;
     prnt << "+       Welcome to geomandel " << version << std::endl;
     prnt << "+                                    " << std::endl;
@@ -174,7 +177,7 @@ int main(int argc, char *argv[])
     // TODO: More refactoring needed here. Would be nice to move this somewhere
     // else. Maybe we could put this into the Mandelparameters structure.
     // The way we make it right now is not testable by Catch.
-    // TODO: Shouldn't we use unsigned int in rgb tuples
+    // TODO: Shouldn't we use unsigned int in rgb tuples?
 
     // visualize/export the crunched numbers
     std::unique_ptr<Buffwriter> img;

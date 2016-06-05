@@ -19,6 +19,7 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
 #include <vector>
 #include <memory>
 #include <algorithm>
+#include <cmath>
 
 #include "catch.hpp"
 
@@ -79,7 +80,7 @@ TEST_CASE("Computation of zoom values", "[computation]")
     unsigned int steps_ima = 1000;
 
     // zoom level
-    unsigned int zoom = 30;
+    double zoom = 30;
     // x/y coordinate in the image space
     double xcoord = 200;
     double ycoord = 300;
@@ -105,6 +106,13 @@ TEST_CASE("Computation of zoom values", "[computation]")
         REQUIRE(real_max_zoom == Catch::Detail::Approx(-1.37826086957));
         REQUIRE(ima_min_zoom == Catch::Detail::Approx(-0.621739130435));
         REQUIRE(ima_max_zoom == Catch::Detail::Approx(-0.578260869565));
+    }
+    SECTION("Test 6 - 10^16x zoom "){
+        zoom = 6 * std::pow(10, 16);
+        steps_real = 1000;
+        steps_ima = 1000;
+        xcoord = 501.705349998;
+        ycoord = 450.64976;
     }
 
     SECTION("Test 20x zoom, 640x480, 89x321")

@@ -2,7 +2,7 @@
 # Geomandel
 
 [![Build Status](https://travis-ci.org/crapp/geomandel.svg?branch=master)](https://travis-ci.org/crapp/geomandel)
-
+[![geomandel License](https://img.shields.io/badge/license-GPL3-blue.svg)](#license)
 <!-- START doctoc generated TOC please keep comment here to allow auto update -->
 <!-- DON'T EDIT THIS SECTION, INSTEAD RE-RUN doctoc TO UPDATE -->
 
@@ -645,7 +645,7 @@ Please note this extra memory is only acquired when you use SFML (PNG/JPG).
 
 Brief overview over the development process.
 
-## Repositories
+### Repositories
 The [github repository](https://github.com/crapp/geomandel) of geomandel has
 several different branches.
 
@@ -702,6 +702,11 @@ branches on the [travis project page](https://travis-ci.org/crapp/geomandel).
 
 Besides testing compilation on different systems and compilers I also run the
 unit tests after the application was compiled successfully.
+
+## Bugs, feature requests, ideas
+
+Please use the [github bugtracker](https://github.com/crapp/geomandel/issues)
+to submit bugs or feature requests
 
 ## ToDo
 

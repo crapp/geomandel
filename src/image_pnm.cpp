@@ -29,9 +29,6 @@ void ImagePNM::write_buffer()
 {
     // This will overwrite any existing image. Image is written into the
     // directory from where the application was called.
-    // TODO: Maybe add coordinates for zoom
-    // FIXME: Add zoom value to filename only when greater 0
-    // File name: FILENAME_BAILOUT_WIDTHxHEIGHT_ZOOMx.FILE_TYPE
     std::string filename =
         this->out_file_name(
             this->params->image_base, this->params->fractal_type,
