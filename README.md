@@ -42,9 +42,8 @@ try to plot this set, you will find areas that are similar to the main area. You
 can zoom into this figure as much as you want. You will discover new formations as
 well as parts with self similarity.
 
-Here is a video showing a zoom into the Mandelbrot seahorse valley.
-
-LINK TO VIDEO
+[![geomandel demo video](https://crapp.github.io/geomandel/geomandel_youtube_screenshot.png)](https://www.youtube.com/watch?v=X55JtZ7qRPM "geomandel demo video")
+*Mandelbrot Fractal animated Zoom*
 
 Besides the Mandelbrot Fractal geomandel supports the following other fractals:
 * [Julia Set](https://en.wikipedia.org/wiki/Julia_set)
@@ -434,6 +433,16 @@ geomandel --fractal=2 --col-algo=2 --rgb-base=0,0,0 \
 --xcoord=253.5 --ycoord=289.7 --zoom=300
 ```
 ![Julia Fractal zoomed Bernstein](https://crapp.github.io/geomandel/example_julia_253.5x289.7-300x_border.png)
+
+#### Full HD zoomed Mandelbrot Fractal, colored using Bernstein Polynomials
+
+```shell
+src/geomandel -w 1920 -h 1280 --image-png -m 4 -b 28000 \
+--cima-min=-1.0 --cima-max=1.0 --creal-min=-2.0 \
+--zoom=55250 --xcoord=471.42 --ycoord=615.681
+```
+[![Mandelbrot zoomed Full HD](https://crapp.github.io/geomandel/example_mandelbrot_zoomed_fullhd_thumb.png)](https://crapp.github.io/geomandel/example_mandelbrot_zoomed_fullhd.png "Mandelbrot Full HD")
+*Warning large image*
 
 ## Color
 
