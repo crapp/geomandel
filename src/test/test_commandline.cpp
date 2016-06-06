@@ -39,19 +39,10 @@ TEST_CASE("Command line arguments", "[commandline]")
 {
     SECTION("Basic parser checking, expecting exception")
     {
-        std::cout << "get empty parser" << std::endl;
         auto parser = generate_empty_parser();
-        std::cout << "set char array" << std::endl;
         const char *test_argv[] {"Unittester", "--idiotic", "--options"};
-        std::cout << "cast to **" << std::endl;
         char **cxxopt_pointer = const_cast<char **>(test_argv);
-        std::cout << "set number of arguments" << std::endl;
         int test_argc = 3;
-        std::cout << "assert require throws" << std::endl;
-        for (int j = 0; j < test_argc; j++) {
-            const char *f = cxxopt_pointer[j];
-            std::cout << f << std::endl;
-        }
         REQUIRE_THROWS(parser.parse(test_argc, cxxopt_pointer));
     }
 
