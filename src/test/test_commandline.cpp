@@ -52,7 +52,7 @@ TEST_CASE("Command line arguments", "[commandline]")
             const char *f = cxxopt_pointer[j];
             std::cout << f << std::endl;
         }
-        //REQUIRE_THROWS(parser.parse(test_argc, cxxopt_pointer));
+        REQUIRE_THROWS(parser.parse(test_argc, cxxopt_pointer));
     }
 
     SECTION("Test options that need an argument")
