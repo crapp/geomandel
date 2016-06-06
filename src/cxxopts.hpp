@@ -30,6 +30,7 @@ THE SOFTWARE.
 #pragma GCC diagnostic ignored "-Wnon-virtual-dtor"
 #endif
 
+#include <cstring>
 #include <exception>
 #include <iostream>
 #include <map>
@@ -391,7 +392,6 @@ namespace cxxopts
       std::istringstream is(text);
       if (!(is >> value))
       {
-        std::cerr << "cannot parse empty value" << std::endl;
         throw argument_incorrect_type(text);
       }
 
@@ -610,7 +610,6 @@ namespace cxxopts
     parse_default()
     {
       m_value->parse();
-      ++m_count;
     }
 
     int
