@@ -16,15 +16,15 @@ You should have received a copy of the GNU General Public License
 along with this program.  If not, see <http://www.gnu.org/licenses/>.
 */
 
-#include <vector>
-#include <memory>
 #include <algorithm>
 #include <cmath>
+#include <memory>
+#include <vector>
 
 #include "catch.hpp"
 
-#include "global.h"
 #include "fractalzoom.h"
+#include "global.h"
 
 #include "fractalcruncher_mock.h"
 
@@ -107,13 +107,16 @@ TEST_CASE("Computation of zoom values", "[computation]")
         REQUIRE(ima_min_zoom == Catch::Detail::Approx(-0.621739130435));
         REQUIRE(ima_max_zoom == Catch::Detail::Approx(-0.578260869565));
     }
-    SECTION("Test 6 - 10^16x zoom "){
-        zoom = 6 * std::pow(10, 16);
-        steps_real = 1000;
-        steps_ima = 1000;
-        xcoord = 501.705349998;
-        ycoord = 450.64976;
-    }
+
+    // TODO: Add a deep zoom test
+    //SECTION("Test 6 * 10^10x zoom ")
+    //{
+    //zoom = 6 * std::pow(10, 16);
+    // steps_real = 1000;
+    // steps_ima = 1000;
+    //xcoord = 501.705349998;
+    //ycoord = 450.64976;
+    //}
 
     SECTION("Test 20x zoom, 640x480, 89x321")
     {

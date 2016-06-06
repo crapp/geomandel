@@ -178,7 +178,7 @@ Usage:
                         render (default:0)
   -b, --bailout arg     Bailout value for the fractal algorithm
                         (default:1000)
-      --creal-min arg   Real part minimum (default:-2.5)
+      --creal-min arg   Real part minimum (default:-2.0)
       --creal-max arg   Real part maximum (default:1.0)
       --cima-min arg    Imaginary part minimum (default:-1.5)
       --cima-max arg    Imaginary part maximum (default:1.5)
@@ -242,7 +242,7 @@ The parameter has the following options:
 The complex plane is defined with these options:
 
 ```
---creal-min   arg (-2.5)
+--creal-min   arg (-2.0)
 --creal-max   arg ( 1.0)
 --cima-min    arg (-1.5)
 --cima-max    arg ( 1.5)
@@ -323,7 +323,7 @@ If you have set a bailout value of 2048 and are using the default values for the
 complex plane you could use a file name pattern like this
 
 ```
-my_fractals_%bb_z(%Zr, %Zi)_z(%ZR, %ZI) -> my_fractals_2048b_z(-2.5, -1.5)_z(1.0, 1.5).[pgm|pbm|ppm|png|jpg]
+my_fractals_%bb_z(%Zr, %Zi)_z(%ZR, %ZI) -> my_fractals_2048b_z(-2.0, -1.5)_z(1.0, 1.5).[pgm|pbm|ppm|png|jpg]
 ```
 Please note the naming scheme used for image files also applies for csv files
 that will be generated when you use the ```csv``` command line option.

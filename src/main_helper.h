@@ -165,7 +165,7 @@ inline void configure_command_line_parser(cxxopts::Options &p)
         ("b,bailout", "Bailout value for the fractal algorithm",
          cxxopts::value<unsigned int>()->default_value("1000"))
         ("creal-min", "Real part minimum",
-         cxxopts::value<double>()->default_value("-2.5"))
+         cxxopts::value<double>()->default_value("-2.0"))
         ("creal-max", "Real part maximum",
          cxxopts::value<double>()->default_value("1.0"))
         ("cima-min", "Imaginary part minimum",
