@@ -85,27 +85,36 @@ find_package(SFML 2.3 COMPONENTS graphics)
 if (${SFML_FOUND})
     include_directories(${SFML_INCLUDE_DIR})
     set (HAVE_SFML ON)
-    set (MAIN_SOURCE 
-        ${MAIN_SOURCE} 
+    set (MAIN_SOURCE
+        ${MAIN_SOURCE}
         ${CMAKE_CURRENT_SOURCE_DIR}/image_sfml.cpp
         )
-    set (MAIN_HEADER 
-        ${MAIN_SOURCE} 
+    set (MAIN_HEADER
+        ${MAIN_SOURCE}
         ${CMAKE_CURRENT_SOURCE_DIR}/image_sfml.h
         )
 endif()
 
+find_package(Boost 1.61 COMPONENTS)
+if(${Boost_FOUND})
+    include_directories(${Boost_INCLUDE_DIRS})
+endif()
+
 configure_file(${CMAKE_CURRENT_SOURCE_DIR}/config.h.in config.h)
 
+# additional include directories
 include_directories(
     ${CMAKE_CURRENT_BINARY_DIR}
     ${CMAKE_CURRENT_SOURCE_DIR}
 )
 
+# generate a target and link it to the libraries
 add_executable(geomandel ${MAIN_HEADER} ${HEADER_LIB} ${MAIN_SOURCE})
 target_link_libraries(geomandel ${CMAKE_THREAD_LIBS_INIT})
 if (${SFML_FOUND})
     target_link_libraries(geomandel ${SFML_LIBRARIES})
+endif()
+if(${Boost_FOUND})
 endif()
 
 # TODO: It would be better to use this with CMAKEs test framework
