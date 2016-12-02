@@ -85,12 +85,12 @@ find_package(SFML 2.3 COMPONENTS graphics)
 if (${SFML_FOUND})
     include_directories(${SFML_INCLUDE_DIR})
     set (HAVE_SFML ON)
-    set (MAIN_SOURCE 
-        ${MAIN_SOURCE} 
+    set (MAIN_SOURCE
+        ${MAIN_SOURCE}
         ${CMAKE_CURRENT_SOURCE_DIR}/image_sfml.cpp
         )
-    set (MAIN_HEADER 
-        ${MAIN_SOURCE} 
+    set (MAIN_HEADER
+        ${MAIN_SOURCE}
         ${CMAKE_CURRENT_SOURCE_DIR}/image_sfml.h
         )
 endif()

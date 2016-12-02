@@ -26,8 +26,8 @@ BuffwriterMock::~BuffwriterMock() {}
 void BuffwriterMock::write_buffer(){};
 
 std::string BuffwriterMock::test_filename_patterns(
-    std::string filename_pattern, std::string fractal_type, unsigned int bailout,
-    unsigned int xrange, unsigned int yrange, double zoom,
+    const std::string &filename_pattern, const std::string &fractal_type,
+    unsigned int bailout, unsigned int xrange, unsigned int yrange, double zoom,
     unsigned int cores, double xcoord, double ycoord, double z_real_min,
     double z_real_max, double z_ima_min, double z_ima_max)
 {
