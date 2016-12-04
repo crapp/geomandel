@@ -28,7 +28,7 @@ public:
     virtual ~BuffwriterMock();
 
     void write_buffer();
-    std::string test_filename_patterns(const std::string &filename_pattern,
+    std::string test_filename_patterns(std::string filename_pattern,
                                        const std::string &fractal_type,
                                        unsigned int bailout, unsigned int xrange,
                                        unsigned int yrange, double zoom,

@@ -71,7 +71,7 @@ TEST_CASE("Filename Patterns", "[output]")
             "mandeltest_%f_%a_%wx%h_b%b_m%c_[%x, %y --> %z]_(%Zr, %Zi)->(%ZR, "
             "%ZI)";
         std::string filename = bmock.test_filename_patterns(
-            pattern, fractal_type, bailout, xrange, yrange, zoom,
+            std::move(pattern), fractal_type, bailout, xrange, yrange, zoom,
             cores, xcoord, ycoord, z_real_min, z_real_max, z_ima_min, z_ima_max);
         REQUIRE(filename ==
                 "mandeltest_" + fractal_type + "_%a_" +

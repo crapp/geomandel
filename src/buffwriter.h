@@ -46,7 +46,7 @@ struct RegexpatternIface {
  */
 template <typename T>
 struct Regexpattern : public RegexpatternIface {
-    Regexpattern(T value, std::string &&pattern)
+    Regexpattern(T value, std::string pattern)
         : RegexpatternIface(), value(value), regpattern(std::move(pattern)){};
     virtual ~Regexpattern(){};
 
