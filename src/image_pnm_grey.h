@@ -28,15 +28,15 @@ public:
     Imagegrey(const constants::fracbuff &buff,
               const std::shared_ptr<FractalParameters> &params,
               const std::shared_ptr<Printer> &prnt,
-              std::tuple<int, int, int> &&rgb_base,
-              std::tuple<double, double, double> &&rgb_freq);
+              std::tuple<int, int, int> rgb_base,
+              std::tuple<double, double, double> rgb_freq);
     virtual ~Imagegrey();
 
 private:
     /* data */
 
-    std::tuple<int, int, int> &&rgb_base;
-    std::tuple<double, double, double> &&rgb_freq;
+    std::tuple<int, int, int> rgb_base;
+    std::tuple<double, double, double> rgb_freq;
     std::tuple<int, int, int> rgb_phase;
 
     void out_format_write(std::stringstream &img_buf,

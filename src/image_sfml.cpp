@@ -21,11 +21,11 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
 ImageSFML::ImageSFML(const constants::fracbuff &buff,
                      const std::shared_ptr<FractalParameters> &params,
                      const std::shared_ptr<Printer> &prnt,
-                     std::tuple<int, int, int> &&rgb_base,
-                     std::tuple<int, int, int> &&rgb_set_base,
-                     std::tuple<double, double, double> &&rgb_freq,
-                     std::tuple<int, int, int> &&rgb_phase,
-                     std::tuple<double, double, double> &&rgb_amp, uint8_t outfmt)
+                     std::tuple<int, int, int> rgb_base,
+                     std::tuple<int, int, int> rgb_set_base,
+                     std::tuple<double, double, double> rgb_freq,
+                     std::tuple<int, int, int> rgb_phase,
+                     std::tuple<double, double, double> rgb_amp, uint8_t outfmt)
     : Imagewriter(buff, params, prnt),
       rgb_base(std::move(rgb_base)),
       rgb_set_base(std::move(rgb_set_base)),

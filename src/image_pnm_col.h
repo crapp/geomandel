@@ -28,22 +28,22 @@ public:
     Imagecol(const constants::fracbuff &buff,
              const std::shared_ptr<FractalParameters> &params,
              const std::shared_ptr<Printer> &prnt,
-             std::tuple<int, int, int> &&rgb_base,
-             std::tuple<int, int, int> &&rgb_set_base,
-             std::tuple<double, double, double> &&rgb_freq,
-             std::tuple<int, int, int> &&rgb_phase,
-             std::tuple<double, double, double> &&rgb_amp);
+             std::tuple<int, int, int> rgb_base,
+             std::tuple<int, int, int> rgb_set_base,
+             std::tuple<double, double, double> rgb_freq,
+             std::tuple<int, int, int> rgb_phase,
+             std::tuple<double, double, double> rgb_amp);
 
     virtual ~Imagecol();
 
 private:
     /* data */
 
-    std::tuple<int, int, int> &&rgb_base;
-    std::tuple<int, int, int> &&rgb_set_base;
-    std::tuple<double, double, double> &&rgb_freq;
-    std::tuple<int, int, int> &&rgb_phase;
-    std::tuple<double, double, double> &&rgb_amp;
+    std::tuple<int, int, int> rgb_base;
+    std::tuple<int, int, int> rgb_set_base;
+    std::tuple<double, double, double> rgb_freq;
+    std::tuple<int, int, int> rgb_phase;
+    std::tuple<double, double, double> rgb_amp;
 
     void out_format_write(std::stringstream &img_buf,
                           const constants::Iterations &data);
