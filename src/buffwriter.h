@@ -59,8 +59,6 @@ struct Regexpattern : public RegexpatternIface {
     void parse_filename(std::string &filename)
     {
         std::regex re(this->regpattern);
-        std::cout << "Pattern: " << this->regpattern << std::endl;
-        std::cout << "Filename: " << filename << std::endl;
         std::string val_string = utility::primitive_to_string(this->value);
         filename = std::regex_replace(filename, re, val_string);
     }
