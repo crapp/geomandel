@@ -58,7 +58,7 @@ TEST_CASE("Filename Patterns", "[output]")
         xcoord = 280.0;
         ycoord = 178.0;
         std::string filename = bmock.test_filename_patterns(
-            std::move(pattern), fractal_type, bailout, xrange, yrange, zoom,
+            pattern, fractal_type, bailout, xrange, yrange, zoom,
             cores, xcoord, ycoord, z_real_min, z_real_max, z_ima_min, z_ima_max);
         REQUIRE(filename ==
                 "mandeltest_[" + utility::primitive_to_string(xcoord) + "-" +

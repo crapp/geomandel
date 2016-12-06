@@ -32,7 +32,7 @@ ImageSFML::ImageSFML(const constants::fracbuff &buff,
       rgb_freq(std::move(rgb_freq)),
       rgb_phase(std::move(rgb_phase)),
       rgb_amp(std::move(rgb_amp)),
-      outfmt(std::move(outfmt))
+      outfmt(outfmt)
 {
 }
 

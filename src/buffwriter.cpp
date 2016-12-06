@@ -27,7 +27,7 @@ std::string Buffwriter::out_file_name(
     double z_real_min, double z_real_max, double z_ima_min, double z_ima_max)
 {
     // this might represent the classic example of overengineering
-    
+
     //TODO: This vector initialization should be moved to the constructor
     std::vector<std::unique_ptr<RegexpatternIface>> regex_patterns;
     regex_patterns.emplace_back(
