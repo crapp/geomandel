@@ -23,7 +23,7 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
 
 #include "fractalcruncher.h"
 
-class FractalcruncherMock : public Fractalcruncher
+template <class T> class FractalcruncherMock : public Fractalcruncher<T>
 {
 public:
     FractalcruncherMock(constants::fracbuff &buff,

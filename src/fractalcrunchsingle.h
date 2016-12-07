@@ -22,7 +22,7 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
 #include "global.h"
 #include "fractalcruncher.h"
 
-class Fractalcrunchsingle : public Fractalcruncher
+template <class T> class Fractalcrunchsingle : public Fractalcruncher<T>
 {
 public:
     Fractalcrunchsingle(constants::fracbuff &buff,

@@ -25,7 +25,7 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
 #include "global.h"
 #include "fractalcruncher.h"
 
-class Fractalcrunchmulti : public Fractalcruncher
+template <class T> class Fractalcrunchmulti : public Fractalcruncher<T>
 {
 public:
     Fractalcrunchmulti(constants::fracbuff &buff,

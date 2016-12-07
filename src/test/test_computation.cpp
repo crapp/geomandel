@@ -46,7 +46,7 @@ void fill_test_buffer(std::vector<int> &tbuff, double z_real_min,
                       double z_real_max, double z_ima_min, double z_ima_max,
                       unsigned int bailout, unsigned int width,
                       unsigned int height,
-                      const FractalcruncherMock &crunch_test)
+                      const FractalcruncherMock<double> &crunch_test)
 {
     double real_delta = (z_real_max - z_real_min) / width;
     double ima_delta = (z_ima_max - z_ima_min) / height;
@@ -164,7 +164,7 @@ TEST_CASE(
         std::make_shared<FractalParameters>();
     params->set_type = constants::FRACTAL::MANDELBROT;
 
-    FractalcruncherMock crunch_test_mandel(b, params);
+    FractalcruncherMock<double> crunch_test_mandel(b, params);
 
     SECTION(
         "Test some single point computations with the Mandelbrot Set, z1(-2.5, "
@@ -304,7 +304,7 @@ TEST_CASE(
     params->julia_real = -0.8;
     params->julia_ima = 0.156;
 
-    FractalcruncherMock crunch_test_julia(b, params);
+    FractalcruncherMock<double> crunch_test_julia(b, params);
 
     SECTION(
         "Test some single point computations with the Julia Set, z1(-2.5-1.5j) "
@@ -377,7 +377,7 @@ TEST_CASE(
         std::make_shared<FractalParameters>();
     params->set_type = constants::FRACTAL::BURNING_SHIP;
 
-    FractalcruncherMock crunch_test_bship(b, params);
+    FractalcruncherMock<double> crunch_test_bship(b, params);
 
     SECTION(
         "Test some single point computations with the Burning Ship Set, "
@@ -445,7 +445,7 @@ TEST_CASE("Test computation of continuous index", "[computation]")
     std::shared_ptr<FractalParameters> params =
         std::make_shared<FractalParameters>();
     params->set_type = constants::FRACTAL::MANDELBROT;
-    FractalcruncherMock crunch_test_cindex(b, params);
+    FractalcruncherMock<double> crunch_test_cindex(b, params);
 
     SECTION("Default index of its 2, -3.0672, 2.7696")
     {
