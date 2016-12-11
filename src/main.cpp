@@ -149,16 +149,16 @@ int main(int argc, char *argv[])
         v.assign(params->xrange, constants::Iterations());
     }
 
-    std::unique_ptr<Fractalcruncher> crunchi;
+    std::unique_ptr<Fractalcruncher<double>> crunchi;
 
     if (parser.count("m")) {
         prnt << "+ Multicore: " << params->cores << std::endl;
-        crunchi = std::unique_ptr<Fractalcrunchmulti>(
-            new Fractalcrunchmulti(fractalbuffer, params));
+        crunchi = std::unique_ptr<Fractalcrunchmulti<double>>(
+            new Fractalcrunchmulti<double>(fractalbuffer, params));
     } else {
         prnt << "+ Singlecore " << std::endl;
-        crunchi = std::unique_ptr<Fractalcrunchsingle>(
-            new Fractalcrunchsingle(fractalbuffer, params));
+        crunchi = std::unique_ptr<Fractalcrunchsingle<double>>(
+            new Fractalcrunchsingle<double>(fractalbuffer, params));
     }
 
     // Do the work
