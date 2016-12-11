@@ -23,11 +23,11 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
 
 #include "fractalcruncher.h"
 
-template <class T> class FractalcruncherMock : public Fractalcruncher<T>
+class FractalcruncherMock : public Fractalcruncher
 {
 public:
     FractalcruncherMock(constants::fracbuff &buff,
-                       const std::shared_ptr<FractalParameters> &params);
+                        const std::shared_ptr<FractalParameters> &params);
     virtual ~FractalcruncherMock();
 
     void fill_buffer();

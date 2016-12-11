@@ -58,7 +58,7 @@ std::tuple<unsigned int, double, double> Fractalcruncher::crunch_complex(
     return std::make_tuple(iterations, x, y);
 }
 
-constants::Iterations Fractalcruncher<T>::iterations_factory(unsigned int its,
+constants::Iterations Fractalcruncher::iterations_factory(unsigned int its,
                                                           double Zx,
                                                           double Zy) const
 {
@@ -74,5 +74,3 @@ constants::Iterations Fractalcruncher<T>::iterations_factory(unsigned int its,
     }
     return it;
 }
-
-template class Fractalcruncher<double>;

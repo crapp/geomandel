@@ -22,14 +22,14 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
 #include <thread>
 #include "ctpl_stl.h"
 
-#include "global.h"
 #include "fractalcruncher.h"
+#include "global.h"
 
-template <class T> class Fractalcrunchmulti : public Fractalcruncher<T>
+class Fractalcrunchmulti : public Fractalcruncher
 {
 public:
     Fractalcrunchmulti(constants::fracbuff &buff,
-                      const std::shared_ptr<FractalParameters> &params);
+                       const std::shared_ptr<FractalParameters> &params);
     virtual ~Fractalcrunchmulti();
 
     void fill_buffer();

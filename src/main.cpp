@@ -16,9 +16,9 @@ You should have received a copy of the GNU General Public License
 along with this program.  If not, see <http://www.gnu.org/licenses/>.
 */
 
+#include <cmath>
 #include <iostream>
 #include <memory>
-#include <cmath>
 /**
  * measure time
  */
@@ -26,14 +26,14 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
 #include <fstream>
 #include <tuple>
 
-#include "printer.h"
+#include "config.h"
 #include "global.h"
 #include "main_helper.h"
-#include "config.h"
+#include "printer.h"
 
 #include "image_pnm_bw.h"
-#include "image_pnm_grey.h"
 #include "image_pnm_col.h"
+#include "image_pnm_grey.h"
 #ifdef HAVE_SFML
 #include "image_sfml.h"
 #endif
@@ -42,8 +42,8 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
 
 #include "fractalzoom.h"
 
-#include "fractalcrunchsingle.h"
 #include "fractalcrunchmulti.h"
+#include "fractalcrunchsingle.h"
 
 #include "ctpl_stl.h"
 #include "cxxopts.hpp"
@@ -123,7 +123,7 @@ int main(int argc, char *argv[])
     }
 
     // FIXME: real and Imaginary part only seem to have a precision of 5 digits
-    // whereas the Zoom level is printed in scientific notation correctly. 
+    // whereas the Zoom level is printed in scientific notation correctly.
 
     prnt << "+++++++++++++++++++++++++++++++++++++" << std::endl;
     prnt << "+       Welcome to geomandel " << version << std::endl;
@@ -149,16 +149,16 @@ int main(int argc, char *argv[])
         v.assign(params->xrange, constants::Iterations());
     }
 
-    std::unique_ptr<Fractalcruncher<double>> crunchi;
+    std::unique_ptr<Fractalcruncher> crunchi;
 
     if (parser.count("m")) {
         prnt << "+ Multicore: " << params->cores << std::endl;
-        crunchi = std::unique_ptr<Fractalcrunchmulti<double>>(
-            new Fractalcrunchmulti<double>(fractalbuffer, params));
+        crunchi = std::unique_ptr<Fractalcrunchmulti>(
+            new Fractalcrunchmulti(fractalbuffer, params));
     } else {
         prnt << "+ Singlecore " << std::endl;
-        crunchi = std::unique_ptr<Fractalcrunchsingle<double>>(
-            new Fractalcrunchsingle<double>(fractalbuffer, params));
+        crunchi = std::unique_ptr<Fractalcrunchsingle>(
+            new Fractalcrunchsingle(fractalbuffer, params));
     }
 
     // Do the work

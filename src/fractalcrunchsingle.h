@@ -19,14 +19,14 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
 #ifndef FRACTALCRUNCHSINGLE_H
 #define FRACTALCRUNCHSINGLE_H
 
-#include "global.h"
 #include "fractalcruncher.h"
+#include "global.h"
 
-template <class T> class Fractalcrunchsingle : public Fractalcruncher<T>
+class Fractalcrunchsingle : public Fractalcruncher
 {
 public:
     Fractalcrunchsingle(constants::fracbuff &buff,
-                       const std::shared_ptr<FractalParameters> &params);
+                        const std::shared_ptr<FractalParameters> &params);
     virtual ~Fractalcrunchsingle();
 
     void fill_buffer();
