@@ -18,15 +18,15 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
 
 #include "catch.hpp"
 
-#include "global.h"
-#include "main_helper.h"
 #include "fractalparams.h"
 #include "fractalzoom.h"
+#include "global.h"
+#include "main_helper.h"
 
 #include <iostream>
-#include <vector>
-#include <string>
 #include <memory>
+#include <string>
+#include <vector>
 
 cxxopts::Options generate_empty_parser()
 {
@@ -40,7 +40,7 @@ TEST_CASE("Command line arguments", "[commandline]")
     SECTION("Basic parser checking, expecting exception")
     {
         auto parser = generate_empty_parser();
-        const char *test_argv[] {"Unittester", "--idiotic", "--options"};
+        const char *test_argv[]{"Unittester", "--idiotic", "--options"};
         char **cxxopt_pointer = const_cast<char **>(test_argv);
         int test_argc = 3;
         REQUIRE_THROWS(parser.parse(test_argc, cxxopt_pointer));
@@ -51,7 +51,7 @@ TEST_CASE("Command line arguments", "[commandline]")
         char **cxxopt_pointer = nullptr;
         // fractal type
         auto parser = generate_empty_parser();
-        const char *test_argv_settype[] {"Unittester", "-f"};
+        const char *test_argv_settype[]{"Unittester", "-f"};
         cxxopt_pointer = const_cast<char **>(test_argv_settype);
         int test_argc = 2;
         REQUIRE_THROWS(parser.parse(test_argc, cxxopt_pointer));
@@ -152,7 +152,7 @@ TEST_CASE("Command line arguments", "[commandline]")
         int test_argc = 3;
         char **cxxopt_pointer = const_cast<char **>(test_argv_max_low_min);
         parser.parse(test_argc, cxxopt_pointer);
-        init_mandel_parameters(params, parser);
+        init_fractal_paramters(params, parser);
         REQUIRE(params == nullptr);
 
         params = nullptr;
@@ -162,7 +162,7 @@ TEST_CASE("Command line arguments", "[commandline]")
         cxxopt_pointer = const_cast<char **>(test_argv_max_low_min_ima);
         test_argc = 3;
         parser.parse(test_argc, cxxopt_pointer);
-        init_mandel_parameters(params, parser);
+        init_fractal_paramters(params, parser);
         REQUIRE(params == nullptr);
 
         // no parameters at all should give as a default Fractalparameters object
@@ -172,7 +172,7 @@ TEST_CASE("Command line arguments", "[commandline]")
         test_argc = 1;
         cxxopt_pointer = const_cast<char **>(test_argv_empty);
         parser.parse(test_argc, cxxopt_pointer);
-        init_mandel_parameters(params, parser);
+        init_fractal_paramters(params, parser);
         REQUIRE(params != nullptr);
     }
 }

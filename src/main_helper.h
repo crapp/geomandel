@@ -25,7 +25,8 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
 #include "fractalparams.h"
 #include "fractalzoom.h"
 
-inline void init_mandel_parameters(std::shared_ptr<FractalParameters> &params,
+template <typename T>
+inline void init_fractal_paramters(std::shared_ptr<FractalParameters<T>> &params,
                                    const cxxopts::Options &parser)
 {
     // TODO: This try catch block could be unnecessary as cxxopts does most of
@@ -135,7 +136,7 @@ inline void init_mandel_parameters(std::shared_ptr<FractalParameters> &params,
 
         // Stores informations used by the mandel cruncher and some data
         // writer classes
-        params = std::make_shared<FractalParameters>(
+        params = std::make_shared<FractalParameters<T>>(
             set_type, xrange, xl, xh, yrange, yl, yh, julia_real, julia_ima,
             bailout, zoomlvl, xcoord, ycoord,
             parser["image-file"].as<std::string>(), fractal_type, cores,

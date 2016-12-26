@@ -23,29 +23,31 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
 
 #include "global.h"
 
-struct FractalParameters {
+template <class T>
+class FractalParameters
+{
     constants::FRACTAL set_type;
 
     unsigned int xrange;
-    double xdelta;
-    double x;
-    double xl;
-    double xh;
+    T xdelta;
+    T x;
+    T xl;
+    T xh;
 
     unsigned int yrange;
-    double ydelta;
-    double y;
-    double yl;
-    double yh;
+    T ydelta;
+    T y;
+    T yl;
+    T yh;
 
-    double julia_real;
-    double julia_ima;
+    T julia_real;
+    T julia_ima;
 
     unsigned int bailout;
 
-    double zoom;
-    double xcoord;
-    double ycoord;
+    T zoom;
+    T xcoord;
+    T ycoord;
 
     std::string image_base;
     std::string fractal_type;
@@ -55,13 +57,11 @@ struct FractalParameters {
     constants::COL_ALGO col_algo;
 
     FractalParameters() {}
-    FractalParameters(constants::FRACTAL set_type, unsigned int xrange,
-                      double xl, double xh, unsigned int yrange, double yl,
-                      double yh, double julia_real, double julia_ima,
-                      unsigned int bailout, double zoom, double xcoord,
-                      double ycoord, std::string image_base,
-                      std::string fractal_type, unsigned int cores,
-                      constants::COL_ALGO col_algo)
+    FractalParameters(constants::FRACTAL set_type, unsigned int xrange, T xl,
+                      T xh, unsigned int yrange, T yl, T yh, T julia_real,
+                      T julia_ima, unsigned int bailout, T zoom, T xcoord,
+                      T ycoord, std::string image_base, std::string fractal_type,
+                      unsigned int cores, constants::COL_ALGO col_algo)
         : set_type(set_type),
           xrange(xrange),
           xl(xl),
