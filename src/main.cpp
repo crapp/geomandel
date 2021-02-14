@@ -26,6 +26,8 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
 #include <fstream>
 #include <tuple>
 
+#include <boost/multiprecision/cpp_dec_float.hpp>
+
 #include "config.h"
 #include "global.h"
 #include "main_helper.h"
@@ -42,11 +44,13 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
 
 #include "fractalzoom.h"
 
-#include "fractalcrunchmulti.h"
+//#include "fractalcrunchmulti.h"
 #include "fractalcrunchsingle.h"
 
 #include "ctpl_stl.h"
 #include "cxxopts.hpp"
+
+namespace bmp = boost::multiprecision;
 
 /**
  * Based on
@@ -93,8 +97,11 @@ int main(int argc, char *argv[])
 
     std::shared_ptr<Printer> prnt =
         std::make_shared<Printer>(static_cast<bool>(parser.count("quiet")));
-
+#ifdef HAVE_BOOST
+    std::shared_ptr<FractalParameters<bmp::cpp_dec_float_100>> params = nullptr;
+#else
     std::shared_ptr<FractalParameters<double>> params = nullptr;
+#endif
     init_fractal_paramters(params, parser);
 
     if (params == nullptr) {
@@ -112,6 +119,7 @@ int main(int argc, char *argv[])
 
     std::string frac_type = "Mandelbrot";
 
+    // Set a string according to fractal type for better output
     if (params->set_type == constants::FRACTAL::TRICORN) {
         frac_type = "Tricorn";
     }
@@ -149,12 +157,12 @@ int main(int argc, char *argv[])
         v.assign(params->xrange, constants::Iterations());
     }
 
-    std::unique_ptr<Fractalcruncher> crunchi;
+    std::unique_ptr<Fractalcruncher> crunchi = nullptr;
 
     if (parser.count("m")) {
         prnt << "+ Multicore: " << params->cores << std::endl;
-        crunchi = std::unique_ptr<Fractalcrunchmulti>(
-            new Fractalcrunchmulti(fractalbuffer, params));
+        // crunchi = std::unique_ptr<Fractalcrunchmulti>(
+        // new Fractalcrunchmulti(fractalbuffer, params));
     } else {
         prnt << "+ Singlecore " << std::endl;
         crunchi = std::unique_ptr<Fractalcrunchsingle>(
@@ -180,73 +188,73 @@ int main(int argc, char *argv[])
     // TODO: Shouldn't we use unsigned int in rgb tuples?
 
     // visualize/export the crunched numbers
-    std::unique_ptr<Buffwriter> img;
-    std::unique_ptr<Buffwriter> csv =
-        std::unique_ptr<CSVWriter>(new CSVWriter(fractalbuffer, params));
-    if (parser.count("image-pnm-bw")) {
-        prnt << "+ Generating B/W image" << std::endl;
-        img = std::unique_ptr<ImageBW>(new ImageBW(fractalbuffer, params, prnt));
-        img->write_buffer();
-    }
-    if (parser.count("image-pnm-grey")) {
-        prnt << "+ Generating grey scale bitmap" << std::endl;
-        unsigned int grey_base = parser["grey-base"].as<unsigned int>();
-        // do we need to use std::fabs for the parsed double here?
-        double grey_freq = parser["grey-freq"].as<double>();
-        img = std::unique_ptr<Imagegrey>(new Imagegrey(
-            fractalbuffer, params, prnt, std::make_tuple(grey_base, 0, 0),
-            std::make_tuple(grey_freq, 0, 0)));
-        img->write_buffer();
-    }
-    if (parser.count("image-pnm-col")) {
-        prnt << "+ Generating RGB bitmap" << std::endl;
-        std::tuple<int, int, int> rgb_base;
-        std::tuple<int, int, int> rgb_set_base;
-        std::tuple<double, double, double> rgb_freq;
-        std::tuple<int, int, int> rgb_phase;
-        std::tuple<double, double, double> rgb_amp;
-        parse_rgb_command_options(parser, rgb_base, rgb_set_base, rgb_freq,
-                                  rgb_phase, rgb_amp);
-        img = std::unique_ptr<Imagecol>(
-            new Imagecol(fractalbuffer, params, prnt, std::move(rgb_base),
-                         std::move(rgb_set_base), std::move(rgb_freq),
-                         std::move(rgb_phase), std::move(rgb_amp)));
-        img->write_buffer();
-    }
-    uint8_t png_jpg = 0;
-    if (parser.count("image-png"))
-        png_jpg |= static_cast<uint8_t>(constants::OUT_FORMAT::IMAGE_PNG);
+    // std::unique_ptr<Buffwriter> img;
+    // std::unique_ptr<Buffwriter> csv =
+    // std::unique_ptr<CSVWriter>(new CSVWriter(fractalbuffer, params));
+    //if (parser.count("image-pnm-bw")) {
+    // prnt << "+ Generating B/W image" << std::endl;
+    // img = std::unique_ptr<ImageBW>(new ImageBW(fractalbuffer, params, prnt));
+    // img->write_buffer();
+    //}
+    //if (parser.count("image-pnm-grey")) {
+    // prnt << "+ Generating grey scale bitmap" << std::endl;
+    //unsigned int grey_base = parser["grey-base"].as<unsigned int>();
+    //// do we need to use std::fabs for the parsed double here?
+    //double grey_freq = parser["grey-freq"].as<double>();
+    // img = std::unique_ptr<Imagegrey>(new Imagegrey(
+    // fractalbuffer, params, prnt, std::make_tuple(grey_base, 0, 0),
+    // std::make_tuple(grey_freq, 0, 0)));
+    // img->write_buffer();
+    //}
+    //if (parser.count("image-pnm-col")) {
+    // prnt << "+ Generating RGB bitmap" << std::endl;
+    // std::tuple<int, int, int> rgb_base;
+    // std::tuple<int, int, int> rgb_set_base;
+    // std::tuple<double, double, double> rgb_freq;
+    // std::tuple<int, int, int> rgb_phase;
+    // std::tuple<double, double, double> rgb_amp;
+    // parse_rgb_command_options(parser, rgb_base, rgb_set_base, rgb_freq,
+    // rgb_phase, rgb_amp);
+    // img = std::unique_ptr<Imagecol>(
+    // new Imagecol(fractalbuffer, params, prnt, std::move(rgb_base),
+    // std::move(rgb_set_base), std::move(rgb_freq),
+    // std::move(rgb_phase), std::move(rgb_amp)));
+    // img->write_buffer();
+    //}
+    // uint8_t png_jpg = 0;
+    //if (parser.count("image-png"))
+    // png_jpg |= static_cast<uint8_t>(constants::OUT_FORMAT::IMAGE_PNG);
 
-    if (parser.count("image-jpg"))
-        png_jpg |= static_cast<uint8_t>(constants::OUT_FORMAT::IMAGE_JPG);
-    if (png_jpg != 0) {
-        prnt << "+ Generating jpg/png image" << std::endl;
-        std::tuple<int, int, int> rgb_base;
-        std::tuple<int, int, int> rgb_set_base;
-        std::tuple<double, double, double> rgb_freq;
-        std::tuple<int, int, int> rgb_phase;
-        std::tuple<double, double, double> rgb_amp;
-        parse_rgb_command_options(parser, rgb_base, rgb_set_base, rgb_freq,
-                                  rgb_phase, rgb_amp);
-// TODO: Don't like ifdefs in code. Maybe better off with an "empty"
-// ImageSFML stub class
-#ifdef HAVE_SFML
-        img = std::unique_ptr<ImageSFML>(
-            new ImageSFML(fractalbuffer, params, prnt, std::move(rgb_base),
-                          std::move(rgb_set_base), std::move(rgb_freq),
-                          std::move(rgb_phase), std::move(rgb_amp), png_jpg));
-        img->write_buffer();
-#endif
-    }
+    //if (parser.count("image-jpg"))
+    // png_jpg |= static_cast<uint8_t>(constants::OUT_FORMAT::IMAGE_JPG);
+    // if (png_jpg != 0) {
+    // prnt << "+ Generating jpg/png image" << std::endl;
+    // std::tuple<int, int, int> rgb_base;
+    // std::tuple<int, int, int> rgb_set_base;
+    // std::tuple<double, double, double> rgb_freq;
+    // std::tuple<int, int, int> rgb_phase;
+    // std::tuple<double, double, double> rgb_amp;
+    // parse_rgb_command_options(parser, rgb_base, rgb_set_base, rgb_freq,
+    // rgb_phase, rgb_amp);
+    //// TODO: Don't like ifdefs in code. Maybe better off with an "empty"
+    //// ImageSFML stub class
+    //#ifdef HAVE_SFML
+    // img = std::unique_ptr<ImageSFML>(
+    // new ImageSFML(fractalbuffer, params, prnt, std::move(rgb_base),
+    // std::move(rgb_set_base), std::move(rgb_freq),
+    // std::move(rgb_phase), std::move(rgb_amp), png_jpg));
+    // img->write_buffer();
+    //#endif
+    //}
 
-    if (parser.count("csv")) {
-        prnt << "+ Exporting data to csv files" << std::endl;
-        csv->write_buffer();
-    }
-    if (parser.count("p"))
-        prnt_buff(fractalbuffer, params->bailout);  // print the buffer
+    //if (parser.count("csv")) {
+    // prnt << "+ Exporting data to csv files" << std::endl;
+    // csv->write_buffer();
+    //}
+    //if (parser.count("p"))
+    // prnt_buff(fractalbuffer, params->bailout);  // print the buffer
 
-    prnt << "+\n+" << std::endl;
-    prnt << "+++++++++++++++++++++++++++++++++++++" << std::endl << std::endl;
+    // prnt << "+\n+" << std::endl;
+    // prnt << "+++++++++++++++++++++++++++++++++++++" << std::endl << std::endl;
     return 0;
 }

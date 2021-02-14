@@ -23,9 +23,11 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
 
 #include "global.h"
 
+// TODO: Can't i use a struct for this as I did before?
 template <class T>
 class FractalParameters
 {
+    public:
     constants::FRACTAL set_type;
 
     unsigned int xrange;

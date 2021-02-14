@@ -25,8 +25,9 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
 class Fractalcrunchsingle : public Fractalcruncher
 {
 public:
+    template <class T>
     Fractalcrunchsingle(constants::fracbuff &buff,
-                        const std::shared_ptr<FractalParameters> &params);
+                        const std::shared_ptr<FractalParameters<T>> &params);
     virtual ~Fractalcrunchsingle();
 
     void fill_buffer();
